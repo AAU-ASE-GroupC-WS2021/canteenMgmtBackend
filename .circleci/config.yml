@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Test
           command: mvn test
-      -run:
+      - run:
           name: Sonar
           command: sonarcloud/scan
 
