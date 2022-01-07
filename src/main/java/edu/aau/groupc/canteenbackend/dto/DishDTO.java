@@ -1,30 +1,18 @@
 package edu.aau.groupc.canteenbackend.dto;
 
-import javax.persistence.*;
+import edu.aau.groupc.canteenbackend.entities.Dish;
 
-@Entity
-@Table(name = "dish")
-public class Dish {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class DishDTO implements DTO {
     private Integer id;
-
     private String name;
     private float price;
-    private Type type;
+    private Dish.Type type;
 
-    public enum Type {
-        STARTER,
-        MAIN,
-        DESSERT
+    public DishDTO() {
     }
 
-    public Dish() {
-        // default
-    }
-
-    public Dish(String name, float price, Type type) {
-        super();
+    public DishDTO(Integer id, String name, float price, Dish.Type type) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.type = type;
@@ -32,6 +20,10 @@ public class Dish {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -50,11 +42,15 @@ public class Dish {
         this.price = price;
     }
 
-    public Type getType() {
+    public Dish.Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(Dish.Type type) {
         this.type = type;
+    }
+
+    public Dish toEntity() {
+        return new Dish(getName(), getPrice(), getType());
     }
 }

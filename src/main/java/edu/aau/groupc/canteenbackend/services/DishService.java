@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.services;
 
 import edu.aau.groupc.canteenbackend.dao.DishRepository;
-import edu.aau.groupc.canteenbackend.dto.Dish;
+import edu.aau.groupc.canteenbackend.entities.Dish;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class DishService implements IDishService {
     }
 
     @Override
-    public void create(Dish newDish) {
-        dishRepo.save(newDish);
+    public Dish create(Dish newDish) {
+        return dishRepo.save(newDish);
     }
 }

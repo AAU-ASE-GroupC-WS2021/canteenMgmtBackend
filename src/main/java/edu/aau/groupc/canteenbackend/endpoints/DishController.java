@@ -1,6 +1,7 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
-import edu.aau.groupc.canteenbackend.dto.Dish;
+import edu.aau.groupc.canteenbackend.dto.DishDTO;
+import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.services.IDishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +23,12 @@ public class DishController {
     @GetMapping(value = "/dish")
     public List<Dish> getDishes()
     {
-        List<Dish> dishes = dishService.findAll();
-        return dishes;
+        return dishService.findAll();
     }
 
     @PostMapping(value = "/dish")
-    public Dish createDish(@RequestBody Dish newDish)
+    public Dish createDish(@RequestBody DishDTO newDish)
     {
-        dishService.create(newDish);
-        return newDish;
+        return dishService.create(newDish.toEntity());
     }
 }
