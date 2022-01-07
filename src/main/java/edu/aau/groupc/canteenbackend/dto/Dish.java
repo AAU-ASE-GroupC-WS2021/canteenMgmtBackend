@@ -1,6 +1,14 @@
 package edu.aau.groupc.canteenbackend.dto;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "dish")
 public class Dish {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String name;
     private float price;
     private Type type;
@@ -20,6 +28,10 @@ public class Dish {
         this.name = name;
         this.price = price;
         this.type = type;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
