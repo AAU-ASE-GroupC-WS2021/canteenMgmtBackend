@@ -1,9 +1,7 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
-import edu.aau.groupc.canteenbackend.CanteenBackendApplication;
 import org.json.JSONException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -12,11 +10,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = CanteenBackendApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DishControllerIT {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class DishControllerTest {
     @LocalServerPort
     private int port;
 

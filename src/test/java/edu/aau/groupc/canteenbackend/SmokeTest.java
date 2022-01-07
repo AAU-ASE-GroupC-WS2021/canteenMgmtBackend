@@ -4,10 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CanteenBackendApplicationTests {
+class SmokeTest {
 
     @Test
     void contextLoads() {
+        // tests if the application actually loads
     }
 
 }
