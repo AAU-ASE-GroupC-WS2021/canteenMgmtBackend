@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DishServiceTest {
 
     @Autowired
-    private DishService dishService;
+    private IDishService dishService;
 
     @Test
     public void testAddDish() {
