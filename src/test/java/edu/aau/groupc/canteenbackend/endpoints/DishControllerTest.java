@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestTemplate;
 
 @ActiveProfiles("H2Database")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -23,8 +23,9 @@ public class DishControllerTest {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    RestTemplate restTemplate;
 
-    TestRestTemplate restTemplate = new TestRestTemplate();
     HttpHeaders headers = new HttpHeaders();
 
     @Test
@@ -40,7 +41,7 @@ public class DishControllerTest {
     }
 
     private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
+        return "https://localhost:" + port + uri;
     }
 
     private ResponseEntity<String> makeGetRequest(String uri) {
