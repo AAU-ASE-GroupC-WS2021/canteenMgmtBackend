@@ -1,4 +1,4 @@
-package edu.aau.groupc.canteenbackend;
+package edu.aau.groupc.canteenbackend.config;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;

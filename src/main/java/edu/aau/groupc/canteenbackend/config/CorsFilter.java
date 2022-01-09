@@ -1,4 +1,4 @@
-package edu.aau.groupc.canteenbackend.endpoints;
+package edu.aau.groupc.canteenbackend.config;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
