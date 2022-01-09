@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class DishController {
-    private IDishService dishService;
+    private final IDishService dishService;
 
     @Autowired
     public DishController(IDishService dishService) {
