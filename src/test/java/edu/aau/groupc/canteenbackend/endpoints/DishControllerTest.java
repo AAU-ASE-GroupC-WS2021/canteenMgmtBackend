@@ -6,26 +6,13 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("H2Database")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DishControllerTest {
-    @LocalServerPort
-    private int port;
-
+public class DishControllerTest extends AbstractControllerTest {
     @Autowired
     private DishService dishService;
-
-    TestRestTemplate restTemplate = new TestRestTemplate();
-    HttpHeaders headers = new HttpHeaders();
 
     @Test
     public void testGetDishes() throws JSONException {
@@ -37,17 +24,5 @@ public class DishControllerTest {
                            "{\"name\":\"Cheese Burger\",\"price\":4.0,\"type\":\"MAIN\"}]";
 
         JSONAssert.assertEquals(expected, response.getBody(), false);
-    }
-
-    private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
-    }
-
-    private ResponseEntity<String> makeGetRequest(String uri) {
-        return restTemplate.exchange(
-                createURLWithPort(uri),
-                HttpMethod.GET,
-                new HttpEntity<>(null, headers),
-                String.class);
     }
 }
