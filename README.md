@@ -1,4 +1,7 @@
 # Canteen Management Backend
+[![CircleCI](https://circleci.com/gh/AAU-ASE-GroupC-WS2021/canteenMgmtBackend/tree/main.svg?style=shield)](https://circleci.com/gh/AAU-ASE-GroupC-WS2021/canteenMgmtBackend/tree/main)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=elsantner_canteenMgmtBackend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=elsantner_canteenMgmtBackend)
+
 Backend for our canteen management system.
 
 Built with Spring Boot.
