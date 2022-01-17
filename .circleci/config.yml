@@ -29,8 +29,8 @@ jobs:
             set -x
             sudo curl https://cli-assets.heroku.com/install.sh | sh
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a aau-ase-ws21-canteen-app web
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a aau-ase-ws21-canteen-app web
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a ${HEROKU_APP_NAME} web
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
 
 workflows:
   main:
@@ -38,7 +38,7 @@ workflows:
       - build-and-test:
           context: SonarCloud
       - build-and-deploy:
-          context: Heroku
+          context: Heroku-<< pipeline.git.branch >>
           requires:
             # Deploy after testing.
             - build-and-test
@@ -46,4 +46,4 @@ workflows:
             branches:
               only:
                 - main
-                - deploy_stage
+                - development
