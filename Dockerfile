@@ -20,6 +20,6 @@ RUN mvn -B clean package
 FROM ${RUNTIME_IMAGE}
 
 WORKDIR /app
-COPY --from=build /build/target/canteen_backend.jar /app/canteen_backend.jar
+COPY --from=build /build/target/canteen_backend.jar /app/canteen_backend-exec.jar
 
-CMD ["sh", "-c", "java -jar /app/canteen_backend.jar"]
+CMD ["sh", "-c", "java -jar /app/canteen_backend-exec.jar"]
