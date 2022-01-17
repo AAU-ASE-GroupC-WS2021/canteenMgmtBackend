@@ -42,3 +42,8 @@ workflows:
           requires:
             # Deploy after testing.
             - build-and-test
+          filters:
+            branches:
+              only:
+                - main
+                - deploy_stage
