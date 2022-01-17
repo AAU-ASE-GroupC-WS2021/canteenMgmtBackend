@@ -25,7 +25,9 @@ By default, the application is configured to use a public testing database on AW
 
 If Docker is installed, executing the command `docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres` should set up a Docker container with a PostgreSQL instance accessible through port 5432. For more details, have a look at [this tutorial post](https://www.optimadata.nl/blogs/1/n8dyr5-how-to-run-postgres-on-docker-part-1).
 
-## HTTPS and Certificate Issues
-By default, the application is configured to run in secure mode using HTTPS on port 8443. Since we are dealing with local development environments, we are currently unable to create a CA-approved SSL certificate. This means that you will get a security warning when trying to access an application endpoint through your web browser. Please trust the service by adding an exception in your browser for now.
+## HTTPS and CSRF
+By default, the application is configured to run in plain HTTP on port 8080. 
+Please notethat once deployed, HTTPS is automatically used by Heroku. This requires the [Frontend application](https://github.com/AAU-ASE-GroupC-WS2021/canteenMgmtFrontend) (in file `lib/services/abstract_service.dart`) to be configured correctly before being deployed.
 
-Alternatively, you have the option to disable HTTPS by setting `server.ssl.enabled` to `false` in the `src/main/resources/application.properties`. Please note that this will require also changing the protocol in the [Frontend application](https://github.com/AAU-ASE-GroupC-WS2021/canteenMgmtFrontend) (in file `lib/services/abstract_service.dart`).
+This application uses Spring Securities built-in prevention mechanism for [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery). This requires every state-changing request (POST, PUT, DELETE) to have a correct CSRF token set.
+In detail, upon the first request, the application returns a `XSRF-TOKEN` as a cookie. This token must be set as the header `X-XSRF-TOKEN` (**notice the leading X-**) for all future requests in the session. For more details, please see [this tutorial](https://www.baeldung.com/csrf-stateless-rest-api)
