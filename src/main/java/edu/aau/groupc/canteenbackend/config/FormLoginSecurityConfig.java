@@ -18,5 +18,6 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/**")
                 .permitAll();
+        http.csrf().disable();
     }
 }
