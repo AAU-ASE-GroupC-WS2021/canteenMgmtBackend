@@ -40,4 +40,4 @@ workflows:
       - build-and-deploy:
           requires:
             # Deploy after testing.
-            - build_and_test
+            - build-and-test
