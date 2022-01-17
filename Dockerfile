@@ -15,7 +15,7 @@ FROM dependencies as build
 WORKDIR /build
 COPY src /build/src
 
-RUN mvn -B clean package
+RUN mvn -B clean package -Dmaven.test.skip
 
 FROM ${RUNTIME_IMAGE}
 
