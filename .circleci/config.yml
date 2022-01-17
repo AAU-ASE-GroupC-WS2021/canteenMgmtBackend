@@ -38,6 +38,7 @@ workflows:
       - build-and-test:
           context: SonarCloud
       - build-and-deploy:
+          context: Heroku
           requires:
             # Deploy after testing.
             - build-and-test
