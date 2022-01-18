@@ -16,18 +16,18 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("localhost")
+                .allowedOrigins("*")
                 .allowedMethods("*")
-                .allowedHeaders("Set-Cookie, X-XSRF-TOKEN");
+                .allowedHeaders("*");
     }
 
     // Add SameSite: None to all responses
-    /*@Bean
+    @Bean
     public TomcatContextCustomizer sameSiteCookiesConfig() {
         return context -> {
             final Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
             cookieProcessor.setSameSiteCookies(SameSiteCookies.NONE.getValue());
             context.setCookieProcessor(cookieProcessor);
         };
-    }*/
+    }
 }

@@ -18,7 +18,6 @@ public class CanteenCorsFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
         // add CORS headers to response
-        httpServletResponse.addHeader("Access-Control-Allow-Origin", "localhost");
         httpServletResponse.addHeader("Access-Control-Expose-Headers", "Set-Cookie");
         httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
