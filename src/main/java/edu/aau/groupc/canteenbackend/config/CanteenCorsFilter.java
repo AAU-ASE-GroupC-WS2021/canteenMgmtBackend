@@ -10,14 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class CorsFilter extends OncePerRequestFilter {
+public class CanteenCorsFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+        // add CORS headers to response
+        httpServletResponse.addHeader("Access-Control-Expose-Headers", "Set-Cookie");
+        httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
+        httpServletResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

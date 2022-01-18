@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  canteenbackend:
+    build: .
+    container_name: canteen_backend
+    ports:
+      - "8080:8080"
+      - "8443:8443"
