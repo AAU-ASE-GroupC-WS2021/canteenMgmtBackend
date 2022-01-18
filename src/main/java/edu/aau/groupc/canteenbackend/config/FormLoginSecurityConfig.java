@@ -21,5 +21,6 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
         // set CSRF token as cookie
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        http.cors();
     }
 }
