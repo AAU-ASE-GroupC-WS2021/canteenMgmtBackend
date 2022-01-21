@@ -1,6 +1,5 @@
 package edu.aau.groupc.canteenbackend.user;
 
-import edu.aau.groupc.canteenbackend.dto.DTO;
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
 import lombok.Data;
 
@@ -31,6 +30,7 @@ public class User implements DBEntity {
     public User() {}
 
     public User(String username, String password, Type type) {
+        super();
         this.username = username;
         this.password = password;
         this.type = type;
