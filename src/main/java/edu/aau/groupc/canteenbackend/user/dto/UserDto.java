@@ -21,7 +21,7 @@ public class UserDto implements DTO, Serializable {
 
     @Override
     public User toEntity() {
-        return new User(username, password, User.Type.USER);
+        return new User(getUsername(), getPassword(), User.Type.USER);
     }
 
 }
