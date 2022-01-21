@@ -1,5 +1,6 @@
-package edu.aau.groupc.canteenbackend.user;
+package edu.aau.groupc.canteenbackend.user.repositories;
 
+import edu.aau.groupc.canteenbackend.user.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
