@@ -20,7 +20,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> findAll() {
         return this.userRepository.findAll();
     }
 
@@ -28,4 +28,5 @@ public class UserService implements IUserService {
     public User create(User user) {
         return userRepository.save(user);
     }
+
 }

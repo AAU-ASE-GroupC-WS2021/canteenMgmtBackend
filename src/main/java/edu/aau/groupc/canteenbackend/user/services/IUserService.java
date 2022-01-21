@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IUserService {
 
-    List<User> getUsers();
+    List<User> findAll();
 
     User create(User user);
 

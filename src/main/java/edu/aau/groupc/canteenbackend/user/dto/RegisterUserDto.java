@@ -21,7 +21,7 @@ public class RegisterUserDto implements DTO, Serializable {
     }
 
     @Override
-    public DBEntity toEntity() {
+    public User toEntity() {
         return new User(username, password, User.Type.USER);
     }
 
