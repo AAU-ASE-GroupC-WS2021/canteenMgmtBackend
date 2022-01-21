@@ -3,7 +3,6 @@ package edu.aau.groupc.canteenbackend.user;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Data
 @Entity
@@ -17,5 +16,13 @@ public class User {
     private long id;
     private String username;
     private String password;
+    private Type type;
+
+    public enum Type {
+        OWNER,
+        ADMIN,
+        USER,
+        GUEST,
+    }
 
 }
