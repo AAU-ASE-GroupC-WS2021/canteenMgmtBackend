@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.user.controllers;
 
 import edu.aau.groupc.canteenbackend.user.User;
-import edu.aau.groupc.canteenbackend.user.dto.RegisterUserDto;
+import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/user")
-    public User createUser(@RequestBody RegisterUserDto newUser) {
+    public User createUser(@RequestBody UserDto newUser) {
         return this.userService.create(newUser.toEntity());
     }
 

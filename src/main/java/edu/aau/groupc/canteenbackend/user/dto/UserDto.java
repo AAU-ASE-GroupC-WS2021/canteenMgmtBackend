@@ -1,21 +1,20 @@
 package edu.aau.groupc.canteenbackend.user.dto;
 
 import edu.aau.groupc.canteenbackend.dto.DTO;
-import edu.aau.groupc.canteenbackend.entities.DBEntity;
 import edu.aau.groupc.canteenbackend.user.User;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class RegisterUserDto implements DTO, Serializable {
+public class UserDto implements DTO, Serializable {
 
     private String username;
     private String password;
 
-    private RegisterUserDto() {}
+    private UserDto() {}
 
-    public RegisterUserDto(String username, String password) {
+    public UserDto(String username, String password) {
         this.username = username;
         this.password = password;
     }
