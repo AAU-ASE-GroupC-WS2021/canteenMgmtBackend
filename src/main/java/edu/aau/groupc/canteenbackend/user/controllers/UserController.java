@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping(value = "/user")
     public List<User> getUsers() {
-        // TODO: disable this feature (enabled only for testing purposes)
+        // TODO: Disable this feature (enabled only for testing purposes).
         return userService.findAll();
     }
 
@@ -31,5 +31,7 @@ public class UserController {
     public User createUser(@RequestBody UserDto newUser) {
         return this.userService.create(newUser.toEntity());
     }
+
+    // TODO: Enable creating GUEST accounts in case guests can add items to cart. Or a user is a GUEST if they are not logged in?
 
 }
