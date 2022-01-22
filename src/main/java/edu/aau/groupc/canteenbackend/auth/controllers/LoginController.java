@@ -40,6 +40,7 @@ public class LoginController {
     }
 
     @GetMapping(value = "/api/auth")
+    // TODO: Disable later (for security reasons)!
     public List<Auth> getLogins() {
         return this.authService.findAll();
     }
