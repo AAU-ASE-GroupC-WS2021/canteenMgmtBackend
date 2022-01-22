@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "auth", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username", "token"}),
+        @UniqueConstraint(columnNames = {"token"}),
 })
 public class Auth implements DBEntity {
 
@@ -85,5 +85,10 @@ public class Auth implements DBEntity {
 
     public void setTimeEnd(long maxDuration) {
         this.timeEnd = this.timeStart + maxDuration;
+    }
+
+    public boolean isNotExpired() {
+        long now = System.currentTimeMillis();
+        return now >= timeStart && now <= timeEnd;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -54,5 +55,29 @@ public class AuthService implements IAuthService {
         }
 
         return this.userRepository.getUserByUsername(username);
+    }
+
+    @Override
+    public Boolean isValidLogin(String token) {
+        if (token == null) {
+            return false;
+        }
+        Optional<Auth> auth = authRepository.getAuthByToken(token);
+        if (auth.isEmpty()) {
+            return false;
+        }
+        return auth.get().isNotExpired();
+    }
+
+    @Override
+    public User getUserByToken(String token) {
+        if (token == null) {
+            return null;
+        }
+        Optional<Auth> auth = authRepository.getAuthByToken(token);
+        if (auth.isEmpty()) {
+            return null;
+        }
+        return userRepository.getUserByUsername(auth.get().getUsername());
     }
 }
