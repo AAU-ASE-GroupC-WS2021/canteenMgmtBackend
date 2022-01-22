@@ -26,7 +26,8 @@ public class UserController {
 
     @GetMapping(value = "/user")
     public List<User> getUsers() {
-        return new ArrayList<User>();
+        // TODO: Disable later (for security reasons)!
+        return this.userService.findAll();
     }
 
     @PostMapping(value = "/user")
