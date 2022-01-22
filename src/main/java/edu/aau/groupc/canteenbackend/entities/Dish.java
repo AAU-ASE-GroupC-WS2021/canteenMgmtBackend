@@ -1,5 +1,7 @@
 package edu.aau.groupc.canteenbackend.entities;
 
+import org.springframework.lang.NonNull;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,8 +11,10 @@ public class Dish implements DBEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NonNull
     private String name;
     private float price;
+    @NonNull
     private Type type;
 
     public enum Type {
@@ -23,7 +27,7 @@ public class Dish implements DBEntity {
         // default
     }
 
-    public Dish(String name, float price, Type type) {
+    public Dish(@NonNull String name, float price, @NonNull Type type) {
         super();
         this.name = name;
         this.price = price;
@@ -34,27 +38,32 @@ public class Dish implements DBEntity {
         return id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Dish setName(@NonNull String name) {
         this.name = name;
+        return this;
     }
 
     public float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public Dish setPrice(float price) {
         this.price = price;
+        return this;
     }
 
+    @NonNull
     public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public Dish setType(@NonNull Type type) {
         this.type = type;
+        return this;
     }
 }
