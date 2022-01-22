@@ -2,6 +2,7 @@ package edu.aau.groupc.canteenbackend.auth.services;
 
 import edu.aau.groupc.canteenbackend.auth.Auth;
 import edu.aau.groupc.canteenbackend.auth.repositories.IAuthRepository;
+import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,19 @@ public class AuthService implements IAuthService {
     @Override
     public List<Auth> findAll() {
         return this.authRepository.findAll();
+    }
+
+    @Override
+    public Boolean isValidLogin(String username, String token) {
+        return this.authRepository.getAuthByUsernameAndToken(username, token) != null;
+    }
+
+    @Override
+    public User getUserByUsernameAndToken(String username, String token) {
+        if (!isValidLogin(username, token)) {
+            return null;
+        }
+
+        return this.userRepository.getUserByUsername(username);
     }
 }

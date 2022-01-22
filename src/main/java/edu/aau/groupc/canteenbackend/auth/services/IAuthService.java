@@ -1,6 +1,7 @@
 package edu.aau.groupc.canteenbackend.auth.services;
 
 import edu.aau.groupc.canteenbackend.auth.Auth;
+import edu.aau.groupc.canteenbackend.user.User;
 
 import java.util.List;
 
@@ -11,5 +12,9 @@ public interface IAuthService {
     Boolean logout(String username, String token);
 
     List<Auth> findAll();
+
+    Boolean isValidLogin(String username, String token);
+
+    User getUserByUsernameAndToken(String username, String token);
 
 }
