@@ -26,7 +26,7 @@ public class UserController {
 
     @GetMapping(value = "/user")
     public List<User> getUsers() {
-        return new ArrayList<User>();
+        return this.userService.findAll();
     }
 
     @PostMapping(value = "/user")
