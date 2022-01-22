@@ -26,6 +26,10 @@ public class UserService implements IUserService {
 
     @Override
     public User create(User user) {
+        if (userRepository.existsByUsername((user.getUsername()))) {
+            return null;
+        }
+
         return userRepository.save(user);
     }
 
