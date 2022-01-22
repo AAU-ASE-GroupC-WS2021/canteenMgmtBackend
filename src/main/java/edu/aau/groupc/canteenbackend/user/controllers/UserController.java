@@ -26,6 +26,7 @@ public class UserController {
 
     @GetMapping(value = "/user")
     public List<User> getUsers() {
+        // TODO: Disable later (for security reasons)!
         return this.userService.findAll();
     }
 
