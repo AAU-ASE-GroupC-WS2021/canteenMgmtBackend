@@ -32,9 +32,20 @@ public class UserController {
 
     @PostMapping(value = "/user")
     public ResponseEntity<?> createUser(@RequestBody UserDto newUser) {
+        if (newUser.getUsername() == null || newUser.getPassword() == null) {
+            return new ResponseEntity<>("Invalid username or password!", HttpStatus.BAD_REQUEST);
+        }
+
+        if (newUser.getUsername().length() < 4 || newUser.getPassword().length() < 8) {
+            return new ResponseEntity<>("Too short username (min 4 characters) or password (min 8 characters)!", HttpStatus.BAD_REQUEST);
+        }
+
+        if (newUser.getUsername().length() > 24 || newUser.getPassword().length() > 120) {
+            return new ResponseEntity<>("Too long username (max 24 characters) or password (max 120 characters)!", HttpStatus.BAD_REQUEST);
+        }
 
         if (this.userService.create(newUser.toEntity()) == null) {
-            return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>("User registered successfully.", HttpStatus.OK);
