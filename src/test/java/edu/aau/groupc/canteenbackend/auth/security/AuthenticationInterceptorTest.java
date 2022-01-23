@@ -5,9 +5,12 @@ import edu.aau.groupc.canteenbackend.auth.services.IAuthService;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -182,5 +185,20 @@ public class AuthenticationInterceptorTest extends AbstractControllerTest {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 makeGetRequest("/authtest/securedUser", getTokenHeader("someInvalidToken")));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+    }
+
+    /**
+     * Check if the user is correctly retrievable within the controller method.
+     * (Returning it via response is just for test simplification)
+     * @throws JSONException If response body cannot be parsed.
+     */
+    @Test
+    void testSecured_GetUserDataFromRequest() throws JSONException {
+        ResponseEntity<String> response = makeGetRequest("/authtest/securedUserReturnUserData",
+                getTokenHeader(User.Type.USER));
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        JSONObject responseJson = new JSONObject(response.getBody());
+        assertEquals(tokens.get(User.Type.USER).getUsername(), responseJson.getString("username"));
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("authtest")
 public class AuthTestController {
@@ -51,5 +53,12 @@ public class AuthTestController {
     public ResponseEntity<String> securedOwner()
     {
         return new ResponseEntity<>("Data", new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @Secured(User.Type.USER)
+    @GetMapping(value = "/securedUserReturnUserData")
+    public ResponseEntity<User> securedUserReturnUserData(HttpServletRequest request)
+    {
+        return new ResponseEntity<>((User) request.getAttribute("user"), new HttpHeaders(), HttpStatus.OK);
     }
 }
