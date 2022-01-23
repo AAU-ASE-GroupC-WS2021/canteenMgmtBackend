@@ -79,9 +79,10 @@ public class AuthenticationInterceptorTest extends AbstractControllerTest {
     }
 
     @Test
-    void testSecuredNoType_NotAuthenticated_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedNoType");
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    void testSecuredNoType_NotAuthenticated_ThenUnauthorized() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
+                makeGetRequest("/authtest/securedNoType"));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
     }
 
     @Test

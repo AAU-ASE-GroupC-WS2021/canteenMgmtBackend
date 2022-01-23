@@ -11,5 +11,5 @@ import static java.lang.annotation.ElementType.METHOD;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({METHOD})
 public @interface Secured {
-    User.Type value() default User.Type.GUEST;
+    User.Type value() default User.Type.USER;
 }
