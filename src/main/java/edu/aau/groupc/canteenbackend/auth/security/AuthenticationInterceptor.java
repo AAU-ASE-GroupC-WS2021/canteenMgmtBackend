@@ -23,10 +23,10 @@ import java.util.Optional;
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Value("${app.auth.header}")
-    private String tokenHeader;
+    protected String tokenHeader;
 
     @Autowired
-    private IAuthService authService;
+    protected IAuthService authService;
 
     /**
      * Authenticate user and check authorization.
@@ -77,7 +77,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      * @param requiredType Type the user must at least have.
      * @return True, if authorized.
      */
-    private boolean isAuthorized(User user, User.Type requiredType) {
+    boolean isAuthorized(User user, User.Type requiredType) {
+        if (user == null) {
+            return false;
+        }
         User.Type userType = user.getType();
         if (userType == User.Type.OWNER) {
             return true;
@@ -99,7 +102,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      * @param request Request
      * @return Optional of token
      */
-    private Optional<String> getToken(HttpServletRequest request) {
+    Optional<String> getToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(tokenHeader));
     }
 
@@ -109,7 +112,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      * @return User Type of associated @Secured annotation,
      *         or GUEST if no @Secured is present or if no value is set.
      */
-    private User.Type getRequiredUserRole(AnnotatedElement e) {
+    User.Type getRequiredUserRole(AnnotatedElement e) {
         if (e == null) {
             return User.Type.GUEST;
         }
