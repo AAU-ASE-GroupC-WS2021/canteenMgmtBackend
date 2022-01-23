@@ -1,4 +1,4 @@
-package edu.aau.groupc.canteenbackend.mgmt;
+package edu.aau.groupc.canteenbackend.entities.mgmt;
 
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
 

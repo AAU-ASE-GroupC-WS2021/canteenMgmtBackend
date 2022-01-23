@@ -25,6 +25,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public boolean ownerExists() {
+        return !userRepository.findUsersByType(User.Type.OWNER).isEmpty();
+    }
+
+    @Override
     public User create(User user) {
         if (userRepository.existsByUsername((user.getUsername()))) {
             return null;

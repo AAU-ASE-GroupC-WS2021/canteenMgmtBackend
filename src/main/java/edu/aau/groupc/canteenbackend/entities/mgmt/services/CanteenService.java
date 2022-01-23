@@ -1,7 +1,7 @@
-package edu.aau.groupc.canteenbackend.mgmt.services;
+package edu.aau.groupc.canteenbackend.entities.mgmt.services;
 
-import edu.aau.groupc.canteenbackend.mgmt.Canteen;
-import edu.aau.groupc.canteenbackend.mgmt.repositories.ICanteenRepository;
+import edu.aau.groupc.canteenbackend.entities.mgmt.Canteen;
+import edu.aau.groupc.canteenbackend.entities.mgmt.repositories.ICanteenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

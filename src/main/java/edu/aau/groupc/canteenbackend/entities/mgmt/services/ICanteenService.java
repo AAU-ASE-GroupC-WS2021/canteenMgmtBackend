@@ -1,6 +1,6 @@
-package edu.aau.groupc.canteenbackend.mgmt.services;
+package edu.aau.groupc.canteenbackend.entities.mgmt.services;
 
-import edu.aau.groupc.canteenbackend.mgmt.Canteen;
+import edu.aau.groupc.canteenbackend.entities.mgmt.Canteen;
 
 import java.util.List;
 import java.util.Optional;

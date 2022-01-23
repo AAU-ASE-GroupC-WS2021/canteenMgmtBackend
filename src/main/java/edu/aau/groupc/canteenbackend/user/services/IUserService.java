@@ -7,7 +7,7 @@ import java.util.List;
 public interface IUserService {
 
     List<User> findAll();
-
+    boolean ownerExists();
     User create(User user);
 
 }

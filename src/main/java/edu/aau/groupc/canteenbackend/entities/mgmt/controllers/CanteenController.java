@@ -1,10 +1,10 @@
-package edu.aau.groupc.canteenbackend.mgmt.controllers;
+package edu.aau.groupc.canteenbackend.entities.mgmt.controllers;
 
 import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractController;
-import edu.aau.groupc.canteenbackend.mgmt.Canteen;
-import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
-import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
+import edu.aau.groupc.canteenbackend.entities.mgmt.Canteen;
+import edu.aau.groupc.canteenbackend.entities.mgmt.dto.CanteenDTO;
+import edu.aau.groupc.canteenbackend.entities.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
