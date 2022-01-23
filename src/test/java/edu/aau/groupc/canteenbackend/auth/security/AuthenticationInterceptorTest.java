@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("H2Database")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AuthenticationInterceptorTest extends AbstractControllerTest {
+class AuthenticationInterceptorTest extends AbstractControllerTest {
     @Autowired
     private IUserService userService;
 
@@ -57,13 +59,21 @@ public class AuthenticationInterceptorTest extends AbstractControllerTest {
     }
 
     private HttpHeaders getTokenHeader(User.Type userType) {
-        return getTokenHeader(tokens.get(userType).getToken());
+        try {
+            return getTokenHeader(tokens.get(userType).getToken());
+        } catch (RuntimeException e) {
+            return new HttpHeaders();
+        }
     }
 
     private HttpHeaders getTokenHeader(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.put(tokenHeader, List.of(token));
-        return headers;
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.put(tokenHeader, List.of(token));
+            return headers;
+        } catch (RuntimeException e) {
+            return new HttpHeaders();
+        }
     }
 
     @Test
@@ -72,23 +82,21 @@ public class AuthenticationInterceptorTest extends AbstractControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Test
-    void testUnsecured_User_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/unsecured", getTokenHeader(User.Type.USER));
+    @ParameterizedTest
+    @ValueSource(strings = {"/authtest/unsecured", "/authtest/securedNoType",
+            "/authtest/securedGuest", "/authtest/securedUser"})
+    void testUser_ThenOK(String path) {
+        ResponseEntity<String> response = makeGetRequest(path, getTokenHeader(User.Type.USER));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Test
-    void testSecuredNoType_NotAuthenticated_ThenUnauthorized() {
+    @ParameterizedTest
+    @ValueSource(strings = {"/authtest/securedNoType", "/authtest/securedUser",
+            "/authtest/securedAdmin", "/authtest/securedOwner"})
+    void testNotAuthenticated_ThenUnauthorized(String path) {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedNoType"));
+                makeGetRequest(path));
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
-    }
-
-    @Test
-    void testSecuredNoType_User_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedNoType", getTokenHeader(User.Type.USER));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -98,47 +106,23 @@ public class AuthenticationInterceptorTest extends AbstractControllerTest {
     }
 
     @Test
-    void testSecuredGuest_User_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedGuest", getTokenHeader(User.Type.USER));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    void testSecuredUser_NotAuthenticated_ThenUnauthorized() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedUser"));
-        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
-    }
-
-    @Test
-    void testSecuredUser_User_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedUser", getTokenHeader(User.Type.USER));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
     void testSecuredUser_Admin_ThenOK() {
         ResponseEntity<String> response = makeGetRequest("/authtest/securedUser", getTokenHeader(User.Type.ADMIN));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Test
-    void testSecuredUser_Owner_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedUser", getTokenHeader(User.Type.OWNER));
+    @ParameterizedTest
+    @ValueSource(strings = {"/authtest/securedUser", "/authtest/securedAdmin", "/authtest/securedOwner"})
+    void testOwner_ThenOK(String path) {
+        ResponseEntity<String> response = makeGetRequest(path, getTokenHeader(User.Type.OWNER));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Test
-    void testSecuredAdmin_NotAuthenticated_ThenUnauthorized() {
+    @ParameterizedTest
+    @ValueSource(strings = {"/authtest/securedAdmin", "/authtest/securedOwner"})
+    void testUser_ThenForbidden(String path) {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedAdmin"));
-        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
-    }
-
-    @Test
-    void testSecuredAdmin_User_ThenForbidden() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedAdmin", getTokenHeader(User.Type.USER)));
+                makeGetRequest(path, getTokenHeader(User.Type.USER)));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
     }
 
@@ -149,36 +133,10 @@ public class AuthenticationInterceptorTest extends AbstractControllerTest {
     }
 
     @Test
-    void testSecuredAdmin_Owner_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedAdmin", getTokenHeader(User.Type.OWNER));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    void testSecuredOwner_NotAuthenticated_ThenUnauthorized() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedOwner"));
-        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
-    }
-
-    @Test
-    void testSecuredOwner_User_ThenForbidden() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedOwner", getTokenHeader(User.Type.USER)));
-        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
-    }
-
-    @Test
     void testSecuredOwner_Admin_ThenForbidden() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
                 makeGetRequest("/authtest/securedOwner", getTokenHeader(User.Type.ADMIN)));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
-    }
-
-    @Test
-    void testSecuredOwner_Owner_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedOwner", getTokenHeader(User.Type.OWNER));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test

@@ -58,7 +58,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean isValidLogin(String token) {
+    public boolean isValidLogin(String token) {
         if (token == null) {
             return false;
         }
