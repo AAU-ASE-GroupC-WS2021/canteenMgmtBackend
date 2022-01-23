@@ -37,21 +37,4 @@ class UserControllerTest extends AbstractControllerTest {
         JSONAssert.assertEquals(expected.toString(), response.getBody(), false);
     }
 
-    @Test
-    void userPOST_createNewUserUsingPOST_returnsCorrect() throws JSONException {
-        JSONObject object = new JSONObject();
-        object.put("username", "TestUser123456");
-        object.put("password", "0123456789ABCDEF");
-
-        ResponseEntity<String> response = makePostRequest("/user", object.toString());
-
-        for (User a : userService.findAll()) {
-            if (a.getUsername().equals("TestUser123456") && a.getPassword().equals("0123456789ABCDEF") && a.getType() == User.Type.USER) {
-                return;
-            }
-        }
-
-        assertTrue(false, "No user found!");
-    }
-
 }

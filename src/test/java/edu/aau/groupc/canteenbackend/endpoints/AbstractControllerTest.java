@@ -38,12 +38,4 @@ public class AbstractControllerTest {
                 new HttpEntity<>(null, headers),
                 String.class);
     }
-
-    protected ResponseEntity<String> makePostRequest(String uri, String body) {
-        return restTemplate.exchange(
-                createURLWithPort(uri),
-                HttpMethod.POST,
-                new HttpEntity<>(body, headers),
-                String.class);
-    }
 }
