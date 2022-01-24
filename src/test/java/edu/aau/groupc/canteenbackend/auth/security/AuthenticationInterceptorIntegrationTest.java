@@ -15,17 +15,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("H2Database")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -41,8 +43,16 @@ class AuthenticationInterceptorIntegrationTest extends AbstractControllerTest {
 
     private Map<User.Type, Auth> tokens;
 
+    private MockMvc mvc;
+
+    @Autowired
+    private AuthenticationInterceptor authenticationInterceptor;
+
     @BeforeAll
     void setupUsersAndAuth() {
+        mvc = MockMvcBuilders.standaloneSetup(new AuthTestController())
+                .addInterceptors(authenticationInterceptor).build();
+
         User user = new User("someUser", "somePassword", User.Type.USER);
         User admin = new User("someAdmin", "somePassword", User.Type.ADMIN);
         User owner = new User("someOwner", "somePassword", User.Type.OWNER);
@@ -76,73 +86,96 @@ class AuthenticationInterceptorIntegrationTest extends AbstractControllerTest {
     }
 
     @Test
-    void testUnsecured_NotAuthenticated_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/unsecured");
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    void testUnsecured_NotAuthenticated_ThenOK() throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get("/authtest/unsecured")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"/authtest/unsecured", "/authtest/securedNoType",
             "/authtest/securedGuest", "/authtest/securedUser"})
-    void testUser_ThenOK(String path) {
-        ResponseEntity<String> response = makeGetRequest(path, getTokenHeader(User.Type.USER));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    void testUser_ThenOK(String path) throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get(path)
+                        .headers(getTokenHeader(User.Type.USER))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"/authtest/securedNoType", "/authtest/securedUser",
             "/authtest/securedAdmin", "/authtest/securedOwner"})
-    void testNotAuthenticated_ThenUnauthorized(String path) {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest(path));
-        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+    void testNotAuthenticated_ThenUnauthorized(String path) throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get(path)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void testSecuredGuest_NotAuthenticated_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedGuest");
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    void testSecuredGuest_NotAuthenticated_ThenOK() throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get("/authtest/securedGuest")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testSecuredUser_Admin_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedUser", getTokenHeader(User.Type.ADMIN));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    void testSecuredUser_Admin_ThenOK() throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get("/authtest/securedUser")
+                        .headers(getTokenHeader(User.Type.ADMIN))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"/authtest/securedUser", "/authtest/securedAdmin", "/authtest/securedOwner"})
-    void testOwner_ThenOK(String path) {
-        ResponseEntity<String> response = makeGetRequest(path, getTokenHeader(User.Type.OWNER));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    void testOwner_ThenOK(String path) throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get(path)
+                        .headers(getTokenHeader(User.Type.OWNER))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"/authtest/securedAdmin", "/authtest/securedOwner"})
-    void testUser_ThenForbidden(String path) {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest(path, getTokenHeader(User.Type.USER)));
-        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+    void testUser_ThenForbidden(String path) throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get(path)
+                        .headers(getTokenHeader(User.Type.USER))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void testSecuredAdmin_Admin_ThenOK() {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedAdmin", getTokenHeader(User.Type.ADMIN));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    void testSecuredAdmin_Admin_ThenOK() throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get("/authtest/securedAdmin")
+                        .headers(getTokenHeader(User.Type.ADMIN))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testSecuredOwner_Admin_ThenForbidden() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedOwner", getTokenHeader(User.Type.ADMIN)));
-        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+    void testSecuredOwner_Admin_ThenForbidden() throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get("/authtest/securedOwner")
+                        .headers(getTokenHeader(User.Type.ADMIN))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void testSecured_InvalidToken_ThenUnauthorized() {
-        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () ->
-                makeGetRequest("/authtest/securedUser", getTokenHeader("someInvalidToken")));
-        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+    void testSecured_InvalidToken_ThenUnauthorized() throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .get("/authtest/securedUser")
+                        .headers(getTokenHeader("someInvalidToken"))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
     /**
@@ -151,12 +184,15 @@ class AuthenticationInterceptorIntegrationTest extends AbstractControllerTest {
      * @throws JSONException If response body cannot be parsed.
      */
     @Test
-    void testSecured_GetUserDataFromRequest() throws JSONException {
-        ResponseEntity<String> response = makeGetRequest("/authtest/securedUserReturnUserData",
-                getTokenHeader(User.Type.USER));
+    void testSecured_GetUserDataFromRequest() throws Exception {
+        MvcResult res = mvc.perform( MockMvcRequestBuilders
+                        .get("/authtest/securedUserReturnUserData")
+                        .headers(getTokenHeader(User.Type.USER))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        JSONObject responseJson = new JSONObject(response.getBody());
+        JSONObject responseJson = new JSONObject(res.getResponse().getContentAsString());
         assertEquals(tokens.get(User.Type.USER).getUsername(), responseJson.getString("username"));
     }
 }
