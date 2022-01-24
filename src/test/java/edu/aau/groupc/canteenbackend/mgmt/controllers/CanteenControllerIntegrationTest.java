@@ -3,10 +3,8 @@ package edu.aau.groupc.canteenbackend.mgmt.controllers;
 import edu.aau.groupc.canteenbackend.auth.security.AuthenticationInterceptor;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
-import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.util.JsonTest;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,8 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

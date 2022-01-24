@@ -1,15 +1,11 @@
 package edu.aau.groupc.canteenbackend.mgmt.services;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
-import edu.aau.groupc.canteenbackend.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 
@@ -20,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class CanteenServiceTest {
+
+    private final int invalidID = 9999;
 
     @Autowired
     private ICanteenService canteenService;
@@ -43,6 +41,7 @@ public class CanteenServiceTest {
     @Test
     public void testUpdate_invalidId_ThenIllegalArgumentException() {
         Canteen c = new Canteen("someCanteen", "someAddress", 420);
+        c.setId(invalidID);
         assertThrows(IllegalArgumentException.class, () ->
                 canteenService.update(c));
     }
