@@ -3,6 +3,7 @@ package edu.aau.groupc.canteenbackend.mgmt;
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "canteen")
@@ -11,8 +12,9 @@ public class Canteen implements DBEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @NotNull
     private String name;
+    @NotNull
     private String address;
     private int numTables;
 
