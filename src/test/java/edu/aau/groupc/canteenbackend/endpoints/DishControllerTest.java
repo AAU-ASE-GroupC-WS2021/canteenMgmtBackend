@@ -1,5 +1,6 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
+import edu.aau.groupc.canteenbackend.dto.DishDTO;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.services.DishService;
 import org.json.JSONException;
