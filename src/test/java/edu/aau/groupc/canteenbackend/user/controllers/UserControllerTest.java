@@ -22,7 +22,7 @@ class UserControllerTest extends AbstractControllerTest {
     void userGET_createNewUserManuallyThenGET_returnsCorrect() throws JSONException {
         userService.create(new User("TestUser123", "0123456789ABCDEF", User.Type.USER));
 
-        ResponseEntity<String> response = makeGetRequest("/user");
+        ResponseEntity<String> response = makeGetRequest("/api/register");
 
         JSONArray expected = new JSONArray();
         JSONObject object = new JSONObject();

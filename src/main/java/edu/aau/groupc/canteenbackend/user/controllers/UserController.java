@@ -25,13 +25,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/api/register")
     public List<User> getUsers() {
         // TODO: Disable later (for security reasons)!
         return this.userService.findAll();
     }
 
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/api/register")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDto newUser) {
         if (this.userService.create(newUser.toEntity()) == null) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
