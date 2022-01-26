@@ -18,7 +18,10 @@ public class EnumPatternValidatorTest extends AbstractControllerTest {
 
     @BeforeAll
     static void setup() {
-        mvc = MockMvcBuilders.standaloneSetup(new ValidationTestController()).build();
+        mvc = MockMvcBuilders
+                .standaloneSetup(new ValidationTestController())
+                .setControllerAdvice(new ExceptionHandler())
+                .build();
     }
 
     @Test
@@ -27,6 +30,16 @@ public class EnumPatternValidatorTest extends AbstractControllerTest {
                         .post("/test/validation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"someEnum\": \"invalid\"}"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    void testValidate_nullString_ThenInvalid() throws Exception {
+        mvc.perform( MockMvcRequestBuilders
+                        .post("/test/validation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"someEnum\": null}"))
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
