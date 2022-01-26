@@ -30,7 +30,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
+                .toList();
 
         body.put("errors", errors);
 
