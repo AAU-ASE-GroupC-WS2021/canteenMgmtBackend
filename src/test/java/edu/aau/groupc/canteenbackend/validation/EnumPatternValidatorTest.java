@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("H2Database")
-public class EnumPatternValidatorTest extends AbstractControllerTest {
+class EnumPatternValidatorTest extends AbstractControllerTest {
 
     private static MockMvc mvc;
 
