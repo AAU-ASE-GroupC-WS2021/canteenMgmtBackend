@@ -16,8 +16,8 @@ public class UserDto implements DTO, Serializable {
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Username can contain only alphanumeric characters!")
     private String username;
 
-    @Length(min = 9, message = "Password must be at least 9 characters long!")
-    @Length(max = 64, message = "Password cannot be longer than 64 characters!")
+    @Pattern(regexp = "^[a-fA-F0-9]+$", message = "Password can contain only hexadecimal digits!")
+    @Length(min = 64, max = 64, message = "Password must be exactly 64 characters long!")
     private String password;
 
     private UserDto() {}
