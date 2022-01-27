@@ -26,7 +26,7 @@ public class UserService implements IUserService {
 
     @Override
     public User create(User user) {
-        if (userRepository.existsByUsername((user.getUsername()))) {
+        if (Boolean.TRUE.equals(userRepository.existsByUsername((user.getUsername())))) {
             return null;
         }
 

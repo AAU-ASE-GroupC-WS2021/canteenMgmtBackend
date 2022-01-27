@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/api/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto newUser) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserDto newUser) {
         if (this.userService.create(newUser.toEntity()) == null) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
