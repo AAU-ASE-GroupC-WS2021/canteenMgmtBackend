@@ -30,13 +30,12 @@ class AuthTest {
         Auth a = new Auth("username", 50);
 
         assertEquals("username", a.getUsername());
-        assertEquals("token", a.getToken());
         assertTrue(a.getTimeEnd() > a.getTimeStart());
     }
 
     @Test
     void setters() {
-        Auth a = new Auth("");
+        Auth a = new Auth("", "");
 
         a.setId(5L);
         a.setUsername("username");
