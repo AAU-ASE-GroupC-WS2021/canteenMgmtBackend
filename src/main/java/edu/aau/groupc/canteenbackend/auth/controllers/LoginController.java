@@ -5,6 +5,7 @@ import edu.aau.groupc.canteenbackend.auth.dto.LoginDto;
 import edu.aau.groupc.canteenbackend.auth.dto.LogoutDto;
 import edu.aau.groupc.canteenbackend.auth.services.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ import java.util.Map;
 
 @RestController
 public class LoginController {
+
+    @Value("${app.auth.header}")
+    private String tokenHeader;
 
     private IAuthService authService;
 
@@ -38,7 +42,7 @@ public class LoginController {
         HttpHeaders headers = new HttpHeaders();
         List<String> headersList = new ArrayList<>();
         headersList.add(auth.getToken());
-        headers.put("Auth-Token", headersList);
+        headers.put(tokenHeader, headersList);
 
         return new ResponseEntity<>("Logged in successfully.", headers, HttpStatus.OK);
     }

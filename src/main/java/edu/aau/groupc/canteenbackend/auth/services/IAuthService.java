@@ -17,4 +17,7 @@ public interface IAuthService {
 
     User getUserByUsernameAndToken(String username, String token);
 
+    boolean isValidLogin(String token);
+
+    User getUserByToken(String token);
 }

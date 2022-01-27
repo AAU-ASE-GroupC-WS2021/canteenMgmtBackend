@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "app.auth.header",
+      "type": "java.lang.String",
+      "description": "Name of the HTTP header used for the authentication token."
+  }
+] }

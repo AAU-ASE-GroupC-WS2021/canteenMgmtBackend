@@ -12,4 +12,5 @@ public interface IAuthRepository extends JpaRepository<Auth, Long> {
 
     Optional<Auth> getAuthByUsernameAndToken(String username, String token);
 
+    Optional<Auth> getAuthByToken(String token);
 }
