@@ -26,6 +26,32 @@ class AuthTest {
     }
 
     @Test
+    void constructor3() {
+        Auth a = new Auth("username", 50);
+
+        assertEquals("username", a.getUsername());
+        assertEquals("token", a.getToken());
+        assertTrue(a.getTimeEnd() > a.getTimeStart());
+    }
+
+    @Test
+    void setters() {
+        Auth a = new Auth("");
+
+        a.setId(5L);
+        a.setUsername("username");
+        a.setToken("token");
+        a.setTimeStart(2L);
+        a.setTimeEnd(6L);
+
+        assertEquals(5L, a.getId());
+        assertEquals("username", a.getUsername());
+        assertEquals("token", a.getToken());
+        assertEquals(2L, a.getTimeStart());
+        assertEquals(6L + 2L, a.getTimeEnd());
+    }
+
+    @Test
     void testEquals_Same() {
         Auth a = new Auth("username", "token");
 
