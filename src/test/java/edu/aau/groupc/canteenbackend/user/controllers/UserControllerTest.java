@@ -1,20 +1,52 @@
 package edu.aau.groupc.canteenbackend.user.controllers;
 
 import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("H2Database")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserControllerTest extends AbstractControllerTest {
 
     @Autowired
     IUserService userService;
+
+    @Test
+    void UserControllerTest_GetUsers_ReturnsCorrect() {
+        UserController a = new UserController(userService);
+
+        var users = a.getUsers();
+
+        assertEquals(0L, a.getUsers().size());
+    }
+
+    @Test
+    void UserControllerTest_CreateUser_ReturnsCorrect() {
+        UserController a = new UserController(userService);
+        long size = a.getUsers().size();
+
+        a.createUser(new UserDto("user1", "password1"));
+
+        assertEquals(size + 1, a.getUsers().size());
+    }
+
+    @Test
+    void UserControllerTest_CreateUserDuplicate_ReturnsNull() {
+        UserController a = new UserController(userService);
+        long size = a.getUsers().size();
+
+        a.createUser(new UserDto("user2", "password1"));
+        a.createUser(new UserDto("user2", "password1"));
+
+        assertEquals(size + 1, a.getUsers().size());
+    }
 
     @Test
     void userPOST_createNewUserUsernameNull_throwsException() {
