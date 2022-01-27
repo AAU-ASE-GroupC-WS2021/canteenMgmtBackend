@@ -48,4 +48,12 @@ public class UserDto implements DTO, Serializable {
     public int hashCode() {
         return Objects.hash(username, password);
     }
+
+    @Override
+    public String toString() {
+        return "UserDto {" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

@@ -62,4 +62,16 @@ class UserDtoTest {
         assertEquals(expectedHash, a.hashCode());
     }
 
+    @Test
+    void UserDto_toString_returnsCorrect() {
+        UserDto a = new UserDto("username", "password");
+
+        String expected = "UserDto {" +
+                "username='" + a.getUsername() + '\'' +
+                ", password='" + a.getPassword() + '\'' +
+                '}';
+
+        assertEquals(expected, a.toString());
+    }
+
 }
