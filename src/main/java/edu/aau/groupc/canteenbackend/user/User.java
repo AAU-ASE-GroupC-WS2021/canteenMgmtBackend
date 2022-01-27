@@ -4,6 +4,7 @@ import edu.aau.groupc.canteenbackend.entities.DBEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -60,4 +61,16 @@ public class User implements DBEntity {
         this.type = type;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && username.equals(user.username) && password.equals(user.password) && type == user.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, type);
+    }
 }
