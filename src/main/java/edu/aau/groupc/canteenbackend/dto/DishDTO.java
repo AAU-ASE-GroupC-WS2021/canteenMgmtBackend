@@ -1,56 +1,28 @@
 package edu.aau.groupc.canteenbackend.dto;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.validation.EnumPattern;
+import lombok.Data;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Data
 public class DishDTO implements DTO {
-    private Integer id;
+    @NotBlank(message = "Name is required")
     private String name;
-    private float price;
-    private Dish.Type type;
-
-    public DishDTO() {
-    }
-
-    public DishDTO(Integer id, String name, float price, Dish.Type type) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.type = type;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public Dish.Type getType() {
-        return type;
-    }
-
-    public void setType(Dish.Type type) {
-        this.type = type;
-    }
+    @Min(value = 0, message = "Price must be > 0")
+    @NotNull(message = "Price is required")
+    private Float price;
+    @NotNull(message = "Type is required")
+    @EnumPattern(regexp = "STARTER|MAIN|DESSERT", name="Type")
+    private String type;
 
     public Dish toEntity() {
-        return new Dish(getName(), getPrice(), getType());
+        return new Dish()
+                .setName(getName())
+                .setPrice(getPrice())
+                .setType(Dish.Type.valueOf(getType()));
     }
 }
