@@ -4,6 +4,7 @@ import edu.aau.groupc.canteenbackend.entities.DBEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -35,8 +36,8 @@ public class Auth implements DBEntity {
         super();
         this.username = username;
         this.token = token;
-        this.timeStart = 0;
-        this.timeEnd = 0;
+        this.timeStart = System.currentTimeMillis();
+        this.timeEnd = this.timeStart + 60 * 60 * 1000;
     }
 
     public Auth(String username, long maxDuration) {
@@ -90,5 +91,29 @@ public class Auth implements DBEntity {
     public boolean isNotExpired() {
         long now = System.currentTimeMillis();
         return now >= timeStart && now <= timeEnd;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Auth auth = (Auth) o;
+        return id == auth.id && timeStart == auth.timeStart && timeEnd == auth.timeEnd && username.equals(auth.username) && token.equals(auth.token);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, token, timeStart, timeEnd);
+    }
+
+    @Override
+    public String toString() {
+        return "Auth{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", token='" + token + '\'' +
+                ", timeStart=" + timeStart +
+                ", timeEnd=" + timeEnd +
+                '}';
     }
 }
