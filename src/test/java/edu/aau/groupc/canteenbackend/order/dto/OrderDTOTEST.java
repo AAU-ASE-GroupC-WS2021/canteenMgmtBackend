@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.order.dto;
 
-import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
+import edu.aau.groupc.canteenbackend.orders.dto.OrderDTO;
+import edu.aau.groupc.canteenbackend.orders.dto.OrderDishDTO;
 import edu.aau.groupc.canteenbackend.util.ValidationTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -10,11 +10,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CreateOrderDTOTEST implements ValidationTest {
+public class OrderDTOTEST implements ValidationTest {
+
+    final String name = "name";
+    final Float price = 1f;
+    final String type = "MAIN";
+    final Integer id = 1;
+    final Integer count = 1;
 
     @Test
     public void testValid_ThenOk() {
         assertValid(createOrderDTO(1, 1, generateDishList(2)));
+    }
+
+    @Test
+    public void testNullId_ThenInvalid() {
+        assertInvalid(createOrderDTO(null, 1, generateDishList(2)));
     }
 
     @Test
@@ -39,33 +50,27 @@ public class CreateOrderDTOTEST implements ValidationTest {
     }
 
 
-    private CreateOrderDTO createOrderDTO(Integer userId, Integer canteenId, List<DishForOrderCreationDTO> dishList) {
-        CreateOrderDTO dto = new CreateOrderDTO();
+    private OrderDTO createOrderDTO(Integer id, Integer canteenId, List<OrderDishDTO> dishList) {
+        OrderDTO dto = new OrderDTO();
+        dto.setId(id);
         dto.setDishes(dishList);
-        dto.setUserId(userId);
         dto.setCanteenId(canteenId);
         return dto;
     }
 
-    // dont really care about the dishDTOs except for thembeing valid
-    private List<DishForOrderCreationDTO> generateDishList(int length) {
-        List<DishForOrderCreationDTO> dishList = new LinkedList<>();
+    // dont really care about the dishDTOs except for them being valid
+    private List<OrderDishDTO> generateDishList(int length) {
+        List<OrderDishDTO> dishList = new LinkedList<>();
         for (int i = 0; i < length; i++) {
-            DishForOrderCreationDTO dishDto = new DishForOrderCreationDTO();
-            dishDto.setId(i);
-            dishDto.setCount(i + 1);
-            dishList.add(dishDto);
+            dishList.add(new OrderDishDTO(name, price, type, id, count));
         }
         return dishList;
     }
 
     // dont really care about the dishDTOs except for them being invalid
-    private List<DishForOrderCreationDTO> generateInvalidDishList() {
-        List<DishForOrderCreationDTO> dishList = new LinkedList<>();
-        DishForOrderCreationDTO dishDto = new DishForOrderCreationDTO();
-        dishDto.setId(null);
-        dishDto.setCount(0);
-        dishList.add(dishDto);
+    private List<OrderDishDTO> generateInvalidDishList() {
+        List<OrderDishDTO> dishList = new LinkedList<>();
+        dishList.add(new OrderDishDTO());
         return dishList;
     }
 }

@@ -12,7 +12,7 @@ public class OrderDishDTO extends DishDTO {
     @NotNull(message = "dishId is required")
     private Integer id;
     @NotNull(message = "count is required")
-    @Min(value = 0, message = "count must be > 0")
+    @Min(value = 1, message = "count must be > 0")
     private Integer count;
 
     public OrderDishDTO() {

@@ -18,12 +18,11 @@ public class CreateOrderDTO {
     @NotNull(message = "CanteenId is required")
     private Integer canteenId;
 
-    @NotNull
-    @Size(min = 1)
+    @NotNull(message = "Dish-List is required")
+    @Size(min = 1, message = "Dish-List must not be empty")
     private List<@Valid DishForOrderCreationDTO> dishes;
 
     // TODO ADD MENU LIST
-
 
     public Integer getUserId() {
         return userId;

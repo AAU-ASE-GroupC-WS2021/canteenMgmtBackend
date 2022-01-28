@@ -1,7 +1,8 @@
 package edu.aau.groupc.canteenbackend.orders.dto;
 
-import javax.validation.constraints.Min;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,9 +13,9 @@ public class OrderDTO {
     // replace with canteen
     @NotNull(message = "Canteen is required")
     Integer canteenId;
-    @NotNull(message = "DishList is required")
-    @Min(1)
-    List<OrderDishDTO> dishes = new LinkedList<>();
+    @NotNull(message = "Dish-List is required")
+    @Size(min = 1, message = "Dish-List must not be empty")
+    List<@Valid OrderDishDTO> dishes = new LinkedList<>();
 
     public OrderDTO() {
         // Default

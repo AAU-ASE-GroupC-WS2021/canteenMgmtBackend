@@ -12,7 +12,7 @@ public class DishForOrderCreationDTO {
     @NotNull(message = "DishId is required")
     private Integer id;
 
-    @Min(value = 0, message = "Count must be > 0")
+    @Min(value = 1, message = "Count must be > 0")
     @NotNull(message = "Count is required")
     private Integer count;
 
