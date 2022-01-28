@@ -21,6 +21,18 @@ Using cmd, it can either be run using `mvn spring-boot:run` or `java -jar ./targ
 
 Tests can be executed directly through IntelliJ or using `mvn test`.
 
+### Performance Tests:
+Performance tests are implemented using [JMeter](https://jmeter.apache.org/download_jmeter.cgi). This tool allows for the easy creation of performance tests by simulating a configurable number of users sending configurable HTTP requests. The tool also comes with a GUI for test plan creation.
+
+Once configured, test plans can be saved as `jmx` files. Placing those files into the `src/test/jmeter` folder of the backend will automatically include them for performance test execution.
+
+#### Test Execution
+Performance tests are configured to be run on CircleCI as regular nightly builds.
+
+To run them locally, first start the backend by running `mvn spring-boot:run` (requires local PostgreSQL setup) and then run the tests using `mvn verify -Pperformance`.
+
+**Please Note**: The current version of JMeter used in this setup is partly incompatible with Java 17. In particular, HTML test reports are not generated in a Java 17 environment.
+To bypass this issue, you can start the backend in a standard Java 17 environment, and then run the performance tests in a Java <17 environment. To change the Java version used by Maven you can set the `JAVA_HOME` environment variable to the install directory of your JDK.
 ## Database configuration
 To allow for local testing, the database used by this application can be configured in the `src/main/resources/application.properties`. The three properties of `spring.datasource` allow to configure the database url, username and password. 
 
