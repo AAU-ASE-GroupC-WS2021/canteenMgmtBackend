@@ -60,11 +60,12 @@ jobs:
             wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 http://localhost:8080/
             :
       - run:
+          name: Install Java 11
+          command: sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
+      - run:
           name: Run performance tests
           command: |
-            sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
             export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
-            echo $JAVA_HOME
             mvn verify -Pperformance -f pom.xml
       - store_artifacts:
           path: target/jmeter/reports
