@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE=maven:3.8-openjdk-17
-ARG RUNTIME_IMAGE=openjdk:17-jdk-slim
+ARG BUILD_IMAGE=maven:3.8-openjdk-16
+ARG RUNTIME_IMAGE=openjdk:16-jdk-slim
 
 # pull all maven dependencies
 FROM ${BUILD_IMAGE} as dependencies
