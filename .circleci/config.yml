@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Run backend
           command: mvn spring-boot:run
-          working_directory: /opt/backend
+          #working_directory: /opt/backend
           background: true
         # wait for the server to start responding. We expect Bad Request 400 once it starts listening.
         # so override the shell and have the last command be the : { null } command to force exit code 0.
