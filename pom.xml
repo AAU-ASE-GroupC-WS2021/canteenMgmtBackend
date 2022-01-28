@@ -14,7 +14,7 @@
     <name>canteen-backend</name>
     <description>canteen-backend</description>
     <properties>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
         <sonar.organization>elsantner</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
