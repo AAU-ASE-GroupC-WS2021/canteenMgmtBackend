@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AbstractControllerTest {
@@ -18,10 +17,18 @@ public class AbstractControllerTest {
     @Value("${server.ssl.enabled}")
     private boolean httpsEnabled;
 
+    @Value("${app.auth.header}")
+    protected String tokenHeader;
+
     @Autowired
     protected RestTemplate restTemplate;
 
-    protected HttpHeaders headers = new HttpHeaders();
+    private final HttpHeaders defaultHeaders;
+
+    public AbstractControllerTest() {
+        defaultHeaders = new HttpHeaders();
+        defaultHeaders.setContentType(MediaType.APPLICATION_JSON);
+    }
 
     private String getProtocol() {
         return httpsEnabled ? "https" : "http";
@@ -32,10 +39,39 @@ public class AbstractControllerTest {
     }
 
     protected ResponseEntity<String> makeGetRequest(String uri) {
+        return makeGetRequest(uri, new HttpHeaders());
+    }
+
+    protected ResponseEntity<String> makeGetRequest(String uri, HttpHeaders headers) {
+        setDefaultHeaders(headers);
         return restTemplate.exchange(
                 createURLWithPort(uri),
                 HttpMethod.GET,
                 new HttpEntity<>(null, headers),
                 String.class);
+    }
+
+    protected ResponseEntity<String> makePostRequest(String uri, String body) {
+        return makePostRequest(uri, body, new HttpHeaders());
+    }
+
+    protected ResponseEntity<String> makePostRequest(String uri, String body, HttpHeaders headers) {
+        setDefaultHeaders(headers);
+        return restTemplate.exchange(
+                createURLWithPort(uri),
+                HttpMethod.POST,
+                new HttpEntity<>(body, headers),
+                String.class);
+    }
+
+    private void setDefaultHeaders(HttpHeaders headers) {
+        for (String k: defaultHeaders.keySet()) {
+            List<String> values = defaultHeaders.get(k);
+            if (values != null) {
+                for (String v: values) {
+                    headers.addIfAbsent(k, v);
+                }
+            }
+        }
     }
 }
