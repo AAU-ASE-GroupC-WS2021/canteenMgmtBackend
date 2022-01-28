@@ -7,15 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
 public class DishService implements IDishService {
-    private DishRepository dishRepo;
+    private final DishRepository dishRepo;
 
     @Autowired
     public DishService(DishRepository dishRepo) {
         this.dishRepo = dishRepo;
+    }
+
+    @Override
+    public Dish findById(Integer id) {
+        Optional<Dish> dishOptional = dishRepo.findById(id);
+        return dishOptional.orElseThrow(() -> new IllegalArgumentException("no dish found"));
     }
 
     @Override
