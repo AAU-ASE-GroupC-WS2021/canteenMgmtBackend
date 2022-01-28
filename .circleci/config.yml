@@ -75,13 +75,13 @@ workflows:
       #- build-and-test:
       #    context: SonarCloud
       - performance-tests
-      - build-and-deploy:
-          context: Heroku-<< pipeline.git.branch >>
-          requires:
-            # Deploy after testing.
-            - build-and-test
-          filters:
-            branches:
-              only:
-                - main
-                - development
+      #- build-and-deploy:
+      #    context: Heroku-<< pipeline.git.branch >>
+      #    requires:
+      #      # Deploy after testing.
+      #      - build-and-test
+      #    filters:
+      #      branches:
+      #        only:
+      #          - main
+      #          - development
