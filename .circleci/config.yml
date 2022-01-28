@@ -53,7 +53,7 @@ jobs:
       - run:
           name: Install Java 11
           command: sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
-      # wait for the server to start responding. We expect Bad Request 400 once it starts listening.
+      # Wait for the server to start responding. We expect Bad Request 400 once it starts listening.
       # so override the shell and have the last command be the : { null } command to force exit code 0.
       - run:
           name: Wait for backend to start
@@ -61,6 +61,7 @@ jobs:
           command: |
             wget --retry-connrefused --waitretry=2 --read-timeout=20 --timeout=15 -t 20 http://localhost:8080/
             :
+      # Run all performance tests in src/test/jmeter of the repository
       - run:
           name: Run performance tests
           command: |
@@ -71,17 +72,24 @@ jobs:
 
 workflows:
   main:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      #- build-and-test:
-      #    context: SonarCloud
+      - build-and-test:
+          context: SonarCloud
+      - build-and-deploy:
+          context: Heroku-<< pipeline.git.branch >>
+          requires:
+            # Deploy after testing.
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - main
+                - development
+  nighly:
+    when:
+      equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
       - performance-tests
-      #- build-and-deploy:
-      #    context: Heroku-<< pipeline.git.branch >>
-      #    requires:
-      #      # Deploy after testing.
-      #      - build-and-test
-      #    filters:
-      #      branches:
-      #        only:
-      #          - main
-      #          - development
