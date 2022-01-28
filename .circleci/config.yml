@@ -50,17 +50,17 @@ jobs:
           name: Run backend
           command: mvn spring-boot:run
           background: true
-        # wait for the server to start responding. We expect Bad Request 400 once it starts listening.
-        # so override the shell and have the last command be the : { null } command to force exit code 0.
+      - run:
+          name: Install Java 11
+          command: sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
+      # wait for the server to start responding. We expect Bad Request 400 once it starts listening.
+      # so override the shell and have the last command be the : { null } command to force exit code 0.
       - run:
           name: Wait for backend to start
           shell: /bin/sh
           command: |
             wget --retry-connrefused --waitretry=2 --read-timeout=20 --timeout=15 -t 20 http://localhost:8080/
             :
-      - run:
-          name: Install Java 11
-          command: sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
       - run:
           name: Run performance tests
           command: |
