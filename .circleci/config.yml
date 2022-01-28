@@ -36,11 +36,45 @@ jobs:
           name: Deploy container
           command: HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
 
+  performance-tests:
+    docker:
+      # first `image` defines the primary container where all steps will run
+      # if no `name:` is provided, services are accessible through `localhost`
+      - image: cimg/openjdk:17.0
+      - image: postgres
+        environment:
+          POSTGRES_PASSWORD: mysecretpassword
+    steps:
+      - checkout
+      - run:
+          name: Run backend
+          command: mvn spring-boot:run
+          working_directory: /opt/backend
+          background: true
+        # wait for the server to start responding. We expect Bad Request 400 once it starts listening.
+        # so override the shell and have the last command be the : { null } command to force exit code 0.
+      - run:
+          name: Wait for backend to start
+          shell: /bin/sh
+          command: |
+            wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 http://localhost:8080/
+            :
+      - run:
+          name: Run performance tests
+          command: |
+            sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
+            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+            echo $JAVA_HOME
+            mvn verify -Pperformance -f pom.xml
+      - store_artifacts:
+          path: target/jmeter/reports
+
 workflows:
   main:
     jobs:
-      - build-and-test:
-          context: SonarCloud
+      #- build-and-test:
+      #    context: SonarCloud
+      - performance-tests
       - build-and-deploy:
           context: Heroku-<< pipeline.git.branch >>
           requires:
