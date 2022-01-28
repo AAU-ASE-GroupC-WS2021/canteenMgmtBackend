@@ -1,5 +1,10 @@
 version: 2.1
 
+parameters:
+  run-performance-tests:
+    type: boolean
+    default: false
+
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.3
 
