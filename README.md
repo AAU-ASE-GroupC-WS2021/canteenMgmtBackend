@@ -33,6 +33,10 @@ To run them locally, first start the backend by running `mvn spring-boot:run` (r
 
 **Please Note**: The current version of JMeter used in this setup is partly incompatible with Java 17. In particular, HTML test reports are not generated in a Java 17 environment.
 To bypass this issue, you can start the backend in a standard Java 17 environment, and then run the performance tests in a Java <17 environment. To change the Java version used by Maven you can set the `JAVA_HOME` environment variable to the install directory of your JDK.
+
+A run config is provided which uses Java 11 to execute all performance tests. If Java 11 is not installed, you might need to manually change the JDK in the run configuration to use it.
+(Note: This run config launches _only_ the performance tests. The application still has to be started explicitly.)
+
 ## Database configuration
 To allow for local testing, the database used by this application can be configured in the `src/main/resources/application.properties`. The three properties of `spring.datasource` allow to configure the database url, username and password. 
 
