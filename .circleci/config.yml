@@ -1,5 +1,13 @@
 version: 2.1
 
+parameters:
+  run-main:
+    type: boolean
+    default: true
+  run-performance-tests:
+    type: boolean
+    default: false
+
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.3
 
@@ -36,8 +44,44 @@ jobs:
           name: Deploy container
           command: HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a ${HEROKU_APP_NAME} web
 
+  performance-tests:
+    docker:
+      # first `image` defines the primary container where all steps will run
+      # if no `name:` is provided, services are accessible through `localhost`
+      - image: cimg/openjdk:17.0
+      - image: postgres
+        environment:
+          POSTGRES_PASSWORD: mysecretpassword
+    steps:
+      - checkout
+      - run:
+          name: Run backend
+          command: mvn spring-boot:run
+          background: true
+      - run:
+          name: Install Java 11
+          command: sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
+      # Wait for the server to start responding. We expect Bad Request 400 once it starts listening.
+      # so override the shell and have the last command be the : { null } command to force exit code 0.
+      - run:
+          name: Wait for backend to start
+          shell: /bin/sh
+          command: |
+            wget --retry-connrefused --waitretry=2 --read-timeout=20 --timeout=15 -t 20 http://localhost:8080/
+            :
+      # Run all performance tests in src/test/jmeter of the repository
+      - run:
+          name: Run performance tests
+          command: |
+            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
+            mvn verify -Pperformance -f pom.xml
+      - store_artifacts:
+          path: target/jmeter/reports
+
 workflows:
   main:
+    when:
+      << pipeline.parameters.run-main >>
     jobs:
       - build-and-test:
           context: SonarCloud
@@ -51,3 +95,8 @@ workflows:
               only:
                 - main
                 - development
+  nighly:
+    when:
+      << pipeline.parameters.run-performance-tests >>
+    jobs:
+      - performance-tests
