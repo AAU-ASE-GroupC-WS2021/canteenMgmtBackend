@@ -1,6 +1,9 @@
 version: 2.1
 
 parameters:
+  run-main:
+    type: boolean
+    default: true
   run-performance-tests:
     type: boolean
     default: false
@@ -78,8 +81,7 @@ jobs:
 workflows:
   main:
     when:
-      not:
-        << pipeline.parameters.run-performance-tests >>
+      << pipeline.parameters.run-main >>
     jobs:
       - build-and-test:
           context: SonarCloud
