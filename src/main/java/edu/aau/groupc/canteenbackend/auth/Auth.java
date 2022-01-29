@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -27,7 +28,7 @@ public class Auth implements DBEntity {
     public Auth(String username) {
         super();
         this.username = username;
-        this.token = username + System.currentTimeMillis();
+        this.token = generateRandomToken();
         this.timeStart = System.currentTimeMillis();
         this.timeEnd = this.timeStart + 60 * 60 * 1000;
     }
@@ -35,7 +36,7 @@ public class Auth implements DBEntity {
     public Auth(String username, String token) {
         super();
         this.username = username;
-        this.token = token;
+        this.token = generateRandomToken();
         this.timeStart = System.currentTimeMillis();
         this.timeEnd = this.timeStart + 60 * 60 * 1000;
     }
@@ -43,7 +44,7 @@ public class Auth implements DBEntity {
     public Auth(String username, long maxDuration) {
         super();
         this.username = username;
-        this.token = username + System.currentTimeMillis();
+        this.token = generateRandomToken();
         this.timeStart = System.currentTimeMillis();
         this.timeEnd = this.timeStart + maxDuration;
     }
@@ -115,5 +116,9 @@ public class Auth implements DBEntity {
                 ", timeStart=" + timeStart +
                 ", timeEnd=" + timeEnd +
                 '}';
+    }
+
+    private String generateRandomToken() {
+        return UUID.randomUUID().toString();
     }
 }
