@@ -34,8 +34,8 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean logout(String username, String token) {
-        return this.authRepository.deleteByUsernameAndToken(username, token) > 0;
+    public Boolean logout(String token) {
+        return this.authRepository.deleteByToken(token) > 0;
     }
 
     @Override
