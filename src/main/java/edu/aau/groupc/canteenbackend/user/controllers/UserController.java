@@ -1,5 +1,6 @@
 package edu.aau.groupc.canteenbackend.user.controllers;
 
+import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
@@ -33,6 +34,21 @@ public class UserController {
     @PostMapping(value = "/api/register")
     public ResponseEntity<String> createUser(@Valid @RequestBody UserDto newUser) {
         if (this.userService.create(newUser.toEntity()) == null) {
+            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("User registered successfully.", HttpStatus.OK);
+    }
+
+
+    // TODO: Add tests
+    @Secured(User.Type.OWNER)
+    @PostMapping(value = "/api/create-admin")
+    public ResponseEntity<String> createAdmin(@Valid @RequestBody UserDto newUser) {
+        User newAdmin = newUser.toEntity();
+        newAdmin.setType(User.Type.ADMIN);
+
+        if (this.userService.create(newAdmin) == null) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
 
