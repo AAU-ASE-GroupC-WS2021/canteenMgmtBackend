@@ -3,6 +3,7 @@ package edu.aau.groupc.canteenbackend.dto;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.validation.EnumPattern;
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;

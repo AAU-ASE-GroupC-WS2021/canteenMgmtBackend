@@ -1,5 +1,6 @@
 package edu.aau.groupc.canteenbackend.entities;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;

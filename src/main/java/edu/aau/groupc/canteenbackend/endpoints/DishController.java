@@ -4,11 +4,9 @@ import edu.aau.groupc.canteenbackend.dto.DishDTO;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.services.IDishService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,5 +31,17 @@ public class DishController {
     public Dish createDish(@Valid @RequestBody DishDTO newDish)
     {
         return dishService.create(newDish.toEntity());
+    }
+
+    @PutMapping(value = "/dish")
+    public Dish update(@Valid @RequestBody DishDTO updateDish)
+    {
+        return dishService.update(updateDish.toEntity());
+    }
+
+    @DeleteMapping (value = "/dish")
+    public ResponseEntity delete(@Valid @RequestBody DishDTO deleteDish)
+    {
+        return dishService.delete(deleteDish.toEntity());
     }
 }
