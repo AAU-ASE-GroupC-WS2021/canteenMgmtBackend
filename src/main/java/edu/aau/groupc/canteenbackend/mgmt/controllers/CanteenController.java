@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/canteen")
+@RequestMapping(value = "/api" )
 public class CanteenController extends AbstractController {
     private final ICanteenService canteenService;
 
@@ -26,13 +26,13 @@ public class CanteenController extends AbstractController {
         this.canteenService = canteenService;
     }
 
-    @GetMapping
+    @GetMapping("/canteen")
     public ResponseEntity<List<Canteen>> getCanteens()
     {
         return new ResponseEntity<>(canteenService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/canteen/{id}")
     public ResponseEntity<Canteen> getCanteen(@PathVariable("id") String idString)
     {
         Optional<Canteen> result = canteenService.findById(parseOrThrowHttpException(idString));
@@ -43,14 +43,14 @@ public class CanteenController extends AbstractController {
     }
 
     @Secured(User.Type.OWNER)
-    @PostMapping
+    @PostMapping("/canteen")
     public ResponseEntity<Canteen> createCanteen(@Valid @RequestBody CanteenDTO newCanteen)
     {
         return new ResponseEntity<>(canteenService.create(newCanteen.toEntity()), HttpStatus.OK);
     }
 
     @Secured(User.Type.OWNER)
-    @PutMapping("/{id}")
+    @PutMapping("/canteen/{id}")
     public ResponseEntity<Canteen> updateCanteen(@PathVariable("id") String idString,
                                                  @Valid @RequestBody CanteenDTO updatedCanteen)
     {
