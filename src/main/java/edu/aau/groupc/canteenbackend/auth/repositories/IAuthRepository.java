@@ -7,9 +7,8 @@ import java.util.Optional;
 
 public interface IAuthRepository extends JpaRepository<Auth, Long> {
 
-    Long deleteByToken(String username);
-
-    Optional<Auth> getAuthByUsernameAndToken(String username, String token);
+    Long deleteByToken(String token);
 
     Optional<Auth> getAuthByToken(String token);
+
 }

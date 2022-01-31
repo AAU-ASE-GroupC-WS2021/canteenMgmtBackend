@@ -44,28 +44,16 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean isValidLogin(String username, String token) {
-        return this.authRepository.getAuthByUsernameAndToken(username, token) != null;
-    }
-
-    @Override
-    public User getUserByUsernameAndToken(String username, String token) {
-        if (!isValidLogin(username, token)) {
-            return null;
-        }
-
-        return this.userRepository.getUserByUsername(username);
-    }
-
-    @Override
     public boolean isValidLogin(String token) {
         if (token == null) {
             return false;
         }
+
         Optional<Auth> auth = authRepository.getAuthByToken(token);
         if (auth.isEmpty()) {
             return false;
         }
+
         return auth.get().isNotExpired();
     }
 
@@ -74,10 +62,12 @@ public class AuthService implements IAuthService {
         if (token == null) {
             return null;
         }
+
         Optional<Auth> auth = authRepository.getAuthByToken(token);
         if (auth.isEmpty()) {
             return null;
         }
+
         return userRepository.getUserByUsername(auth.get().getUsername());
     }
 }

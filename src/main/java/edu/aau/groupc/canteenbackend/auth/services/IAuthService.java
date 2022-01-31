@@ -13,10 +13,6 @@ public interface IAuthService {
 
     List<Auth> findAll();
 
-    Boolean isValidLogin(String username, String token);
-
-    User getUserByUsernameAndToken(String username, String token);
-
     boolean isValidLogin(String token);
 
     User getUserByToken(String token);
