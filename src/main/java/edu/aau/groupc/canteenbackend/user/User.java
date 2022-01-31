@@ -1,6 +1,7 @@
 package edu.aau.groupc.canteenbackend.user;
 
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,10 @@ public class User implements DBEntity {
     private String username;
     private String password;
     private Type type;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CANTEEN_ID")
+    private Canteen homeCanteen;
 
     public enum Type {
         OWNER,
