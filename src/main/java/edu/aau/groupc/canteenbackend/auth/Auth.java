@@ -36,7 +36,7 @@ public class Auth implements DBEntity {
     public Auth(String username, String token) {
         super();
         this.username = username;
-        this.token = generateRandomToken();
+        this.token = token;
         this.timeStart = System.currentTimeMillis();
         this.timeEnd = this.timeStart + 60 * 60 * 1000;
     }
