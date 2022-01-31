@@ -32,8 +32,6 @@ public class DishService implements IDishService {
     }
 
 
-
-
     public Dish update(Dish newDish) {
         List<Dish> allDish = findAll();
         int id = 0;
@@ -41,6 +39,7 @@ public class DishService implements IDishService {
             if (aDish.getName().equals(newDish.getName())) {
                 aDish.setPrice(newDish.getPrice());
                 aDish.setType(newDish.getType());
+                aDish.setDishDay(newDish.getDishDay());
                 dishRepo.save(aDish);
                 id = aDish.getId();
                 break;
@@ -61,16 +60,16 @@ public class DishService implements IDishService {
         if (flag == 1)
             return ResponseEntity.ok().build();
         else
-            return ResponseEntity.ok("dish not found");
+            return ResponseEntity.ok("No Such Dish");
         }
 
-//    public ResponseEntity deleteAllDish(String var) {
-//        if (var.equals("all"))
-//        {
-//            dishRepo.deleteAll();
-//        return ResponseEntity.ok().build();
-//        }
-//        else
-//            return ResponseEntity.ok("invalid input parameter");
-//    }
+    public ResponseEntity deleteAllDishes(String var) {
+        if (var.equals("all"))
+        {
+            dishRepo.deleteAll();
+        return ResponseEntity.ok().build();
+        }
+        else
+            return ResponseEntity.ok("invalid input parameter");
+    }
 }

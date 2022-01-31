@@ -1,6 +1,5 @@
 package edu.aau.groupc.canteenbackend.entities;
 
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -24,15 +23,28 @@ public class Dish implements DBEntity {
         DESSERT
     }
 
+    private DishDay dishDay;
+
+    public enum DishDay {
+        NOMENUDAY,
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY
+    }
+
     public Dish() {
         // default
     }
 
-    public Dish(@NonNull String name, float price, @NonNull Type type) {
+    public Dish(@NonNull String name, float price, @NonNull Type type, @NonNull DishDay dishDay) {
         super();
         this.name = name;
         this.price = price;
         this.type = type;
+        this.dishDay = dishDay;
     }
 
     public Integer getId() {
@@ -65,6 +77,16 @@ public class Dish implements DBEntity {
 
     public Dish setType(@NonNull Type type) {
         this.type = type;
+        return this;
+    }
+
+    @NonNull
+    public DishDay getDishDay() {
+        return dishDay;
+    }
+
+    public Dish setDishDay(@NonNull DishDay dishDay) {
+        this.dishDay = dishDay;
         return this;
     }
 }
