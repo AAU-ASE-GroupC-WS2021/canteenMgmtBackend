@@ -9,7 +9,7 @@ public interface IAuthService {
 
     Auth login(String username, String password);
 
-    Boolean logout(String username, String token);
+    Boolean logout(String token);
 
     List<Auth> findAll();
 
