@@ -14,6 +14,8 @@ import java.util.UUID;
 })
 public class Auth implements DBEntity {
 
+    private static int TOKEN_VALIDITY_DURATION_MILISECONDS = 24 * 60 * 60 * 1000;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -30,7 +32,7 @@ public class Auth implements DBEntity {
         this.username = username;
         this.token = generateRandomToken();
         this.timeStart = System.currentTimeMillis();
-        this.timeEnd = this.timeStart + 60 * 60 * 1000;
+        this.timeEnd = this.timeStart + TOKEN_VALIDITY_DURATION_MILISECONDS;
     }
 
     public Auth(String username, String token) {
@@ -38,7 +40,7 @@ public class Auth implements DBEntity {
         this.username = username;
         this.token = token;
         this.timeStart = System.currentTimeMillis();
-        this.timeEnd = this.timeStart + 60 * 60 * 1000;
+        this.timeEnd = this.timeStart + TOKEN_VALIDITY_DURATION_MILISECONDS;
     }
 
     public Auth(String username, long maxDuration) {
