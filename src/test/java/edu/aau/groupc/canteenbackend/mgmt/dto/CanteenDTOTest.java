@@ -9,44 +9,36 @@ public class CanteenDTOTest implements ValidationTest {
 
     @Test
     public void testValid_ThenOk() {
-        assertValid(createCanteen("canteen", "address", 69));
+        assertValid(CanteenDTO.create("canteen", "address", 69));
     }
 
     @Test
     public void testNullName_ThenInvalid() {
-        assertInvalid(createCanteen(null, "address", 69));
+        assertInvalid(CanteenDTO.create(null, "address", 69));
     }
 
     @Test
     public void testNullAddress_ThenInvalid() {
-        assertInvalid(createCanteen("canteen", null, 69));
+        assertInvalid(CanteenDTO.create("canteen", null, 69));
     }
 
     @Test
     public void testNullNumTables_ThenInvalid() {
-        assertInvalid(createCanteen("canteen", "address", null));
+        assertInvalid(CanteenDTO.create("canteen", "address", null));
     }
 
     @Test
     public void testNegativeNumSeats_ThenInvalid() {
-        assertInvalid(createCanteen("canteen", "address", -1));
+        assertInvalid(CanteenDTO.create("canteen", "address", -1));
     }
 
     @Test
     public void testZeroNumSeats_ThenValid() {
-        assertValid(createCanteen("canteen", "address", 0));
+        assertValid(CanteenDTO.create("canteen", "address", 0));
     }
 
     @Test
     public void testAllInvalid_ThenInvalid() {
-        assertInvalid(createCanteen(null, null, -1));
-    }
-
-    private CanteenDTO createCanteen(String name, String address, Integer numTables) {
-        CanteenDTO c = new CanteenDTO();
-        c.setName(name);
-        c.setAddress(address);
-        c.setNumTables(numTables);
-        return c;
+        assertInvalid(CanteenDTO.create(null, null, -1));
     }
 }
