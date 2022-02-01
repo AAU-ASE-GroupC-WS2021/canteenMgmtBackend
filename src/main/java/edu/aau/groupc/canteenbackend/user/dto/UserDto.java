@@ -33,6 +33,12 @@ public class UserDto implements DTO, Serializable {
         this.password = password;
     }
 
+    public UserDto(String username, String password, Integer canteenID) {
+        this.username = username;
+        this.password = password;
+        this.canteenID = canteenID;
+    }
+
     @Override
     public User toEntity() {
         return new User(getUsername(), getPassword(), User.Type.USER);

@@ -10,6 +10,7 @@ import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.dto.UserReturnDTO;
 import edu.aau.groupc.canteenbackend.user.dto.UserUpdateDTO;
 import edu.aau.groupc.canteenbackend.user.exceptions.UserNotFoundException;
+import edu.aau.groupc.canteenbackend.user.exceptions.UsernameConflictException;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,12 +26,10 @@ import java.util.Optional;
 public class UserController extends AbstractController {
 
     private final IUserService userService;
-    private ICanteenService canteenService;
 
     @Autowired
-    UserController(IUserService userService, ICanteenService canteenService) {
+    UserController(IUserService userService) {
         this.userService = userService;
-        this.canteenService = canteenService;
     }
 
     @PostMapping(value = "/api/register")
@@ -42,25 +41,16 @@ public class UserController extends AbstractController {
         return new ResponseEntity<>("User registered successfully.", HttpStatus.OK);
     }
 
-
-    // TODO: Add tests
     @Secured(User.Type.OWNER)
     @PostMapping(value = "/api/owner/user")
     public ResponseEntity<UserReturnDTO> createAdmin(@Valid @RequestBody UserDto newUser) {
-        User newAdmin = newUser.toEntity();
-        newAdmin.setType(User.Type.ADMIN);
-
-        Optional<Canteen> homeCanteen = canteenService.findById(newUser.getCanteenID());
-        if (homeCanteen.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            return new ResponseEntity<>(UserReturnDTO.from(userService.create(newUser, User.Type.ADMIN)), HttpStatus.OK);
+        } catch (UsernameConflictException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "username already exists");
+        } catch (CanteenNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "canteen with given id not found");
         }
-        newAdmin.setHomeCanteen(homeCanteen.get());
-
-        if (this.userService.create(newAdmin) == null) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-
-        return new ResponseEntity<>(UserReturnDTO.from(newAdmin), HttpStatus.OK);
     }
 
     @Secured(User.Type.OWNER)
@@ -71,6 +61,8 @@ public class UserController extends AbstractController {
         int id = parseOrThrowHttpException(idString);
         try {
             return new ResponseEntity<>(UserReturnDTO.from(userService.updateUser(id, updateInfo)), HttpStatus.OK);
+        } catch (UsernameConflictException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "username already exists");
         } catch (UserNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with given id not found");
         } catch (CanteenNotFoundException ex) {

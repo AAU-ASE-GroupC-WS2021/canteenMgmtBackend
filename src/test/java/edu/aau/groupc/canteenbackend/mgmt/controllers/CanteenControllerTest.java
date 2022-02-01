@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("H2Database")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CanteenControllerIntegrationTest extends AbstractControllerTest implements JsonTest {
+public class CanteenControllerTest extends AbstractControllerTest implements JsonTest {
 
     private MockMvc mvc;
     private final int invalidID = 9999;
@@ -29,7 +29,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     private ICanteenService canteenService;
 
     @BeforeAll
-    void setupUsersAndAuth() {
+    void setupCanteens() {
         mvc = MockMvcBuilders.standaloneSetup(new CanteenController(canteenService)).build();
 
         createCanteen("Canteen #1", "Address #1", 11);

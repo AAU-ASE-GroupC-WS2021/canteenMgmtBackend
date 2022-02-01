@@ -42,6 +42,11 @@ public class User implements DBEntity {
         this.type = type;
     }
 
+    public User(String username, String password, Type type, Canteen homeCanteen) {
+        this(username, password, type);
+        this.homeCanteen = homeCanteen;
+    }
+
     public String getUsername() {
         return username;
     }

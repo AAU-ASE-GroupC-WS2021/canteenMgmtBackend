@@ -1,21 +1,37 @@
 package edu.aau.groupc.canteenbackend.user.services;
 
+import edu.aau.groupc.canteenbackend.mgmt.Canteen;
+import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
+import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.User;
+import edu.aau.groupc.canteenbackend.user.dto.UserDto;
+import edu.aau.groupc.canteenbackend.user.dto.UserUpdateDTO;
+import edu.aau.groupc.canteenbackend.user.exceptions.UserNotFoundException;
+import edu.aau.groupc.canteenbackend.user.exceptions.UsernameConflictException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("H2Database")
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserServiceTest {
 
     @Autowired
     IUserService userService;
+
+    @Autowired
+    ICanteenService canteenService;
+
+    private final int invalidCanteenID = 9999;
+    private final int invalidUserID = 9999;
 
     @Test
     void createUser_addOneUser_addsUserAndReturnsIt() {
@@ -36,4 +52,81 @@ class UserServiceTest {
         assertEquals(numUsersBefore + 1, userService.findAll().size());
     }
 
+    @Test
+    void createUserFromDTO_validDataNoCanteen_thenOk() throws CanteenNotFoundException, UsernameConflictException {
+        UserDto userData = new UserDto("someName", "somePass");
+        User u = userService.create(userData, User.Type.ADMIN);
+        assertEquals(userData.getUsername(), u.getUsername());
+        assertEquals(userData.getPassword(), u.getPassword());
+        assertEquals(User.Type.ADMIN, u.getType());
+    }
+
+    @Test
+    void createUserFromDTO_validDataWithCanteen_thenOk() throws CanteenNotFoundException, UsernameConflictException {
+        Canteen canteen = createCanteen();
+
+        UserDto userData = new UserDto("someName", "somePass", canteen.getId());
+        User u = userService.create(userData, User.Type.ADMIN);
+        assertEquals(userData.getUsername(), u.getUsername());
+        assertEquals(userData.getPassword(), u.getPassword());
+        assertEquals(User.Type.ADMIN, u.getType());
+        assertEquals(canteen.getId(), u.getHomeCanteen().getId());
+    }
+
+    @Test
+    void createUserFromDTO_invalidCanteenID_throwsException() {
+        UserDto userData = new UserDto("someName", "somePass", invalidCanteenID);
+        assertThrows(CanteenNotFoundException.class, () -> userService.create(userData, User.Type.ADMIN));
+    }
+
+    @Test
+    void createUserFromDTO_duplicateUsername_throwsException() throws CanteenNotFoundException, UsernameConflictException {
+        String username = "someName";
+        UserDto userData1 = new UserDto(username, "somePass");
+        UserDto userData2 = new UserDto(username, "somePass");
+        userService.create(userData1, User.Type.ADMIN);
+        assertThrows(UsernameConflictException.class, () -> userService.create(userData2, User.Type.ADMIN));
+    }
+
+    @Test
+    // @Transactional is required here for the lazy loading of home canteen to work
+    @Transactional
+    void updateUser_validData_updatedUserReturned() throws UserNotFoundException, CanteenNotFoundException, UsernameConflictException {
+        Canteen canteen = createCanteen();
+        User existingUser = userService.create(new User("username", "password", User.Type.ADMIN, canteen));
+
+        UserUpdateDTO updateInfo = UserUpdateDTO.create("newUsername", "newPassword", User.Type.USER, null);
+        User updatedUser = userService.updateUser(existingUser.getId(), updateInfo);
+
+        assertEquals(updateInfo.getUsername(), updatedUser.getUsername());
+        assertEquals(updateInfo.getPassword(), updatedUser.getPassword());
+        assertEquals(updateInfo.getType(), updatedUser.getType());
+        // canteen should NOt be updated here since the update value is NULL
+        assertEquals(canteen, updatedUser.getHomeCanteen());
+    }
+
+    @Test
+    void updateUser_invalidCanteen_throwsException() {
+        User existingUser = userService.create(new User("username", "password", User.Type.ADMIN));
+        UserUpdateDTO updateInfo = UserUpdateDTO.create("newUsername", "newPassword", User.Type.USER, invalidCanteenID);
+        assertThrows(CanteenNotFoundException.class, () -> userService.updateUser(existingUser.getId(), updateInfo));
+    }
+
+    @Test
+    void updateUser_duplicateUsername_throwsException() {
+        userService.create(new User("username1", "password", User.Type.ADMIN));
+        User existingUser2 = userService.create(new User("username2", "password", User.Type.ADMIN));
+        UserUpdateDTO updateInfo = UserUpdateDTO.create("username1", "newPassword", User.Type.USER, null);
+        assertThrows(UsernameConflictException.class, () -> userService.updateUser(existingUser2.getId(), updateInfo));
+    }
+
+    @Test
+    void updateUser_invalidUserId_throwsException() {
+        UserUpdateDTO updateInfo = UserUpdateDTO.create("username1", "newPassword", User.Type.USER, null);
+        assertThrows(UserNotFoundException.class, () -> userService.updateUser(invalidUserID, updateInfo));
+    }
+
+    private Canteen createCanteen() {
+        return canteenService.create(new Canteen("myCanteen", "myAddress", 69));
+    }
 }

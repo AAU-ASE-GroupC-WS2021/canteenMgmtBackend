@@ -1,6 +1,7 @@
 package edu.aau.groupc.canteenbackend.user.dto;
 
 import edu.aau.groupc.canteenbackend.dto.DTO;
+import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
 import edu.aau.groupc.canteenbackend.user.User;
 import lombok.Data;
 import org.apache.commons.lang3.NotImplementedException;
@@ -30,5 +31,14 @@ public class UserUpdateDTO implements DTO, Serializable {
     @Override
     public User toEntity() {
         throw new NotImplementedException();
+    }
+
+    public static UserUpdateDTO create(String username, String password, User.Type type, Integer canteenID) {
+        UserUpdateDTO u = new UserUpdateDTO();
+        u.setUsername(username);
+        u.setPassword(password);
+        u.setType(type);
+        u.setCanteenID(canteenID);
+        return u;
     }
 }

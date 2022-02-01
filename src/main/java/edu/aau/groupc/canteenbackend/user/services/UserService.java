@@ -4,8 +4,10 @@ import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.User;
+import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.dto.UserUpdateDTO;
 import edu.aau.groupc.canteenbackend.user.exceptions.UserNotFoundException;
+import edu.aau.groupc.canteenbackend.user.exceptions.UsernameConflictException;
 import edu.aau.groupc.canteenbackend.user.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,13 +41,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User updateUser(long id, UserUpdateDTO updateInfo) throws UserNotFoundException, CanteenNotFoundException {
+    public User updateUser(long id, UserUpdateDTO updateInfo) throws UsernameConflictException, UserNotFoundException, CanteenNotFoundException {
         Optional<User> foundUser = findById(id);
         if (foundUser.isEmpty()) {
             throw new UserNotFoundException();
         }
         User existingUser = foundUser.get();
-        if (updateInfo.getUsername() != null) existingUser.setUsername(updateInfo.getUsername());
+        if (updateInfo.getUsername() != null) {
+            User userWithUsername = userRepository.getUserByUsername(updateInfo.getUsername());
+            if (userWithUsername != null && userWithUsername.getId() != existingUser.getId()) {
+                throw new UsernameConflictException();
+            }
+            existingUser.setUsername(updateInfo.getUsername());
+        }
         if (updateInfo.getPassword() != null) existingUser.setPassword(updateInfo.getPassword());
         if (updateInfo.getType() != null) existingUser.setType(updateInfo.getType());
         if (updateInfo.getCanteenID() != null) {
@@ -55,6 +63,7 @@ public class UserService implements IUserService {
             }
             existingUser.setHomeCanteen(canteen.get());
         }
+
         existingUser = userRepository.save(existingUser);
         return existingUser;
     }
@@ -73,4 +82,21 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User create(UserDto user, User.Type type) throws UsernameConflictException, CanteenNotFoundException {
+        if (userRepository.existsByUsername((user.getUsername()))) {
+            throw new UsernameConflictException();
+        }
+        User newUser = user.toEntity();
+        newUser.setType(type);
+        // home canteen is optional
+        if (user.getCanteenID() != null) {
+            Optional<Canteen> homeCanteen = canteenService.findById(user.getCanteenID());
+            if (homeCanteen.isEmpty()) {
+                throw new CanteenNotFoundException();
+            }
+            newUser.setHomeCanteen(homeCanteen.get());
+        }
+        return userRepository.save(newUser);
+    }
 }

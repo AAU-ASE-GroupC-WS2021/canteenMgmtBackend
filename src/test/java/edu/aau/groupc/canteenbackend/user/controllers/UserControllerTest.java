@@ -23,7 +23,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void UserControllerTest_GetUsers_ReturnsCorrect() {
-        UserController a = new UserController(userService, canteenService);
+        UserController a = new UserController(userService);
 
         var users = userService.findAll();
 
@@ -32,7 +32,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void UserControllerTest_CreateUser_ReturnsCorrect() {
-        UserController a = new UserController(userService, canteenService);
+        UserController a = new UserController(userService);
         long size = userService.findAll().size();
 
         a.createUser(new UserDto("user1", "password1"));
@@ -42,7 +42,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void UserControllerTest_CreateUserDuplicate_ReturnsNull() {
-        UserController a = new UserController(userService, canteenService);
+        UserController a = new UserController(userService);
         long size = userService.findAll().size();
 
         a.createUser(new UserDto("user2", "password1"));
