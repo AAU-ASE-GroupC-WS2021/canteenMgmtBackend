@@ -15,6 +15,7 @@ import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,6 +44,7 @@ public class UserController extends AbstractController {
 
     @Secured(User.Type.OWNER)
     @PostMapping(value = "/api/owner/user")
+    @Transactional
     public ResponseEntity<UserReturnDTO> createAdmin(@Valid @RequestBody UserDto newUser) {
         try {
             return new ResponseEntity<>(UserReturnDTO.from(userService.create(newUser, User.Type.ADMIN)), HttpStatus.OK);
@@ -55,7 +57,8 @@ public class UserController extends AbstractController {
 
     @Secured(User.Type.OWNER)
     @PutMapping(value = "/api/owner/user/{id}")
-    public ResponseEntity<UserReturnDTO> updateAccount(@PathVariable("id") String idString,
+    @Transactional
+    public ResponseEntity<UserReturnDTO> updateUser(@PathVariable("id") String idString,
                                                        @Valid @RequestBody UserUpdateDTO updateInfo) {
 
         int id = parseOrThrowHttpException(idString);
