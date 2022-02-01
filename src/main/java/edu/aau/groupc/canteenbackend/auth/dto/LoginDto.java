@@ -45,4 +45,8 @@ public class LoginDto implements DTO, Serializable {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    public String toJSONString() {
+        return "{ \"username\": \"" + username + "\", \"password\":\"" + password + "\" }";
+    }
 }

@@ -4,12 +4,9 @@ import edu.aau.groupc.canteenbackend.auth.Auth;
 import edu.aau.groupc.canteenbackend.auth.dto.LoginDto;
 import edu.aau.groupc.canteenbackend.auth.services.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class LoginController {
@@ -39,12 +36,6 @@ public class LoginController {
         }
 
         return new ResponseEntity<>("Logged out successfully.", HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/api/auth")
-    // TODO: Disable later (for security reasons)!
-    public List<Auth> getLogins() {
-        return this.authService.findAll();
     }
 
 }
