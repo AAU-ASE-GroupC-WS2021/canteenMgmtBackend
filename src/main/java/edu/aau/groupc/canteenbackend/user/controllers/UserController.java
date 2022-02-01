@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class UserController {
@@ -22,12 +21,6 @@ public class UserController {
     @Autowired
     UserController(IUserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping(value = "/api/register")
-    public List<User> getUsers() {
-        // TODO: Disable later (for security reasons)!
-        return this.userService.findAll();
     }
 
     @PostMapping(value = "/api/register")

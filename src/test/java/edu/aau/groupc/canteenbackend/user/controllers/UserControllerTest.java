@@ -22,30 +22,30 @@ class UserControllerTest extends AbstractControllerTest {
     void UserControllerTest_GetUsers_ReturnsCorrect() {
         UserController a = new UserController(userService);
 
-        var users = a.getUsers();
+        var users = userService.findAll();
 
-        assertEquals(0L, a.getUsers().size());
+        assertEquals(0L, users.size());
     }
 
     @Test
     void UserControllerTest_CreateUser_ReturnsCorrect() {
         UserController a = new UserController(userService);
-        long size = a.getUsers().size();
+        long size = userService.findAll().size();
 
         a.createUser(new UserDto("user1", "password1"));
 
-        assertEquals(size + 1, a.getUsers().size());
+        assertEquals(size + 1, userService.findAll().size());
     }
 
     @Test
     void UserControllerTest_CreateUserDuplicate_ReturnsNull() {
         UserController a = new UserController(userService);
-        long size = a.getUsers().size();
+        long size = userService.findAll().size();
 
         a.createUser(new UserDto("user2", "password1"));
         a.createUser(new UserDto("user2", "password1"));
 
-        assertEquals(size + 1, a.getUsers().size());
+        assertEquals(size + 1, userService.findAll().size());
     }
 
     @Test
