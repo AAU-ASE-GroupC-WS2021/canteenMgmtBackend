@@ -20,6 +20,8 @@ public class UserDto implements DTO, Serializable {
     private String username;
 
     @NotBlank(message = "Password is required")
+    @Pattern(regexp = "^[a-fA-F0-9]+$", message = "Password can contain only hexadecimal digits!")
+    @Length(min = 64, max = 64, message = "Password must be exactly 64 characters long!")
     private String password;
 
     private Integer canteenID;

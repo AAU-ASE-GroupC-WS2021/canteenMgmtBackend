@@ -1,6 +1,7 @@
 package edu.aau.groupc.canteenbackend.user.controllers;
 
 import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.junit.jupiter.api.Test;
@@ -17,19 +18,21 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Autowired
     IUserService userService;
+    @Autowired
+    ICanteenService canteenService;
 
     @Test
     void UserControllerTest_GetUsers_ReturnsCorrect() {
-        UserController a = new UserController(userService);
+        UserController a = new UserController(userService, canteenService);
 
         var users = userService.findAll();
 
-        assertEquals(0L, users.size());
+        assertEquals(1L, users.size());
     }
 
     @Test
     void UserControllerTest_CreateUser_ReturnsCorrect() {
-        UserController a = new UserController(userService);
+        UserController a = new UserController(userService, canteenService);
         long size = userService.findAll().size();
 
         a.createUser(new UserDto("user1", "password1"));
@@ -39,7 +42,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void UserControllerTest_CreateUserDuplicate_ReturnsNull() {
-        UserController a = new UserController(userService);
+        UserController a = new UserController(userService, canteenService);
         long size = userService.findAll().size();
 
         a.createUser(new UserDto("user2", "password1"));
