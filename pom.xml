@@ -73,6 +73,12 @@
             <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.lazerycode.jmeter</groupId>
+            <artifactId>jmeter-maven-plugin</artifactId>
+            <version>3.5.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -110,7 +116,57 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>performance</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.lazerycode.jmeter</groupId>
+                        <artifactId>jmeter-maven-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <executions>
+                            <!-- Generate JMeter configuration -->
+                            <execution>
+                                <id>configuration</id>
+                                <goals>
+                                    <goal>configure</goal>
+                                </goals>
+                            </execution>
+                            <!-- Run JMeter tests -->
+                            <execution>
+                                <id>jmeter-tests</id>
+                                <goals>
+                                    <goal>jmeter</goal>
+                                </goals>
+                            </execution>
+                            <!-- Fail build on errors in test -->
+                            <execution>
+                                <id>jmeter-check-results</id>
+                                <goals>
+                                    <goal>results</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <generateReports>true</generateReports>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M5</version>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
