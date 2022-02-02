@@ -1,6 +1,8 @@
 package edu.aau.groupc.canteenbackend.order.services;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.mgmt.Canteen;
+import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.orders.Order;
 import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
@@ -8,6 +10,8 @@ import edu.aau.groupc.canteenbackend.orders.dto.OrderDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.OrderDishDTO;
 import edu.aau.groupc.canteenbackend.orders.services.IOrderService;
 import edu.aau.groupc.canteenbackend.services.IDishService;
+import edu.aau.groupc.canteenbackend.user.User;
+import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,46 +37,61 @@ public class OrderServiceTest {
     @Autowired
     private IDishService dishService;
 
+    @Autowired
+    private IUserService userService;
+
+    @Autowired
+    private ICanteenService canteenService;
+
     @Test
     public void testFindAllByUserAsDTO_Size() {
-        assertTrue(orderService.findAllByUserAsDTO(1).isEmpty());
-        createOrder(1, 1);
-        assertEquals(1, orderService.findAllByUserAsDTO(1).size());
-        assertTrue(orderService.findAllByUserAsDTO(2).isEmpty());
+        User user = createEmptyUser();
+        User emptyUser = userService.create(new User("test", "a", User.Type.GUEST));
+        System.out.println(user);
+        System.out.println(emptyUser);
+        assertTrue(orderService.findAllByUserAsDTO(user.getId()).isEmpty());
+        createOrder(user, createCanteen());
+        assertEquals(1, orderService.findAllByUserAsDTO(user.getId()).size());
+        assertTrue(orderService.findAllByUserAsDTO(emptyUser.getId()).isEmpty());
     }
 
     @Test
     public void testFindAllByUserAsDTO_noOrdersForUser() {
-        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(1);
+        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(1L);
         assertNotNull(orderDtos);
         assertTrue(orderDtos.isEmpty());
     }
 
     @Test
-    public void testFindAllByUserAsDTO_size() {
-        createOrder(1, 1);
-        createOrder(1, 1);
-        createOrder(1, 1);
-        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(1);
+    public void testFindAllByUserAsDTO_multipleOrders() {
+        User user = createEmptyUser();
+        createOrder(user, createCanteen());
+        createOrder(user, createCanteen());
+        createOrder(user, createCanteen());
+        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(user.getId());
         assertEquals(3, orderDtos.size());
     }
 
     @Test
     public void testFindAllByUserAsDTO_noDishes_toTestEntityToDTOConversion() {
-        createOrder(1, 2);
-        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(1);
+        User user = createEmptyUser();
+        Canteen canteen = createCanteen();
+        createOrder(user, canteen);
+        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(user.getId());
         assertEquals(1, orderDtos.size());
         OrderDTO order = orderDtos.get(0);
         assertTrue(order.getDishes().isEmpty());
-        assertEquals(2, order.getCanteenId());
+        assertEquals(canteen.getId(), order.getCanteenId());
     }
 
     @Test
     public void testFindAllByUserAsDTO_WithDish_toTestEntityToDTOConversion() {
+        User user = createEmptyUser();
+        Canteen canteen = createCanteen();
         Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.MAIN));
-        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(1, exampleDish, count);
+        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(user.getId(), exampleDish, count, canteen.getId());
         orderService.create(createOrderDTO);
-        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(1);
+        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(user.getId());
         assertEquals(1, orderDtos.size());
         OrderDTO orderDTO = orderDtos.get(0);
         assertEquals(1, orderDTO.getDishes().size());
@@ -86,8 +105,10 @@ public class OrderServiceTest {
 
     @Test
     public void testCreate() {
+        User user = createEmptyUser();
+        Canteen canteen = createCanteen();
         Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.DESSERT));
-        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(1, exampleDish, count);
+        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(1L, exampleDish, count, canteen.getId());
         OrderDTO orderDTO = orderService.create(createOrderDTO);
         assertEquals(1, orderDTO.getDishes().size());
         assertEquals(1, orderDTO.getCanteenId());
@@ -101,20 +122,28 @@ public class OrderServiceTest {
     // proper test of this function requires a findById method to be usefull
     @Test
     public void testSave_newOrder() {
-        Order orderToSave = createOrder(1, 2);
+        Order orderToSave = createOrder(createEmptyUser(), createCanteen());
         Order savedOrder = orderService.save(orderToSave);
-        assertEquals(orderToSave.getCanteenId(), savedOrder.getCanteenId());
-        assertEquals(orderToSave.getUserId(), savedOrder.getUserId());
+        assertEquals(orderToSave.getCanteen().getId(), savedOrder.getCanteen().getId());
+        assertEquals(orderToSave.getUser().getId(), savedOrder.getUser().getId());
     }
 
-    private Order createOrder(Integer userId, Integer canteenId) {
+    private Order createOrder(User user, Canteen canteen) {
         Order order = new Order();
-        order.setUserId(userId);
-        order.setCanteenId(canteenId);
+        order.setUser(user);
+        order.setCanteen(canteen);
         return orderService.save(order);
     }
 
-    private CreateOrderDTO createCreateOrderDTOWithExampleDish(Integer userId, Dish dish, Integer count) {
+    private Canteen createCanteen() {
+        return canteenService.create(new Canteen("test", "address", 1));
+    }
+
+    private User createEmptyUser() {
+        return userService.create(new User());
+    }
+
+    private CreateOrderDTO createCreateOrderDTOWithExampleDish(Long userId, Dish dish, Integer count, Integer canteenId) {
         List<DishForOrderCreationDTO> dishList = new LinkedList<>();
         DishForOrderCreationDTO dto = new DishForOrderCreationDTO();
         dto.setId(dish.getId());
@@ -122,7 +151,7 @@ public class OrderServiceTest {
         dishList.add(dto);
         CreateOrderDTO orderDTO = new CreateOrderDTO();
         orderDTO.setUserId(userId);
-        orderDTO.setCanteenId(1);
+        orderDTO.setCanteenId(canteenId);
         orderDTO.setDishes(dishList);
         return orderDTO;
     }

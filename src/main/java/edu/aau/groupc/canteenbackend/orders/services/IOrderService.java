@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IOrderService {
     // TODO: UPDATE TO TAKE USER-ENTITY
-    List<OrderDTO> findAllByUserAsDTO(Integer userId);
+    List<OrderDTO> findAllByUserAsDTO(Long userId);
 
     Order save(Order order);
 

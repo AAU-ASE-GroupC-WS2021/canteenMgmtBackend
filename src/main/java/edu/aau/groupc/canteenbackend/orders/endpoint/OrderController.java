@@ -21,11 +21,13 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    // @Secured(User.Type.USER) TODO: ENABLE SECURITY
     @GetMapping(value = "/order")
-    public List<OrderDTO> getOrders(@RequestParam @NotNull Integer userId) {
+    public List<OrderDTO> getOrders(@RequestParam @NotNull Long userId) {
         return orderService.findAllByUserAsDTO(userId);
     }
 
+    // @Secured(User.Type.USER) TODO: ENABLE SECURITY
     @PostMapping(value = "/create-order")
     public OrderDTO createOrder(@Valid @RequestBody CreateOrderDTO newOrder) {
         return orderService.create(newOrder);

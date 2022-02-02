@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -29,11 +28,14 @@ public class DishServiceTest {
 
     @Test
     public void testFindById() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> dishService.findById(1));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> dishService.findById(999));
         assertEquals(noDishFoundExceptionMessage, ex.getMessage());
         Dish dish = createDish();
         Dish foundDish = dishService.findById(dish.getId());
-        assertThat(dish).usingRecursiveComparison().isEqualTo(foundDish);
+        assertEquals(dish.getName(), foundDish.getName());
+        assertEquals(dish.getId(), foundDish.getId());
+        assertEquals(dish.getPrice(), foundDish.getPrice());
+        assertEquals(dish.getType().name(), foundDish.getType().name());
     }
 
     private Dish createDish() {

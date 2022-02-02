@@ -3,8 +3,10 @@ package edu.aau.groupc.canteenbackend.mgmt.services;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.repositories.ICanteenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +15,7 @@ import java.util.Optional;
 @Service
 public class CanteenService implements ICanteenService {
 
-    private ICanteenRepository canteenRepo;
+    private final ICanteenRepository canteenRepo;
 
     @Autowired
     public CanteenService(ICanteenRepository canteenRepo) {
@@ -28,6 +30,12 @@ public class CanteenService implements ICanteenService {
     @Override
     public Optional<Canteen> findById(int id) {
         return canteenRepo.findById(id);
+    }
+
+    @Override
+    public Canteen findEntityById(int id) {
+        Optional<Canteen> canteenOptional = canteenRepo.findById(id);
+        return canteenOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "canteen not found"));
     }
 
     @Override

@@ -2,8 +2,11 @@ package edu.aau.groupc.canteenbackend.orders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.mgmt.Canteen;
+import edu.aau.groupc.canteenbackend.user.User;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,11 +17,17 @@ public class Order implements DBEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // TODO: Link to the user -> need to merge the user creation into this branch first, using a temporary ID field as standin
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
-    // TODO: Link to the canteen -> need to merge the canteen creation branch  first, using a temporary ID field as standin
-    private Integer canteenId;
+    @ManyToOne
+    @JoinColumn(name = "canteenId")
+    private Canteen canteen;
+
+    private Date pickUpDate;
+    @Column(columnDefinition = "boolean default false")
+    private boolean reserveTable;
 
     /*
      * many-to-many connection to the dishes (through the assoziation entity)
@@ -39,20 +48,36 @@ public class Order implements DBEntity {
         return id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Integer getCanteenId() {
-        return canteenId;
+    public Canteen getCanteen() {
+        return canteen;
     }
 
-    public void setCanteenId(Integer canteenId) {
-        this.canteenId = canteenId;
+    public void setCanteen(Canteen canteen) {
+        this.canteen = canteen;
+    }
+
+    public Date getPickUpDate() {
+        return pickUpDate;
+    }
+
+    public void setPickUpDate(Date pickUpDate) {
+        this.pickUpDate = pickUpDate;
+    }
+
+    public boolean isReserveTable() {
+        return reserveTable;
+    }
+
+    public void setReserveTable(boolean reserveTable) {
+        this.reserveTable = reserveTable;
     }
 
     public Set<OrderHasDish> getOrderHasDishes() {

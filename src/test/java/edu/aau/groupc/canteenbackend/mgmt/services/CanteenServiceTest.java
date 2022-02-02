@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("H2Database")
@@ -35,7 +34,7 @@ public class CanteenServiceTest {
         Canteen createdCanteen = createCanteen();
         Optional<Canteen> foundCanteen = canteenService.findById(createdCanteen.getId());
         assertTrue(foundCanteen.isPresent());
-        assertThat(createdCanteen).usingRecursiveComparison().isEqualTo(foundCanteen.get());
+        assertCanteensEqual(createdCanteen, foundCanteen.get());
     }
 
     @Test
@@ -55,10 +54,17 @@ public class CanteenServiceTest {
         Canteen c = createCanteen();
         c.setName(updatedName).setAddress(updatedAddress).setNumTables(updatedNumTables);
         Canteen updatedCanteen = canteenService.update(c);
-        assertThat(c).usingRecursiveComparison().isEqualTo(updatedCanteen);
+        assertCanteensEqual(c, updatedCanteen);
     }
 
     private Canteen createCanteen() {
         return canteenService.create(new Canteen("someCanteen", "someAddress", 420));
+    }
+
+    private void assertCanteensEqual(Canteen c1, Canteen c2) {
+        assertEquals(c1.getId(), c2.getId());
+        assertEquals(c1.getName(), c2.getName());
+        assertEquals(c1.getAddress(), c2.getAddress());
+        assertEquals(c1.getNumTables(), c2.getNumTables());
     }
 }

@@ -1,9 +1,13 @@
 package edu.aau.groupc.canteenbackend.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.orders.Order;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -19,6 +23,9 @@ public class User implements DBEntity {
     private String username;
     private String password;
     private Type type;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Order> orders = new HashSet<>();
 
     public enum Type {
         OWNER,
@@ -27,7 +34,8 @@ public class User implements DBEntity {
         GUEST,
     }
 
-    public User() {}
+    public User() {
+    }
 
     public User(String username, String password, Type type) {
         super();
@@ -60,4 +68,11 @@ public class User implements DBEntity {
         this.type = type;
     }
 
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
 }
