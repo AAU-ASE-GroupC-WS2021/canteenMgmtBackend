@@ -4,6 +4,7 @@ import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.User;
+import edu.aau.groupc.canteenbackend.user.UserTestUtils;
 import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.dto.UserUpdateDTO;
 import edu.aau.groupc.canteenbackend.user.exceptions.UserNotFoundException;
@@ -16,6 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -124,6 +128,96 @@ class UserServiceTest {
     void updateUser_invalidUserId_throwsException() {
         UserUpdateDTO updateInfo = UserUpdateDTO.create("username1", "newPassword", User.Type.USER, null);
         assertThrows(UserNotFoundException.class, () -> userService.updateUser(invalidUserID, updateInfo));
+    }
+
+    @Test
+    void findUserByType_returnsOnlyDesiredUsers() {
+        createUser(User.Type.ADMIN);
+        createUser(User.Type.ADMIN);
+        createUser(User.Type.USER);
+        createUser(User.Type.OWNER);
+
+        List<User> results = userService.findByType(User.Type.ADMIN);
+        assertEquals(2, results.size());
+        for (User u : results) {
+            assertEquals(User.Type.ADMIN, u.getType());
+        }
+    }
+
+    @Test
+    void findUserByType_null_returnsNothing() {
+        createUser(User.Type.ADMIN);
+        createUser(User.Type.USER);
+        createUser(User.Type.OWNER);
+
+        List<User> results = userService.findByType(null);
+        assertEquals(0, results.size());
+    }
+
+    @Test
+    @Transactional
+    void findUserByCanteenID_returnsOnlyDesiredUsers() {
+        Canteen c1 = createCanteen();
+        Canteen c2 = createCanteen();
+
+        createUser(c1.getId());
+        createUser(c1.getId());
+        createUser(c2.getId());
+
+        List<User> results = userService.findByCanteenID(c1.getId());
+        assertEquals(2, results.size());
+        for (User u : results) {
+            assertEquals(c1.getId(), u.getHomeCanteen().getId());
+        }
+    }
+
+    @Test
+    @Transactional
+    void findUserByCanteenID_null_returnsOnlyDesiredUsers() {
+        Canteen c1 = createCanteen();
+
+        createUser(c1.getId());
+        createUser(User.Type.USER);
+        createUser(User.Type.USER);
+
+        List<User> results = userService.findByCanteenID(null);
+        // keep standard OWNER in mind
+        assertEquals(2+1, results.size());
+        for (User u : results) {
+            assertNull(u.getHomeCanteen());
+        }
+    }
+
+    @Test
+    @Transactional
+    void findUserByCanteenIDAndType_returnsOnlyDesiredUsers() {
+        Canteen c1 = createCanteen();
+        Canteen c2 = createCanteen();
+
+        createUser(User.Type.ADMIN, c1.getId());
+        createUser(User.Type.USER, c1.getId());
+        createUser(User.Type.ADMIN, c2.getId());
+
+        List<User> results = userService.findByCanteenIDAndType(c1.getId(), User.Type.ADMIN);
+        assertEquals(1, results.size());
+        for (User u : results) {
+            assertEquals(c1.getId(), u.getHomeCanteen().getId());
+            assertEquals(User.Type.ADMIN, u.getType());
+        }
+    }
+
+    private User createUser(User.Type type, Integer canteenID) {
+        Canteen canteen = canteenID != null ? canteenService.findById(canteenID).get() : null;
+        return userService.create(new User(UserTestUtils.getRandomUsername(), "somePassword",
+                type, canteen));
+    }
+
+    private User createUser(Integer canteenID) {
+        return createUser(User.Type.USER, canteenID);
+    }
+
+    private User createUser(User.Type type) {
+        return createUser(type, null);
     }
 
     private Canteen createCanteen() {

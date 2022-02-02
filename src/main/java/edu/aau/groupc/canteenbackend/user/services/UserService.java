@@ -99,4 +99,19 @@ public class UserService implements IUserService {
         }
         return userRepository.save(newUser);
     }
+
+    @Override
+    public List<User> findByCanteenID(Integer canteenID) {
+        return userRepository.findUsersByHomeCanteen_Id(canteenID);
+    }
+
+    @Override
+    public List<User> findByType(User.Type type) {
+        return userRepository.findUsersByType(type);
+    }
+
+    @Override
+    public List<User> findByCanteenIDAndType(Integer canteenID, User.Type type) {
+        return userRepository.findUsersByHomeCanteen_IdAndType(canteenID, type);
+    }
 }

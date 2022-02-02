@@ -18,4 +18,7 @@ public interface IUserService {
     User create(User user);
     User updateUser(long id, UserUpdateDTO updateInfo) throws UsernameConflictException, UserNotFoundException, CanteenNotFoundException;
     User create(UserDto user, User.Type type) throws UsernameConflictException, CanteenNotFoundException;
+    List<User> findByCanteenID(Integer canteenID);
+    List<User> findByType(User.Type type);
+    List<User> findByCanteenIDAndType(Integer canteenID, User.Type type);
 }

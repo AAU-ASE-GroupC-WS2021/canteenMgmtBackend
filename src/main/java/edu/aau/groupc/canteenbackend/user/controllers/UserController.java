@@ -2,9 +2,7 @@ package edu.aau.groupc.canteenbackend.user.controllers;
 
 import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractController;
-import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
-import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.dto.UserReturnDTO;
@@ -20,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class UserController extends AbstractController {
@@ -73,4 +71,44 @@ public class UserController extends AbstractController {
         }
     }
 
+    @Secured(User.Type.OWNER)
+    @GetMapping(value = "/api/owner/user")
+    @Transactional
+    public ResponseEntity<List<UserReturnDTO>> getUsers(@RequestParam(value = "canteenID", required = false) String idCanteenString,
+                                                         @RequestParam(value = "type", required = false) String userTypeString) {
+
+        Integer canteenID = idCanteenString != null ? parseOrThrowHttpException(idCanteenString) : null;
+        User.Type type = userTypeString != null ? parseUserTypeOrThrowHttpException(userTypeString) : null;
+
+        if (canteenID != null && type != null) {
+            return getResponseEntityForUserList(userService.findByCanteenIDAndType(canteenID, type));
+        }
+        if (canteenID == null && type != null) {
+            return getResponseEntityForUserList(userService.findByType(type));
+        }
+        if (canteenID != null) {
+            return getResponseEntityForUserList(userService.findByCanteenID(canteenID));
+        }
+        return getResponseEntityForUserList(userService.findAll());
+    }
+
+    private ResponseEntity<List<UserReturnDTO>> getResponseEntityForUserList(List<User> users) {
+        return new ResponseEntity<>(convertToReturnDTOs(users), HttpStatus.OK);
+    }
+
+    private List<UserReturnDTO> convertToReturnDTOs(List<User> users) {
+        List<UserReturnDTO> returnDTOs = new ArrayList<>();
+        for (User u : users) {
+            returnDTOs.add(UserReturnDTO.from(u));
+        }
+        return returnDTOs;
+    }
+
+    private User.Type parseUserTypeOrThrowHttpException(String userTypeString) {
+        try {
+            return User.Type.valueOf(userTypeString);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "string cannot be parsed to user type");
+        }
+    }
 }
