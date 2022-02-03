@@ -59,7 +59,7 @@ class UserTest {
     void createUser_testNotEqualsNull_returnsOK() {
         User a = new User("username", "password", User.Type.GUEST);
 
-        assertNotEquals(a, null);
+        assertNotNull(a);
     }
 
     @Test

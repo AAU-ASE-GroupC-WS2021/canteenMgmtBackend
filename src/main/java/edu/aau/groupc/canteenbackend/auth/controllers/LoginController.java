@@ -31,7 +31,7 @@ public class LoginController {
 
     @DeleteMapping(value = "/api/auth")
     public ResponseEntity<String> logout(@RequestBody String token) {
-        if (!this.authService.logout(token)) {
+        if (!Boolean.TRUE.equals(this.authService.logout(token))) {
             return new ResponseEntity<>("No login found or already logged out!", HttpStatus.BAD_REQUEST);
         }
 

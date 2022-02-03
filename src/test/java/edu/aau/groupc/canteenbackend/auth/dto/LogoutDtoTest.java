@@ -64,7 +64,7 @@ class LogoutDtoTest {
     void testEquals_Null() {
         LogoutDto a = new LogoutDto("username", "token");
 
-        assertNotEquals(a,  null);
+        assertNotNull(a);
     }
 
     @Test

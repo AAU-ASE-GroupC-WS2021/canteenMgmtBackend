@@ -44,7 +44,7 @@ class UserDtoTest {
     @Test
     void createUserDto_testNotEqualsNull_returnsTrue() {
         UserDto userDto = new UserDto("username", "password");
-        assertNotEquals(userDto, null);
+        assertNotNull(userDto);
     }
 
     @Test

@@ -69,7 +69,7 @@ class AuthTest {
     void testEquals_Null() {
         Auth a = new Auth("username", "token");
 
-        assertNotEquals(a, null);
+        assertNotNull(a);
     }
 
     @Test
