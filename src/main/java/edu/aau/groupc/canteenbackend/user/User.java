@@ -2,6 +2,7 @@ package edu.aau.groupc.canteenbackend.user;
 
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
 import lombok.Data;
+import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -72,5 +73,12 @@ public class User implements DBEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password, type);
+    }
+
+    public String getUserSelfInfo() {
+        JSONObject userObject = new JSONObject();
+        userObject.appendField("username", this.username);
+        userObject.appendField("type", this.type);
+        return userObject.toString();
     }
 }

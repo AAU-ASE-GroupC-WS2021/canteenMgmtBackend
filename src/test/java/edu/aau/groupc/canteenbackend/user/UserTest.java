@@ -1,5 +1,7 @@
 package edu.aau.groupc.canteenbackend.user;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -70,4 +72,39 @@ class UserTest {
         assertEquals(expectedHash, a.hashCode());
     }
 
+    @Test
+    void getUserSelfInfo_GUEST() throws JSONException {
+        User a = new User("username", "password", User.Type.GUEST);
+        JSONObject userJson = new JSONObject(a.getUserSelfInfo());
+
+        assertEquals("username", userJson.getString("username"));
+        assertEquals("GUEST", userJson.getString("type"));
+    }
+
+    @Test
+    void getUserSelfInfo_USER() throws JSONException {
+        User a = new User("username", "password", User.Type.USER);
+        JSONObject userJson = new JSONObject(a.getUserSelfInfo());
+
+        assertEquals("username", userJson.getString("username"));
+        assertEquals("USER", userJson.getString("type"));
+    }
+
+    @Test
+    void getUserSelfInfo_ADMIN() throws JSONException {
+        User a = new User("username", "password", User.Type.ADMIN);
+        JSONObject userJson = new JSONObject(a.getUserSelfInfo());
+
+        assertEquals("username", userJson.getString("username"));
+        assertEquals("ADMIN", userJson.getString("type"));
+    }
+
+    @Test
+    void getUserSelfInfo_OWNER() throws JSONException {
+        User a = new User("username", "password", User.Type.OWNER);
+        JSONObject userJson = new JSONObject(a.getUserSelfInfo());
+
+        assertEquals("username", userJson.getString("username"));
+        assertEquals("OWNER", userJson.getString("type"));
+    }
 }
