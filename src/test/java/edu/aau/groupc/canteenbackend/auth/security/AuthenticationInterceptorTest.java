@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AuthenticationInterceptorTest {
+class AuthenticationInterceptorTest {
 
     private AuthenticationInterceptor authInterceptor = new AuthenticationInterceptor();
 

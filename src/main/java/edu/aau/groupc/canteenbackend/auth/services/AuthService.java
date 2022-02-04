@@ -26,7 +26,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public Auth login(String username, String password) {
-        if (!this.userRepository.existsByUsernameAndPassword(username, password)) {
+        if (!Boolean.TRUE.equals(this.userRepository.existsByUsernameAndPassword(username, password))) {
             return null;
         }
 

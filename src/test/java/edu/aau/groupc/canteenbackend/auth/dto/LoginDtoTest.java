@@ -63,7 +63,7 @@ class LoginDtoTest {
     void testEquals_Null() {
         LoginDto a = new LoginDto("username", "password");
 
-        assertNotEquals(a,  null);
+        assertNotNull(a);
     }
 
     @Test
