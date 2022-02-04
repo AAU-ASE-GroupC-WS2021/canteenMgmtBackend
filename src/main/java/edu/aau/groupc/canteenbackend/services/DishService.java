@@ -67,7 +67,7 @@ public class DishService implements IDishService {
         if (var.equals("all"))
         {
             dishRepo.deleteAll();
-        return ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
         }
         else
             return ResponseEntity.ok("invalid input parameter");

@@ -2,13 +2,11 @@ package edu.aau.groupc.canteenbackend.menu.services;
 
 import edu.aau.groupc.canteenbackend.dao.DishRepository;
 import edu.aau.groupc.canteenbackend.entities.Dish;
-import edu.aau.groupc.canteenbackend.menu.services.IMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Transactional
@@ -31,7 +29,6 @@ public class MenuService implements IMenuService {
 
         return dishRepo.findBydishDay(day);
     }
-
 
 
 }

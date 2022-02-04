@@ -13,4 +13,6 @@ public interface IDishService {
     ResponseEntity delete(Dish toEntity);
 
     Dish update(Dish toEntity);
+
+    ResponseEntity deleteAllDishes(String var) ;
 }

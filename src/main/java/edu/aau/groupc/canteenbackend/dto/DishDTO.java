@@ -15,7 +15,6 @@ import java.util.HashMap;
 @Data
 public class DishDTO implements DTO {
     @NotBlank(message = "Name is required")
-//    @UniqueElements(message = "Dish already exists")
     private String name;
     @Min(value = 0, message = "Price must be > 0")
     @NotNull(message = "Price is required")

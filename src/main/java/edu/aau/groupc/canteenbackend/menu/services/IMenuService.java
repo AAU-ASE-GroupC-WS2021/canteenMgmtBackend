@@ -11,4 +11,6 @@ public interface IMenuService {
     List<Dish> findAllMenus();
 
     List<Dish> findMenuByDay( Dish.DishDay day);
+
+
 }

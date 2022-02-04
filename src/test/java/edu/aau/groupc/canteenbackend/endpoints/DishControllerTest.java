@@ -61,12 +61,13 @@ public class DishControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testDeleteDishNonExisting() throws JSONException {
+    public void testDeleteDishNonExisting() {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         ResponseEntity<String> response = makeDeleteRequest("/dish", new Dish ("Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY) );
         String expected = "No Such Dish";
         assertThat(expected.equals(response.getBody())).isTrue();
     }
+
 
 
 }
