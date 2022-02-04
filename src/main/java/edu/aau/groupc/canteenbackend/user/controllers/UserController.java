@@ -3,7 +3,6 @@ package edu.aau.groupc.canteenbackend.user.controllers;
 import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractController;
 import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
-import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.dto.UserReturnDTO;

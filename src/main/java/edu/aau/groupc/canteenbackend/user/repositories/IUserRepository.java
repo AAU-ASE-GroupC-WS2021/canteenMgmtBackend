@@ -13,10 +13,10 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     User getUserByUsername(String username);
 
-    List<User> findUsersByType(User.Type type);
+    List<User> findUsersByTypeOrderById(User.Type type);
 
-    List<User> findUsersByHomeCanteen_Id(Integer canteenID);
+    List<User> findUsersByHomeCanteen_IdOrderById(Integer canteenID);
 
-    List<User> findUsersByHomeCanteen_IdAndType(Integer canteenID, User.Type type);
+    List<User> findUsersByHomeCanteen_IdAndTypeOrderById(Integer canteenID, User.Type type);
 
 }

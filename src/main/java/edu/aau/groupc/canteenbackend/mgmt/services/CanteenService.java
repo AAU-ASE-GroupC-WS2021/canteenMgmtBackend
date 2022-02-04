@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class CanteenService implements ICanteenService {
 
-    private ICanteenRepository canteenRepo;
+    private final ICanteenRepository canteenRepo;
 
     @Autowired
     public CanteenService(ICanteenRepository canteenRepo) {
@@ -24,7 +24,7 @@ public class CanteenService implements ICanteenService {
 
     @Override
     public List<Canteen> findAll() {
-        return canteenRepo.findAll();
+        return canteenRepo.findAllByOrderByIdAsc();
     }
 
     @Override

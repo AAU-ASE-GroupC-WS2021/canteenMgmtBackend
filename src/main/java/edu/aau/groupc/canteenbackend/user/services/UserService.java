@@ -70,7 +70,7 @@ public class UserService implements IUserService {
 
     @Override
     public boolean ownerExists() {
-        return !userRepository.findUsersByType(User.Type.OWNER).isEmpty();
+        return !userRepository.findUsersByTypeOrderById(User.Type.OWNER).isEmpty();
     }
 
     @Override
@@ -102,16 +102,16 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> findByCanteenID(Integer canteenID) {
-        return userRepository.findUsersByHomeCanteen_Id(canteenID);
+        return userRepository.findUsersByHomeCanteen_IdOrderById(canteenID);
     }
 
     @Override
     public List<User> findByType(User.Type type) {
-        return userRepository.findUsersByType(type);
+        return userRepository.findUsersByTypeOrderById(type);
     }
 
     @Override
     public List<User> findByCanteenIDAndType(Integer canteenID, User.Type type) {
-        return userRepository.findUsersByHomeCanteen_IdAndType(canteenID, type);
+        return userRepository.findUsersByHomeCanteen_IdAndTypeOrderById(canteenID, type);
     }
 }
