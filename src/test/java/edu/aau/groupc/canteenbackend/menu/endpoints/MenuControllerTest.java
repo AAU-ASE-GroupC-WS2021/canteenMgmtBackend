@@ -20,14 +20,23 @@ public class MenuControllerTest extends AbstractControllerTest {
     private DishService dishService;
 
     @Test
-    public void testGetDishes() throws JSONException {
+    public void testGetMenus() throws JSONException {
         dishService.deleteAllDishes("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+        dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
+        dishService.create(new Dish("Soup", 1.5f, Dish.Type.STARTER, Dish.DishDay.TUESDAY));
+        dishService.create(new Dish("Pasta", 4.0f, Dish.Type.MAIN, Dish.DishDay.TUESDAY));
+        dishService.create(new Dish("Milk Pudding", 2.0f, Dish.Type.DESSERT, Dish.DishDay.TUESDAY));
 
-        ResponseEntity<String> response = makeGetRequest("/dish");
+        ResponseEntity<String> response = makeGetRequest("/menu");
+
         String expected = "[{\"name\":\"Salad\",\"price\":1.5,\"type\":\"STARTER\",\"dishDay\":\"MONDAY\"}," +
-                           "{\"name\":\"Cheese Burger\",\"price\":4.0,\"type\":\"MAIN\",\"dishDay\":\"MONDAY\"}]";
+                            "{\"name\":\"Cheese Burger\",\"price\":4.0,\"type\":\"MAIN\",\"dishDay\":\"MONDAY\"},"+
+                            "{\"name\":\"Tiramisu\",\"price\":2.0,\"type\":\"DESSERT\",\"dishDay\":\"MONDAY\"},"+
+                            "{\"name\":\"Soup\",\"price\":1.5,\"type\":\"STARTER\",\"dishDay\":\"TUESDAY\"},"+
+                            "{\"name\":\"Pasta\",\"price\":4.0,\"type\":\"MAIN\",\"dishDay\":\"TUESDAY\"},"+
+                            "{\"name\":\"Milk Pudding\",\"price\":2.0,\"type\":\"DESSERT\",\"dishDay\":\"TUESDAY\"}]";
 
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }
