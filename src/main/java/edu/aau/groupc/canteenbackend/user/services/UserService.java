@@ -62,6 +62,8 @@ public class UserService implements IUserService {
                 throw new CanteenNotFoundException();
             }
             existingUser.setHomeCanteen(canteen.get());
+        } else {
+            existingUser.setHomeCanteen(null);
         }
 
         existingUser = userRepository.save(existingUser);

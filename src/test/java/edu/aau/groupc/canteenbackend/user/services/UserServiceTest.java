@@ -99,14 +99,29 @@ class UserServiceTest {
         Canteen canteen = createCanteen();
         User existingUser = userService.create(new User("username", "password", User.Type.ADMIN, canteen));
 
+        UserUpdateDTO updateInfo = UserUpdateDTO.create("newUsername", "newPassword", User.Type.USER, canteen.getId());
+        User updatedUser = userService.updateUser(existingUser.getId(), updateInfo);
+
+        assertEquals(updateInfo.getUsername(), updatedUser.getUsername());
+        assertEquals(updateInfo.getPassword(), updatedUser.getPassword());
+        assertEquals(updateInfo.getType(), updatedUser.getType());
+        assertEquals(canteen, updatedUser.getHomeCanteen());
+    }
+
+    @Test
+    // @Transactional is required here for the lazy loading of home canteen to work
+    @Transactional
+    void updateUser_validDataNullCanteenID_updatedUserReturned() throws UserNotFoundException, CanteenNotFoundException, UsernameConflictException {
+        Canteen canteen = createCanteen();
+        User existingUser = userService.create(new User("username", "password", User.Type.ADMIN, canteen));
+
         UserUpdateDTO updateInfo = UserUpdateDTO.create("newUsername", "newPassword", User.Type.USER, null);
         User updatedUser = userService.updateUser(existingUser.getId(), updateInfo);
 
         assertEquals(updateInfo.getUsername(), updatedUser.getUsername());
         assertEquals(updateInfo.getPassword(), updatedUser.getPassword());
         assertEquals(updateInfo.getType(), updatedUser.getType());
-        // canteen should NOt be updated here since the update value is NULL
-        assertEquals(canteen, updatedUser.getHomeCanteen());
+        assertNull(updatedUser.getHomeCanteen());
     }
 
     @Test
