@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class OrderDishDTOTest implements ValidationTest {
+class OrderDishDTOTest implements ValidationTest {
 
     final String name = "name";
     final Float price = 1f;
