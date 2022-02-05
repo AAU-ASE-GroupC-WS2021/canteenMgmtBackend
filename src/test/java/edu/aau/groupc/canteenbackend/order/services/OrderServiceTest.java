@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class OrderServiceTest {
         User user = createEmptyUser();
         Canteen canteen = createCanteen();
         Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.MAIN));
-        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(user.getId(), exampleDish, count, canteen.getId());
+        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(user.getId(), exampleDish, count, new Date(), canteen.getId());
         orderService.create(createOrderDTO);
         List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(user.getId());
         assertEquals(1, orderDtos.size());
@@ -108,7 +109,7 @@ public class OrderServiceTest {
         User user = createEmptyUser();
         Canteen canteen = createCanteen();
         Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.DESSERT));
-        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(1L, exampleDish, count, canteen.getId());
+        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(user.getId(), exampleDish, count, new Date(), canteen.getId());
         OrderDTO orderDTO = orderService.create(createOrderDTO);
         assertEquals(1, orderDTO.getDishes().size());
         assertEquals(1, orderDTO.getCanteenId());
@@ -143,7 +144,7 @@ public class OrderServiceTest {
         return userService.create(new User());
     }
 
-    private CreateOrderDTO createCreateOrderDTOWithExampleDish(Long userId, Dish dish, Integer count, Integer canteenId) {
+    private CreateOrderDTO createCreateOrderDTOWithExampleDish(Long userId, Dish dish, Integer count, Date date, Integer canteenId) {
         List<DishForOrderCreationDTO> dishList = new LinkedList<>();
         DishForOrderCreationDTO dto = new DishForOrderCreationDTO();
         dto.setId(dish.getId());
@@ -152,6 +153,7 @@ public class OrderServiceTest {
         CreateOrderDTO orderDTO = new CreateOrderDTO();
         orderDTO.setUserId(userId);
         orderDTO.setCanteenId(canteenId);
+        orderDTO.setPickupDate(date);
         orderDTO.setDishes(dishList);
         return orderDTO;
     }

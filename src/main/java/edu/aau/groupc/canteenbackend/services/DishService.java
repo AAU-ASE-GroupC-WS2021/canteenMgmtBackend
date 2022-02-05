@@ -3,8 +3,10 @@ package edu.aau.groupc.canteenbackend.services;
 import edu.aau.groupc.canteenbackend.dao.DishRepository;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +22,9 @@ public class DishService implements IDishService {
     }
 
     @Override
-    public Dish findById(Integer id) {
+    public Dish findById(Integer id) throws ResponseStatusException {
         Optional<Dish> dishOptional = dishRepo.findById(id);
-        return dishOptional.orElseThrow(() -> new IllegalArgumentException("no dish found"));
+        return dishOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "dish not found"));
     }
 
     @Override

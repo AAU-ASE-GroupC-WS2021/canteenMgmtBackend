@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,7 +29,7 @@ public class DishServiceTest {
 
     @Test
     public void testFindById() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> dishService.findById(999));
+        Exception ex = assertThrows(ResponseStatusException.class, () -> dishService.findById(-1));
         assertEquals(noDishFoundExceptionMessage, ex.getMessage());
         Dish dish = createDish();
         Dish foundDish = dishService.findById(dish.getId());

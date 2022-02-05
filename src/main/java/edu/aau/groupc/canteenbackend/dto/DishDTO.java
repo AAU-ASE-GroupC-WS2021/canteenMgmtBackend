@@ -19,16 +19,6 @@ public class DishDTO implements DTO {
     @EnumPattern(regexp = "STARTER|MAIN|DESSERT", name = "Type")
     private String type;
 
-    public DishDTO() {
-        // Default
-    }
-
-    public DishDTO(String name, Float price, String type) {
-        this.name = name;
-        this.price = price;
-        this.type = type;
-    }
-
     public Dish toEntity() {
         return new Dish()
                 .setName(getName())

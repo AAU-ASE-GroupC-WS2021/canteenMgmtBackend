@@ -35,7 +35,7 @@ public class CanteenService implements ICanteenService {
     }
 
     @Override
-    public Canteen findEntityById(int id) {
+    public Canteen findEntityById(int id) throws ResponseStatusException {
         Optional<Canteen> canteenOptional = canteenRepo.findById(id);
         return canteenOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "canteen not found"));
     }

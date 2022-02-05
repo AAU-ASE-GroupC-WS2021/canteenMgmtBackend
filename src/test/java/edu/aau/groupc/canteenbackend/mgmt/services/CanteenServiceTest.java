@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -37,6 +38,19 @@ class CanteenServiceTest {
         Optional<Canteen> foundCanteen = canteenService.findById(createdCanteen.getId());
         assertTrue(foundCanteen.isPresent());
         assertCanteensEqual(createdCanteen, foundCanteen.get());
+    }
+
+    @Test
+    void testFindEntityById_throwException() {
+        Exception e = assertThrows(ResponseStatusException.class, () -> canteenService.findEntityById(-1));
+        assertEquals("canteen not found", e.getMessage());
+    }
+
+    @Test
+    void testFindEntityById() {
+        Canteen canteen = createCanteen();
+        Canteen returnedCanteen = canteenService.findEntityById(canteen.getId());
+        assertCanteensEqual(canteen, returnedCanteen);
     }
 
     @Test

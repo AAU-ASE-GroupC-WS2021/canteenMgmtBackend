@@ -3,6 +3,7 @@ package edu.aau.groupc.canteenbackend.mgmt.services;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
 import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,7 @@ public interface ICanteenService {
 
     Optional<Canteen> findById(int id);
 
-    Canteen findEntityById(int id);
+    Canteen findEntityById(int id) throws ResponseStatusException;
 
     Canteen create(Canteen canteen);
 

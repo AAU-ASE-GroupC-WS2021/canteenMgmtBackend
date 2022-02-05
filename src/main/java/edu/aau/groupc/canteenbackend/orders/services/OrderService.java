@@ -56,7 +56,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDTO findById(int orderId) {
+    public OrderDTO findById(int orderId) throws ResponseStatusException {
         Optional<Order> orderOptional = orderRepo.findById(orderId);
         return OrderDTO.from(orderOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "order not found")));
     }

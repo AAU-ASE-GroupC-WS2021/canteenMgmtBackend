@@ -37,7 +37,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findEntityById(long id) {
+    public User findEntityById(long id) throws ResponseStatusException {
         Optional<User> userOptional = this.userRepository.findById(id);
         return userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
     }
