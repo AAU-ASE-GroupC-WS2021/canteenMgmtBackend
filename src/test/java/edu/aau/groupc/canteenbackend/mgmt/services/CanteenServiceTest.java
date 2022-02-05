@@ -56,7 +56,7 @@ class CanteenServiceTest {
         CanteenDTO cDTO = CanteenDTO.create(updatedName, updatedAddress, updatedNumTables);
         Canteen updatedCanteen = canteenService.update(c.getId(), cDTO);
         Canteen expectedCanteen = cDTO.toEntity().setId(c.getId());
-        assertCanteensEqual(c, updatedCanteen);
+        assertCanteensEqual(expectedCanteen, updatedCanteen);
     }
 
     private Canteen createCanteen() {

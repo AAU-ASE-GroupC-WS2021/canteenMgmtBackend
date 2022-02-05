@@ -10,6 +10,8 @@ public interface IOrderService {
     // TODO: UPDATE TO TAKE USER-ENTITY
     List<OrderDTO> findAllByUserAsDTO(Long userId);
 
+    OrderDTO findById(int oderId);
+
     Order save(Order order);
 
     OrderDTO create(CreateOrderDTO orderDto);

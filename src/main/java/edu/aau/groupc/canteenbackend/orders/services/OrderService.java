@@ -8,16 +8,18 @@ import edu.aau.groupc.canteenbackend.orders.dao.OrderRepository;
 import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.OrderDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.OrderDishDTO;
 import edu.aau.groupc.canteenbackend.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -44,13 +46,19 @@ public class OrderService implements IOrderService {
      */
     @Override
     public List<OrderDTO> findAllByUserAsDTO(Long userId) {
-        User user = userService.findById(userId);
+        User user = userService.findEntityById(userId);
         List<Order> orderEntityList = orderRepo.findAllByUserOrderByPickUpDate(user);
         List<OrderDTO> dtoList = new LinkedList<>();
         for (Order order : orderEntityList) {
-            dtoList.add(convertOrderEntityToDto(order));
+            dtoList.add(OrderDTO.from(order));
         }
         return dtoList;
+    }
+
+    @Override
+    public OrderDTO findById(int orderId) {
+        Optional<Order> orderOptional = orderRepo.findById(orderId);
+        return OrderDTO.from(orderOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "order not found")));
     }
 
     @Override
@@ -62,7 +70,7 @@ public class OrderService implements IOrderService {
     public OrderDTO create(CreateOrderDTO orderDto) {
         Order order = new Order();
         order.setCanteen(canteenService.findEntityById(orderDto.getCanteenId()));
-        order.setUser(userService.findById(orderDto.getUserId()));
+        order.setUser(userService.findEntityById(orderDto.getUserId()));
         order.setPickUpDate(orderDto.getPickupDate());
         order.setReserveTable(orderDto.isReserveTable());
         // order needs to be pushed to DB to create the assoziations
@@ -73,23 +81,7 @@ public class OrderService implements IOrderService {
             OrderHasDish orderHasDish = new OrderHasDish(order, d, dishDto.getCount());
             order.addOrderHasDish(orderHasDishService.save(orderHasDish));
         }
-        return convertOrderEntityToDto(save(order));
+        return OrderDTO.from(save(order));
     }
 
-    /*
-     * helper method to convert the entity into the dto
-     */
-    private OrderDTO convertOrderEntityToDto(Order order) {
-        OrderDTO orderDto = new OrderDTO();
-        orderDto.setId(order.getId());
-        orderDto.setCanteenId(order.getCanteen().getId());
-        orderDto.setReserveTable(order.isReserveTable());
-        orderDto.setPickupDate(order.getPickUpDate());
-        for (OrderHasDish orderHasDish : order.getOrderHasDishes()) {
-            Dish dish = orderHasDish.getDish();
-            OrderDishDTO dishDto = new OrderDishDTO(dish.getName(), dish.getPrice(), dish.getType().toString(), dish.getId(), orderHasDish.getCount());
-            orderDto.addDish(dishDto);
-        }
-        return orderDto;
-    }
 }

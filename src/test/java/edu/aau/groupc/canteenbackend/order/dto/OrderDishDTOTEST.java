@@ -23,7 +23,7 @@ public class OrderDishDTOTEST implements ValidationTest {
     // checks if both constructor types lead to the same result, and both should be valid
     @Test
     public void testCreationMethods_ThenValid() {
-        OrderDishDTO allConstructorDish = new OrderDishDTO(name, price, type, id, count);
+        OrderDishDTO allConstructorDish = createOrderDishDTO(name, price, type, id, count);
         OrderDishDTO setterDish = new OrderDishDTO();
         setterDish.setName(name);
         setterDish.setPrice(price);
@@ -38,27 +38,27 @@ public class OrderDishDTOTEST implements ValidationTest {
     // quick test to make sure the validation from the base class still works
     @Test
     public void testParentValidation_ThenInvalid() {
-        assertInvalid(new OrderDishDTO(null, null, null, id, count));
+        assertInvalid(createOrderDishDTO(null, null, null, id, count));
     }
 
     @Test
     public void testNullId_ThenInvalid() {
-        assertInvalid(new OrderDishDTO(name, price, type, null, count));
+        assertInvalid(createOrderDishDTO(name, price, type, null, count));
     }
 
     @Test
     public void testNullCount_ThenInvalid() {
-        assertInvalid(new OrderDishDTO(name, price, type, id, null));
+        assertInvalid(createOrderDishDTO(name, price, type, id, null));
     }
 
     @Test
     public void testNegativeCount_ThenInvalid() {
-        assertInvalid(new OrderDishDTO(name, price, type, id, -1));
+        assertInvalid(createOrderDishDTO(name, price, type, id, -1));
     }
 
     @Test
     public void testZeroCount_ThenInvalid() {
-        assertInvalid(new OrderDishDTO(name, price, type, id, 0));
+        assertInvalid(createOrderDishDTO(name, price, type, id, 0));
     }
 
     // dont really care about the dishDTOs except for thembeing valid
@@ -81,5 +81,15 @@ public class OrderDishDTOTEST implements ValidationTest {
         dishDto.setCount(0);
         dishList.add(dishDto);
         return dishList;
+    }
+
+    private OrderDishDTO createOrderDishDTO(String name, Float price, String type, Integer id, Integer count) {
+        OrderDishDTO dto = new OrderDishDTO();
+        dto.setName(name);
+        dto.setPrice(price);
+        dto.setType(type);
+        dto.setId(id);
+        dto.setCount(count);
+        return dto;
     }
 }

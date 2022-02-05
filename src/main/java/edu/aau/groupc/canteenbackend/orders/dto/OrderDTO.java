@@ -1,16 +1,21 @@
 package edu.aau.groupc.canteenbackend.orders.dto;
 
+import edu.aau.groupc.canteenbackend.orders.Order;
+import edu.aau.groupc.canteenbackend.orders.OrderHasDish;
 import edu.aau.groupc.canteenbackend.validation.PickupdateConstraint;
+import lombok.Data;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 // DTO to return a full overview of an order (userId is not returned)
-public class OrderDTO {
+@Data
+public class OrderDTO implements Serializable {
     @NotNull(message = "OrderId is required")
     Integer id;
     // replace with canteen
@@ -24,51 +29,22 @@ public class OrderDTO {
     @PickupdateConstraint
     Date pickupDate;
 
-    public OrderDTO() {
-        // Default
+    public static OrderDTO from(Order order) {
+        OrderDTO orderDto = new OrderDTO();
+        orderDto.setId(order.getId());
+        orderDto.setCanteenId(order.getCanteen().getId());
+        orderDto.setReserveTable(order.isReserveTable());
+        orderDto.setPickupDate(order.getPickUpDate());
+        for (OrderHasDish orderHasDish : order.getOrderHasDishes()) {
+            OrderDishDTO dishDto = OrderDishDTO.from(orderHasDish);
+            orderDto.addDish(dishDto);
+        }
+        return orderDto;
     }
 
-    public Integer getId() {
-        return id;
+    private void addDish(OrderDishDTO dishDto) {
+        dishes.add(dishDto);
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public Integer getCanteenId() {
-        return canteenId;
-    }
-
-    public void setCanteenId(Integer canteenId) {
-        this.canteenId = canteenId;
-    }
-
-    public List<OrderDishDTO> getDishes() {
-        return dishes;
-    }
-
-    public void setDishes(List<OrderDishDTO> dishes) {
-        this.dishes = dishes;
-    }
-
-    public void addDish(OrderDishDTO dish) {
-        this.dishes.add(dish);
-    }
-
-    public boolean isReserveTable() {
-        return reserveTable;
-    }
-
-    public void setReserveTable(boolean reserveTable) {
-        this.reserveTable = reserveTable;
-    }
-
-    public Date getPickupDate() {
-        return pickupDate;
-    }
-
-    public void setPickupDate(Date pickupDate) {
-        this.pickupDate = pickupDate;
-    }
 }

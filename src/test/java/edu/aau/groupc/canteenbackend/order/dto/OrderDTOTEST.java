@@ -71,7 +71,7 @@ public class OrderDTOTEST implements ValidationTest {
     private List<OrderDishDTO> generateDishList(int length) {
         List<OrderDishDTO> dishList = new LinkedList<>();
         for (int i = 0; i < length; i++) {
-            dishList.add(new OrderDishDTO(name, price, type, id, count));
+            dishList.add(createOrderDishDto(name, price, type, id, count));
         }
         return dishList;
     }
@@ -81,5 +81,15 @@ public class OrderDTOTEST implements ValidationTest {
         List<OrderDishDTO> dishList = new LinkedList<>();
         dishList.add(new OrderDishDTO());
         return dishList;
+    }
+
+    private OrderDishDTO createOrderDishDto(String name, Float price, String type, Integer id, Integer count) {
+        OrderDishDTO dto = new OrderDishDTO();
+        dto.setName(name);
+        dto.setPrice(price);
+        dto.setType(type);
+        dto.setId(id);
+        dto.setCount(count);
+        return dto;
     }
 }

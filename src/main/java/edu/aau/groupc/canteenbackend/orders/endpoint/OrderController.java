@@ -27,6 +27,11 @@ public class OrderController {
         return orderService.findAllByUserAsDTO(userId);
     }
 
+    @GetMapping(value = "/order-by-id")
+    public OrderDTO getOrderById(@RequestParam @NotNull Integer orderId) {
+        return orderService.findById(orderId);
+    }
+
     // @Secured(User.Type.USER) TODO: ENABLE SECURITY
     @PostMapping(value = "/create-order")
     public OrderDTO createOrder(@Valid @RequestBody CreateOrderDTO newOrder) {
