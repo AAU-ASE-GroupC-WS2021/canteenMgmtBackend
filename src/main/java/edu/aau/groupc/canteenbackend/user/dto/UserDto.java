@@ -24,11 +24,19 @@ public class UserDto implements DTO, Serializable {
     @Length(min = 64, max = 64, message = "Password must be exactly 64 characters long!")
     private String password;
 
+    private Integer canteenID;
+
     private UserDto() {}
 
     public UserDto(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public UserDto(String username, String password, Integer canteenID) {
+        this.username = username;
+        this.password = password;
+        this.canteenID = canteenID;
     }
 
     @Override

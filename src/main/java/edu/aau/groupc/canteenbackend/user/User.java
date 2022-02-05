@@ -1,6 +1,7 @@
 package edu.aau.groupc.canteenbackend.user;
 
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import lombok.Data;
 import net.minidev.json.JSONObject;
 
@@ -22,6 +23,10 @@ public class User implements DBEntity {
     private String password;
     private Type type;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CANTEEN_ID")
+    private Canteen homeCanteen;
+
     public enum Type {
         OWNER,
         ADMIN,
@@ -36,6 +41,11 @@ public class User implements DBEntity {
         this.username = username;
         this.password = password;
         this.type = type;
+    }
+
+    public User(String username, String password, Type type, Canteen homeCanteen) {
+        this(username, password, type);
+        this.homeCanteen = homeCanteen;
     }
 
     public String getUsername() {

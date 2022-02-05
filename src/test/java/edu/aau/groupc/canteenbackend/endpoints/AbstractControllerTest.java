@@ -17,6 +17,9 @@ public class AbstractControllerTest {
     @Value("${server.ssl.enabled}")
     private boolean httpsEnabled;
 
+    @Value("${app.auth.header}")
+    protected String tokenHeader;
+
     @Autowired
     protected RestTemplate restTemplate;
 
