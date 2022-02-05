@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("H2Database")
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class OrderServiceTest {
+class OrderServiceTest {
     final String name = "name";
     final Float price = 1f;
     final Integer count = 2;
@@ -45,7 +45,7 @@ public class OrderServiceTest {
     private ICanteenService canteenService;
 
     @Test
-    public void testFindAllByUserAsDTO_Size() {
+    void testFindAllByUserAsDTO_Size() {
         User user = createEmptyUser();
         User emptyUser = userService.create(new User("test", "a", User.Type.GUEST));
         System.out.println(user);
@@ -57,14 +57,14 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void testFindAllByUserAsDTO_noOrdersForUser() {
+    void testFindAllByUserAsDTO_noOrdersForUser() {
         List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(1L);
         assertNotNull(orderDtos);
         assertTrue(orderDtos.isEmpty());
     }
 
     @Test
-    public void testFindAllByUserAsDTO_multipleOrders() {
+    void testFindAllByUserAsDTO_multipleOrders() {
         User user = createEmptyUser();
         createOrder(user, createCanteen());
         createOrder(user, createCanteen());
@@ -74,7 +74,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void testFindAllByUserAsDTO_noDishes_toTestEntityToDTOConversion() {
+    void testFindAllByUserAsDTO_noDishes_toTestEntityToDTOConversion() {
         User user = createEmptyUser();
         Canteen canteen = createCanteen();
         createOrder(user, canteen);
@@ -86,7 +86,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void testFindAllByUserAsDTO_WithDish_toTestEntityToDTOConversion() {
+    void testFindAllByUserAsDTO_WithDish_toTestEntityToDTOConversion() {
         User user = createEmptyUser();
         Canteen canteen = createCanteen();
         Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.MAIN));
@@ -105,7 +105,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         User user = createEmptyUser();
         Canteen canteen = createCanteen();
         Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.DESSERT));
@@ -122,7 +122,7 @@ public class OrderServiceTest {
 
     // proper test of this function requires a findById method to be usefull
     @Test
-    public void testSave_newOrder() {
+    void testSave_newOrder() {
         Order orderToSave = createOrder(createEmptyUser(), createCanteen());
         Order savedOrder = orderService.save(orderToSave);
         assertEquals(orderToSave.getCanteen().getId(), savedOrder.getCanteen().getId());

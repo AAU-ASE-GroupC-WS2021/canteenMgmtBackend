@@ -8,11 +8,12 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 // this dto is seperated from the Entity, since the data does not overlap completly
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class OrderDishDTO extends DishDTO {
+public class OrderDishDTO extends DishDTO implements Serializable {
     @NotNull(message = "dishId is required")
     private Integer id;
     @NotNull(message = "count is required")

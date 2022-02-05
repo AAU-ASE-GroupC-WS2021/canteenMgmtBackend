@@ -26,7 +26,6 @@ import java.util.Optional;
 public class OrderService implements IOrderService {
     private final OrderRepository orderRepo;
 
-    // TODO: setup all required services, e.g.: User, Canteen and Menu
     IDishService dishService;
     IOrderHasDishService orderHasDishService;
     IUserService userService;

@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class OrderDishDTOTEST implements ValidationTest {
+public class OrderDishDTOTest implements ValidationTest {
 
     final String name = "name";
     final Float price = 1f;
@@ -22,7 +22,7 @@ public class OrderDishDTOTEST implements ValidationTest {
 
     // checks if both constructor types lead to the same result, and both should be valid
     @Test
-    public void testCreationMethods_ThenValid() {
+    void testCreationMethods_ThenValid() {
         OrderDishDTO allConstructorDish = createOrderDishDTO(name, price, type, id, count);
         OrderDishDTO setterDish = new OrderDishDTO();
         setterDish.setName(name);
@@ -37,27 +37,27 @@ public class OrderDishDTOTEST implements ValidationTest {
 
     // quick test to make sure the validation from the base class still works
     @Test
-    public void testParentValidation_ThenInvalid() {
+    void testParentValidation_ThenInvalid() {
         assertInvalid(createOrderDishDTO(null, null, null, id, count));
     }
 
     @Test
-    public void testNullId_ThenInvalid() {
+    void testNullId_ThenInvalid() {
         assertInvalid(createOrderDishDTO(name, price, type, null, count));
     }
 
     @Test
-    public void testNullCount_ThenInvalid() {
+    void testNullCount_ThenInvalid() {
         assertInvalid(createOrderDishDTO(name, price, type, id, null));
     }
 
     @Test
-    public void testNegativeCount_ThenInvalid() {
+    void testNegativeCount_ThenInvalid() {
         assertInvalid(createOrderDishDTO(name, price, type, id, -1));
     }
 
     @Test
-    public void testZeroCount_ThenInvalid() {
+    void testZeroCount_ThenInvalid() {
         assertInvalid(createOrderDishDTO(name, price, type, id, 0));
     }
 

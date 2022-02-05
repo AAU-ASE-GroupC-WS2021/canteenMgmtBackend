@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("H2Database")
 @SpringBootTest
-public class DishServiceTest {
+class DishServiceTest {
 
     @Autowired
     private IDishService dishService;
 
     @Test
-    public void testAddDish() {
+    void testAddDish() {
         int numDishesBefore = dishService.findAll().size();
         dishService.create(new Dish());
         int numDishesAfter = dishService.findAll().size();
@@ -26,7 +26,7 @@ public class DishServiceTest {
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         assertThrows(ResponseStatusException.class, () -> dishService.findById(-1));
         Dish dish = createDish();
         Dish foundDish = dishService.findById(dish.getId());

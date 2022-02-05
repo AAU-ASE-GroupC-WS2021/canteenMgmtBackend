@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DishForOrderCreationDTOTEST implements ValidationTest {
+class DishForOrderCreationDTOTest implements ValidationTest {
 
     @Test
     public void testValid_ThenOk() {
