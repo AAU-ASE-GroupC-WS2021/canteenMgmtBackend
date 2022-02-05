@@ -22,7 +22,7 @@ public class Canteen implements DBEntity {
     @NotNull
     private String address;
     private int numTables;
-    @OneToMany(mappedBy = "canteen")
+    @OneToMany(mappedBy = "canteen", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Order> orders = new HashSet<>();
 

@@ -17,17 +17,17 @@ import java.util.List;
 @Data
 public class OrderDTO implements Serializable {
     @NotNull(message = "OrderId is required")
-    Integer id;
+    private Integer id;
     // replace with canteen
     @NotNull(message = "Canteen is required")
-    Integer canteenId;
+    private Integer canteenId;
     @NotNull(message = "Dish-List is required")
     @Size(min = 1, message = "Dish-List must not be empty")
-    List<@Valid OrderDishDTO> dishes = new LinkedList<>();
-    boolean reserveTable = false;
+    private List<@Valid OrderDishDTO> dishes = new LinkedList<>();
+    private boolean reserveTable = false;
     @NotNull
     @PickupdateConstraint
-    Date pickupDate;
+    private Date pickupDate;
 
     public static OrderDTO from(Order order) {
         OrderDTO orderDto = new OrderDTO();

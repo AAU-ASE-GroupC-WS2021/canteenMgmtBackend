@@ -8,9 +8,9 @@ import lombok.Data;
 import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.HashSet;
 
 @Data
 @Entity
@@ -26,7 +26,7 @@ public class User implements DBEntity {
     private String username;
     private String password;
     private Type type;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Order> orders = new HashSet<>();
 

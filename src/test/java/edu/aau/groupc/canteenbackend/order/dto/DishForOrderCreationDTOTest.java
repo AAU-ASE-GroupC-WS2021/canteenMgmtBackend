@@ -9,27 +9,27 @@ import org.junit.jupiter.api.TestInstance;
 class DishForOrderCreationDTOTest implements ValidationTest {
 
     @Test
-    public void testValid_ThenOk() {
+    void testValid_ThenOk() {
         assertValid(createDishDTO(1, 1));
     }
 
     @Test
-    public void testNullDishId_ThenInvalid() {
+    void testNullDishId_ThenInvalid() {
         assertInvalid(createDishDTO(null, 1));
     }
 
     @Test
-    public void testNullCount_ThenInvalid() {
+    void testNullCount_ThenInvalid() {
         assertInvalid(createDishDTO(1, null));
     }
 
     @Test
-    public void testNegativeCount_ThenInvalid() {
+    void testNegativeCount_ThenInvalid() {
         assertInvalid(createDishDTO(1, -1));
     }
 
     @Test
-    public void testZeroCount_ThenInvalid() {
+    void testZeroCount_ThenInvalid() {
         assertInvalid(createDishDTO(1, 0));
     }
 
