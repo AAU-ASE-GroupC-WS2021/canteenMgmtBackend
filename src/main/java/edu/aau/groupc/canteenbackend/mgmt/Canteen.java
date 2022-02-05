@@ -14,6 +14,7 @@ import java.util.Set;
 public class Canteen implements DBEntity {
 
     @Id
+    @Column(name = "CANTEEN_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull

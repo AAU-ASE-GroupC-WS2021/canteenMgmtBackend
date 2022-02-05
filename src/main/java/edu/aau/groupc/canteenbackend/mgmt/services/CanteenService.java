@@ -1,6 +1,8 @@
 package edu.aau.groupc.canteenbackend.mgmt.services;
 
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
+import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
+import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
 import edu.aau.groupc.canteenbackend.mgmt.repositories.ICanteenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +26,7 @@ public class CanteenService implements ICanteenService {
 
     @Override
     public List<Canteen> findAll() {
-        return canteenRepo.findAll();
+        return canteenRepo.findAllByOrderByIdAsc();
     }
 
     @Override
@@ -44,10 +46,11 @@ public class CanteenService implements ICanteenService {
     }
 
     @Override
-    public Canteen update(Canteen canteen) throws IllegalArgumentException {
-        if (!canteenRepo.existsById(canteen.getId())) {
-            throw new IllegalArgumentException("canteen not found");
+    public Canteen update(int id, CanteenDTO canteen) throws CanteenNotFoundException {
+        if (!canteenRepo.existsById(id)) {
+            throw new CanteenNotFoundException();
         }
-        return canteenRepo.save(canteen);
+        Canteen entity = canteen.toEntity().setId(id);
+        return canteenRepo.save(entity);
     }
 }

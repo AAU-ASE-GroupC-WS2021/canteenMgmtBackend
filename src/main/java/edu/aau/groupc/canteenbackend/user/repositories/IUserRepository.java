@@ -4,16 +4,19 @@ import edu.aau.groupc.canteenbackend.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IUserRepository extends JpaRepository<User, Long> {
 
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
-    Boolean existsByUsernameAndPassword(String username, String password);
+    boolean existsByUsernameAndPassword(String username, String password);
 
     User getUserByUsername(String username);
 
-    List<User> findUsersByType(User.Type type);
+    List<User> findUsersByTypeOrderById(User.Type type);
+
+    List<User> findUsersByHomeCanteen_IdOrderById(Integer canteenID);
+
+    List<User> findUsersByHomeCanteen_IdAndTypeOrderById(Integer canteenID, User.Type type);
 
 }

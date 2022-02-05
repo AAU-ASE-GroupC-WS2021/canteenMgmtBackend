@@ -4,6 +4,7 @@ import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractController;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
+import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/canteen")
+@RequestMapping(value = "/api" )
 public class CanteenController extends AbstractController {
     private final ICanteenService canteenService;
 
@@ -26,13 +27,13 @@ public class CanteenController extends AbstractController {
         this.canteenService = canteenService;
     }
 
-    @GetMapping
+    @GetMapping("/canteen")
     public ResponseEntity<List<Canteen>> getCanteens()
     {
         return new ResponseEntity<>(canteenService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/canteen/{id}")
     public ResponseEntity<Canteen> getCanteen(@PathVariable("id") String idString)
     {
         Optional<Canteen> result = canteenService.findById(parseOrThrowHttpException(idString));
@@ -43,24 +44,22 @@ public class CanteenController extends AbstractController {
     }
 
     @Secured(User.Type.OWNER)
-    @PostMapping
+    @PostMapping("/canteen")
     public ResponseEntity<Canteen> createCanteen(@Valid @RequestBody CanteenDTO newCanteen)
     {
         return new ResponseEntity<>(canteenService.create(newCanteen.toEntity()), HttpStatus.OK);
     }
 
     @Secured(User.Type.OWNER)
-    @PutMapping("/{id}")
+    @PutMapping("/canteen/{id}")
     public ResponseEntity<Canteen> updateCanteen(@PathVariable("id") String idString,
                                                  @Valid @RequestBody CanteenDTO updatedCanteen)
     {
         int id = parseOrThrowHttpException(idString);
-        Canteen canteenEntity = updatedCanteen.toEntity();
-        canteenEntity.setId(id);
         try {
-            return new ResponseEntity<>(canteenService.update(canteenEntity), HttpStatus.OK);
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "canteen not with given id not found");
+            return new ResponseEntity<>(canteenService.update(id, updatedCanteen), HttpStatus.OK);
+        } catch (CanteenNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "canteen with given id not found");
         }
     }
 }

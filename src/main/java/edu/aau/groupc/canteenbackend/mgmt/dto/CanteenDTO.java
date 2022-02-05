@@ -25,4 +25,12 @@ public class CanteenDTO implements DTO {
                 .setAddress(address)
                 .setNumTables(numTables);
     }
+
+    public static CanteenDTO create(String name, String address, Integer numTables) {
+        CanteenDTO c = new CanteenDTO();
+        c.setName(name);
+        c.setAddress(address);
+        c.setNumTables(numTables);
+        return c;
+    }
 }

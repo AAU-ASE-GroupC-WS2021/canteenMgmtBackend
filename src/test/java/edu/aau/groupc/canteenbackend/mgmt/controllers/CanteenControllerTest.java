@@ -1,6 +1,5 @@
 package edu.aau.groupc.canteenbackend.mgmt.controllers;
 
-import edu.aau.groupc.canteenbackend.auth.security.AuthenticationInterceptor;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,19 +15,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("H2Database")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CanteenControllerIntegrationTest extends AbstractControllerTest implements JsonTest {
-
-    @MockBean
-    AuthenticationInterceptor authInterceptor;
+class CanteenControllerTest extends AbstractControllerTest implements JsonTest {
 
     private MockMvc mvc;
-
     private final int invalidID = 9999;
     private final String malformedID = "xyz543";
 
@@ -37,9 +29,8 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     private ICanteenService canteenService;
 
     @BeforeAll
-    void setupUsersAndAuth() {
+    void setupCanteens() {
         mvc = MockMvcBuilders.standaloneSetup(new CanteenController(canteenService)).build();
-        when(authInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         createCanteen("Canteen #1", "Address #1", 11);
         createCanteen("Canteen #2", "Address #2", 22);
@@ -49,7 +40,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     @Test
     void testFindAll_ThenReturnsAll() throws Exception {
         MvcResult res = mvc.perform( MockMvcRequestBuilders
-                        .get("/canteen")
+                        .get("/api/canteen")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -62,7 +53,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
         Canteen c = createCanteen("MyCanteen", "MyAddress", 42);
 
         MvcResult res = mvc.perform( MockMvcRequestBuilders
-                        .get("/canteen/"+c.getId())
+                        .get("/api/canteen/"+c.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -73,7 +64,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     @Test
     void testFindById_InvalidId_ThenNotFound() throws Exception {
         mvc.perform( MockMvcRequestBuilders
-                        .get("/canteen/"+invalidID)
+                        .get("/api/canteen/"+invalidID)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -81,7 +72,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     @Test
     void testFindById_MalformedId_ThenUnprocessableEntity() throws Exception {
         mvc.perform( MockMvcRequestBuilders
-                        .get("/canteen/"+malformedID)
+                        .get("/api/canteen/"+malformedID)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -90,7 +81,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     void testCreate_ValidData_ThenOKAndResponse() throws Exception {
         Canteen newCanteen = new Canteen("ValidName", "ValidAddress", 44);
         MvcResult res = mvc.perform( MockMvcRequestBuilders
-                        .post("/canteen")
+                        .post("/api/canteen")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(newCanteen)))
                 .andExpect(status().isOk())
@@ -104,7 +95,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
         Canteen c = createCanteen("ValidName", "ValidAddress", 44);
         c.setName("UpdatedName");
         MvcResult res = mvc.perform( MockMvcRequestBuilders
-                        .put("/canteen/"+c.getId())
+                        .put("/api/canteen/"+c.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(c)))
                 .andExpect(status().isOk())
@@ -117,7 +108,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     void testUpdate_InvalidId_ThenNotFound() throws Exception {
         Canteen newCanteen = new Canteen("ValidName", "ValidAddress", 44);
         mvc.perform( MockMvcRequestBuilders
-                        .put("/canteen/"+invalidID)
+                        .put("/api/canteen/"+invalidID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(newCanteen)))
                 .andExpect(status().isNotFound())
@@ -128,7 +119,7 @@ public class CanteenControllerIntegrationTest extends AbstractControllerTest imp
     void testUpdate_MalformedId_ThenUnprocessableEntity() throws Exception {
         Canteen newCanteen = new Canteen("ValidName", "ValidAddress", 44);
         mvc.perform( MockMvcRequestBuilders
-                        .put("/canteen/"+malformedID)
+                        .put("/api/canteen/"+malformedID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(newCanteen)))
                 .andExpect(status().isUnprocessableEntity())
