@@ -236,8 +236,7 @@ class UserServiceTest {
 
     @Test
     void testFindEntityById_throwException() {
-        Exception e = assertThrows(ResponseStatusException.class, () -> userService.findEntityById(-1));
-        assertEquals("user not found", e.getMessage());
+        assertThrows(ResponseStatusException.class, () -> userService.findEntityById(-1));
     }
 
     @Test

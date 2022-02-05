@@ -42,8 +42,7 @@ class CanteenServiceTest {
 
     @Test
     void testFindEntityById_throwException() {
-        Exception e = assertThrows(ResponseStatusException.class, () -> canteenService.findEntityById(-1));
-        assertEquals("canteen not found", e.getMessage());
+        assertThrows(ResponseStatusException.class, () -> canteenService.findEntityById(-1));
     }
 
     @Test

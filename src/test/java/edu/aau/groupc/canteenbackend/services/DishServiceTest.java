@@ -17,8 +17,6 @@ public class DishServiceTest {
     @Autowired
     private IDishService dishService;
 
-    final String noDishFoundExceptionMessage = "no dish found";
-
     @Test
     public void testAddDish() {
         int numDishesBefore = dishService.findAll().size();
@@ -29,8 +27,7 @@ public class DishServiceTest {
 
     @Test
     public void testFindById() {
-        Exception ex = assertThrows(ResponseStatusException.class, () -> dishService.findById(-1));
-        assertEquals(noDishFoundExceptionMessage, ex.getMessage());
+        assertThrows(ResponseStatusException.class, () -> dishService.findById(-1));
         Dish dish = createDish();
         Dish foundDish = dishService.findById(dish.getId());
         assertEquals(dish.getName(), foundDish.getName());
