@@ -10,8 +10,10 @@ import edu.aau.groupc.canteenbackend.user.exceptions.UserNotFoundException;
 import edu.aau.groupc.canteenbackend.user.exceptions.UsernameConflictException;
 import edu.aau.groupc.canteenbackend.user.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,12 @@ public class UserService implements IUserService {
     @Override
     public List<User> findAll() {
         return this.userRepository.findAll();
+    }
+
+    @Override
+    public User findEntityById(long id) throws ResponseStatusException {
+        Optional<User> userOptional = this.userRepository.findById(id);
+        return userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
     }
 
     @Override

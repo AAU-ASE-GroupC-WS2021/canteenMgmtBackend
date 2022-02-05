@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("H2Database")
@@ -37,7 +37,19 @@ class CanteenServiceTest {
         Canteen createdCanteen = createCanteen();
         Optional<Canteen> foundCanteen = canteenService.findById(createdCanteen.getId());
         assertTrue(foundCanteen.isPresent());
-        assertThat(createdCanteen).usingRecursiveComparison().isEqualTo(foundCanteen.get());
+        assertCanteensEqual(createdCanteen, foundCanteen.get());
+    }
+
+    @Test
+    void testFindEntityById_throwException() {
+        assertThrows(ResponseStatusException.class, () -> canteenService.findEntityById(-1));
+    }
+
+    @Test
+    void testFindEntityById() {
+        Canteen canteen = createCanteen();
+        Canteen returnedCanteen = canteenService.findEntityById(canteen.getId());
+        assertCanteensEqual(canteen, returnedCanteen);
     }
 
     @Test
@@ -57,10 +69,17 @@ class CanteenServiceTest {
         CanteenDTO cDTO = CanteenDTO.create(updatedName, updatedAddress, updatedNumTables);
         Canteen updatedCanteen = canteenService.update(c.getId(), cDTO);
         Canteen expectedCanteen = cDTO.toEntity().setId(c.getId());
-        assertThat(expectedCanteen).usingRecursiveComparison().isEqualTo(updatedCanteen);
+        assertCanteensEqual(expectedCanteen, updatedCanteen);
     }
 
     private Canteen createCanteen() {
         return canteenService.create(new Canteen("someCanteen", "someAddress", 420));
+    }
+
+    private void assertCanteensEqual(Canteen c1, Canteen c2) {
+        assertEquals(c1.getId(), c2.getId());
+        assertEquals(c1.getName(), c2.getName());
+        assertEquals(c1.getAddress(), c2.getAddress());
+        assertEquals(c1.getNumTables(), c2.getNumTables());
     }
 }

@@ -9,17 +9,16 @@ import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.dto.UserUpdateDTO;
 import edu.aau.groupc.canteenbackend.user.exceptions.UserNotFoundException;
 import edu.aau.groupc.canteenbackend.user.exceptions.UsernameConflictException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Random;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -220,6 +219,33 @@ class UserServiceTest {
             assertEquals(User.Type.ADMIN, u.getType());
         }
     }
+
+    @Test
+    void testFindById_NoUser() {
+        Optional<User> userOptional = userService.findById(-1);
+        assertTrue(userOptional.isEmpty());
+    }
+
+    @Test
+    void testFindById() {
+        User user = createUser(User.Type.USER, null);
+        Optional<User> userOptional = userService.findById(user.getId());
+        assertFalse(userOptional.isEmpty());
+        assertEquals(user.getId(), userOptional.get().getId());
+    }
+
+    @Test
+    void testFindEntityById_throwException() {
+        assertThrows(ResponseStatusException.class, () -> userService.findEntityById(-1));
+    }
+
+    @Test
+    void testFindEntityById() {
+        User user = createUser(User.Type.USER, null);
+        User returnedUser = userService.findEntityById(user.getId());
+        assertEquals(user.getId(), returnedUser.getId());
+    }
+
 
     private User createUser(User.Type type, Integer canteenID) {
         Canteen canteen = canteenID != null ? canteenService.findById(canteenID).get() : null;
