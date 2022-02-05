@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("H2Database")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CanteenControllerTest extends AbstractControllerTest implements JsonTest {
+class CanteenControllerTest extends AbstractControllerTest implements JsonTest {
 
     private MockMvc mvc;
     private final int invalidID = 9999;

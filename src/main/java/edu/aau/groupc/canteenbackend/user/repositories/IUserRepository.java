@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface IUserRepository extends JpaRepository<User, Long> {
 
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
-    Boolean existsByUsernameAndPassword(String username, String password);
+    boolean existsByUsernameAndPassword(String username, String password);
 
     User getUserByUsername(String username);
 

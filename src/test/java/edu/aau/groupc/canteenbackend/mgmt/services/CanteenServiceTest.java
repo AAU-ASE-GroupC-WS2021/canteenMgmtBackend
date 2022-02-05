@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("H2Database")
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class CanteenServiceTest {
+class CanteenServiceTest {
 
     private final int invalidID = 9999;
 
@@ -25,14 +25,14 @@ public class CanteenServiceTest {
     private ICanteenService canteenService;
 
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         assertTrue(canteenService.findAll().isEmpty());
         createCanteen();
         assertEquals(1, canteenService.findAll().size());
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         assertFalse(canteenService.findById(1).isPresent());
         Canteen createdCanteen = createCanteen();
         Optional<Canteen> foundCanteen = canteenService.findById(createdCanteen.getId());
@@ -41,14 +41,14 @@ public class CanteenServiceTest {
     }
 
     @Test
-    public void testUpdate_invalidId_ThenIllegalArgumentException() {
+    void testUpdate_invalidId_ThenIllegalArgumentException() {
         CanteenDTO c = CanteenDTO.create("someCanteen", "someAddress", 420);
         assertThrows(CanteenNotFoundException.class, () ->
                 canteenService.update(invalidID, c));
     }
 
     @Test
-    public void testUpdate_validId_ThenUpdatedCanteenReturned() throws CanteenNotFoundException {
+    void testUpdate_validId_ThenUpdatedCanteenReturned() throws CanteenNotFoundException {
         String updatedName = "updatedName";
         String updatedAddress = "updatedName";
         int updatedNumTables = 69;
