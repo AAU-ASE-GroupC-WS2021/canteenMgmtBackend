@@ -40,24 +40,31 @@ public class DishControllerTest extends AbstractControllerTest {
 //
 //
     @Test
-    public void testUpdateDish() throws JSONException {
+    public void testUpdateDish()  {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         ResponseEntity<String> response = makePutRequest("/dish", new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
-        String expected = "{\"name\":\"Cheese Burger\",\"price\":2.0,\"type\":\"STARTER\",\"dishDay\":\"WEDNESDAY\"}";
-
-        JSONAssert.assertEquals(expected, response.getBody(), false);
+        String expected = "dish updated";
+        assertThat(expected.equals(response.getBody())).isTrue();
     }
 
     @Test
-    public void testDeleteDish() throws JSONException {
+    public void testUpdateDishNON()  {
+        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+        ResponseEntity<String> response = makePutRequest("/dish", new Dish ("Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
+        String expected = "No Such Dish found";
+        assertThat(expected.equals(response.getBody())).isTrue();
+    }
+
+    @Test
+    public void testDeleteDish() {
 
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
 //        dishService.delete(new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
 
         ResponseEntity<String> response = makeDeleteRequest("/dish", new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY) );
-        String expected = " ";
+        String expected = "dish deleted";
 
-        JSONAssert.assertEquals(null, response.getBody(), false);
+        assertThat(expected.equals(response.getBody())).isTrue();
     }
 
     @Test

@@ -14,7 +14,7 @@ import java.util.Optional;
 @Transactional
 @Service
 public class DishService implements IDishService {
-    private DishRepository dishRepo;
+    private final DishRepository dishRepo;
 
     @Autowired
     public DishService(DishRepository dishRepo) {
@@ -23,7 +23,7 @@ public class DishService implements IDishService {
 
     @Override
     public List<Dish> findAll() {
-        return dishRepo.findAll();
+        return dishRepo.findAllByOrderByIdDesc();
     }
 
     @Override
@@ -32,23 +32,27 @@ public class DishService implements IDishService {
     }
 
 
-    public Dish update(Dish newDish) {
+    public ResponseEntity<Object> update(Dish newDish) {
         List<Dish> allDish = findAll();
-        int id = 0;
+        int flag = 0;
         for (Dish aDish : allDish) {
             if (aDish.getName().equals(newDish.getName())) {
                 aDish.setPrice(newDish.getPrice());
                 aDish.setType(newDish.getType());
                 aDish.setDishDay(newDish.getDishDay());
                 dishRepo.save(aDish);
-                id = aDish.getId();
+                flag =1;
                 break;
             }
         }
-        return dishRepo.getById(id);
+        if (flag == 1)
+            return ResponseEntity.ok("dish updated");
+
+        else
+            return ResponseEntity.ok("No Such Dish found");
     }
 
-    public ResponseEntity delete(Dish newDish) {
+    public ResponseEntity<Object> delete(Dish newDish) {
         List<Dish> allDish = findAll();
         int flag = 0;
         for (Dish aDish : allDish) {
@@ -58,12 +62,13 @@ public class DishService implements IDishService {
             }
         }
         if (flag == 1)
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("dish deleted");
+
         else
             return ResponseEntity.ok("No Such Dish");
         }
 
-    public ResponseEntity deleteAllDishes(String var) {
+    public ResponseEntity<Object> deleteAllDishes(String var) {
         if (var.equals("all"))
         {
             dishRepo.deleteAll();

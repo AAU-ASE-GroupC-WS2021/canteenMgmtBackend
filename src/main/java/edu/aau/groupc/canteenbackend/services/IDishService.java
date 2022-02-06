@@ -10,9 +10,9 @@ public interface IDishService {
 
     Dish create(Dish newDish);
 
-    ResponseEntity delete(Dish toEntity);
+    ResponseEntity<Object> delete(Dish toEntity);
 
-    Dish update(Dish toEntity);
+    ResponseEntity<Object> update(Dish toEntity);
 
-    ResponseEntity deleteAllDishes(String var) ;
+    ResponseEntity<Object> deleteAllDishes(String var) ;
 }

@@ -34,13 +34,13 @@ public class DishController {
     }
 
     @PutMapping(value = "/dish")
-    public Dish update(@Valid @RequestBody DishDTO updateDish)
+    public ResponseEntity<Object> update(@Valid @RequestBody DishDTO updateDish)
     {
         return dishService.update(updateDish.toEntity());
     }
 
     @DeleteMapping (value = "/dish")
-    public ResponseEntity delete(@Valid @RequestBody DishDTO deleteDish)
+    public ResponseEntity<Object> delete(@Valid @RequestBody DishDTO deleteDish)
     {
         return dishService.delete(deleteDish.toEntity());
     }
