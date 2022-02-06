@@ -18,38 +18,7 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- TOC entry 3008 (class 0 OID 16386)
--- Dependencies: 203
--- Data for Name: auth; Type: TABLE DATA; Schema: public; Owner: -
---
 
-
-
---
--- TOC entry 3010 (class 0 OID 16397)
--- Dependencies: 205
--- Data for Name: canteen; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.canteen (canteen_id, address, name, num_tables) VALUES (1, 'MyAddress', 'MyName', 44);
-
-
---
--- TOC entry 3012 (class 0 OID 16408)
--- Dependencies: 207
--- Data for Name: dish; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- TOC entry 3014 (class 0 OID 16416)
--- Dependencies: 209
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (3, '98ce311c092b0772bf5ef986b626e98856bc57b72699b166d27bd1f50fb0fecf', 0, 'owner', NULL);
 INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (4, 'e9749632c9795cbb006f73c9dff929da42ce03ae218e21593d4e6c1f1ff8241c', 2, 'user1', NULL);
 INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (5, '91bd699f617dca3c983ab9d39c56087379f4e684cb8167bb1ed477158a2dbb50', 2, 'user2', NULL);
 INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (6, '432c2008d5887d13d7fdda9cb2668e19c1e7b1bc1e360ef0db3c348c8d16443f', 2, 'user3', NULL);
