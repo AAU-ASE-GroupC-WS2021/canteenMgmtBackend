@@ -165,10 +165,9 @@
             <boolProp name="CounterConfig.per_user">false</boolProp>
           </CounterConfig>
           <hashTree/>
-          <SwitchController guiclass="SwitchControllerGui" testclass="SwitchController" testname="Weighted Random Switch" enabled="true">
-            <stringProp name="TestPlan.comments">Select random action based on weight</stringProp>
-            <stringProp name="SwitchController.value">${__javaScript( var s = &quot;0&quot;.repeat(${weight_get_users}) + &quot;1&quot;.repeat(${weight_get_canteens}) + &quot;2&quot;.repeat(${weight_create_canteen}) + &quot;3&quot;.repeat(${weight_update_canteen}) + &quot;4&quot;.repeat(${weight_create_admin}) + &quot;5&quot;.repeat(${weight_update_admin}); new Number(s.charAt( Math.floor(Math.random()*s.length) )) )}</stringProp>
-          </SwitchController>
+          <RandomController guiclass="RandomControlGui" testclass="RandomController" testname="Random Controller" enabled="true">
+            <intProp name="InterleaveControl.style">1</intProp>
+          </RandomController>
           <hashTree>
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Users" enabled="true">
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
