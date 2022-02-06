@@ -49,7 +49,7 @@ jobs:
       # first `image` defines the primary container where all steps will run
       # if no `name:` is provided, services are accessible through `localhost`
       - image: cimg/openjdk:17.0
-      - image: postgres
+      - image: postgres:12.9
         environment:
           POSTGRES_PASSWORD: mysecretpassword
     steps:
@@ -61,6 +61,9 @@ jobs:
       - run:
           name: Install Java 11
           command: sudo apt-get -y update && sudo apt-get -y install openjdk-11-jdk-headless
+      - run:
+          name: Install psql
+          command: sudo apt-get -y install postgresql-client
       # Wait for the server to start responding. We expect Bad Request 400 once it starts listening.
       # so override the shell and have the last command be the : { null } command to force exit code 0.
       - run:
@@ -69,6 +72,12 @@ jobs:
           command: |
             wget --retry-connrefused --waitretry=2 --read-timeout=20 --timeout=15 -t 20 http://localhost:8080/
             :
+      # Set up test fixture
+      - run:
+          name: Set up test fixture
+          command: |
+            export PGPASSWORD=mysecretpassword 
+            psql -h 127.0.0.1 -p 5432 -d postgres -U postgres -f src/test/jmeter/fixture_setup.sql > /dev/null
       # Run all performance tests in src/test/jmeter of the repository
       - run:
           name: Run performance tests
