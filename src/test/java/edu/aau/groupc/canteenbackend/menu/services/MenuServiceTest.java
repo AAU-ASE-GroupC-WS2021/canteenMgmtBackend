@@ -17,15 +17,18 @@ public class MenuServiceTest {
 
     @Autowired
     private IMenuService menuService;
-    @Autowired
-    private IDishService dishService;
+//    @Autowired
+//    private IDishService dishService;
     @Test
-    public void testFindAllMenus() {
-        int numDishesBefore = menuService.findAllMenus().size();
-        dishService.create(new Dish());
-        int numDishesAfter = menuService.findAllMenus().size();
+    public void testAddMenu() {
+        int numDishesBefore = menuService.findAll().size();
+        menuService.create(new Menu());
+        int numDishesAfter = menuService.findAll().size();
         assertEquals(numDishesBefore+1, numDishesAfter);
     }
+
+
+
 
 
 }

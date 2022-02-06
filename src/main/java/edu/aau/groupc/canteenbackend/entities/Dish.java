@@ -5,7 +5,9 @@ import org.springframework.lang.NonNull;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "dish")
+@Table(name = "dish",  uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"}),
+} )
 public class Dish implements DBEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

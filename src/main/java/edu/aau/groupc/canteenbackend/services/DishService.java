@@ -26,8 +26,16 @@ public class DishService implements IDishService {
         return dishRepo.findAllByOrderByIdDesc();
     }
 
+//    @Override
+//    public Dish create(Dish newDish) {
+//        return dishRepo.save(newDish);
+//    }
     @Override
     public Dish create(Dish newDish) {
+
+    if (dishRepo.existsByName((newDish.getName()))) {
+        return null;
+    }
         return dishRepo.save(newDish);
     }
 

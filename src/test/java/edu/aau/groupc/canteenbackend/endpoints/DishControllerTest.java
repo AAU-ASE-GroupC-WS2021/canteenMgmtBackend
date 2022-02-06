@@ -33,8 +33,8 @@ public class DishControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCreateDishes() throws JSONException {
-        ResponseEntity<String> response = makePostRequest("/dish", new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
-        String expected = "{\"name\":\"Salad\",\"price\":1.5,\"type\":\"STARTER\",\"dishDay\":\"MONDAY\"}";
+        ResponseEntity<String> response = makePostRequest("/dish", new Dish("Salad1", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
+        String expected = "{\"name\":\"Salad1\",\"price\":1.5,\"type\":\"STARTER\",\"dishDay\":\"MONDAY\"}";
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }
 //
