@@ -24,7 +24,7 @@ public class MenuServiceTest {
         int numDishesBefore = menuService.findAll().size();
         menuService.create(new Menu());
         int numDishesAfter = menuService.findAll().size();
-        assertEquals(numDishesBefore+1, numDishesAfter);
+        assertEquals(numDishesBefore, numDishesAfter);
     }
 
 

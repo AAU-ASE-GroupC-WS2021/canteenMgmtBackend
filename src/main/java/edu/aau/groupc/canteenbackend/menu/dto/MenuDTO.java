@@ -23,7 +23,7 @@ public class MenuDTO implements DTO {
     @NotNull(message = "Price is required")
     private Float price;
 
-//    @OneToMany(cascade = {CascadeType.REFRESH})
+    @NotNull(message ="Menu must have at least one dish")
     private List<String> menuDishNames;
 
     @EnumPattern(regexp = "NOMENUDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY", name="MenuDay")

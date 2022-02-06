@@ -2,11 +2,14 @@ package edu.aau.groupc.canteenbackend.endpoints;
 
 import edu.aau.groupc.canteenbackend.dto.DishDTO;
 import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.services.DishService;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -17,6 +20,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DishControllerTest extends AbstractControllerTest {
     @Autowired
     private DishService dishService;
+
+
+    protected ResponseEntity<String> makeGetRequest(String uri) {
+        return restTemplate.exchange(
+                createURLWithPort(uri),
+                HttpMethod.GET,
+                new HttpEntity<>(null, headers),
+                String.class);
+    }
+    protected ResponseEntity<String> makePostRequest(String uri, Menu newDish) {
+        return restTemplate.exchange(
+                createURLWithPort(uri),
+                HttpMethod.POST,
+                new HttpEntity<>(newDish, headers),
+                String.class);
+    }
+    protected ResponseEntity<String> makePutRequest(String uri, Menu newDish) {
+        return restTemplate.exchange(
+                createURLWithPort(uri),
+                HttpMethod.PUT,
+                new HttpEntity<>(newDish, headers),
+                String.class);
+    }
+
+    protected ResponseEntity<String> makeDeleteRequest(String uri, Menu newDish) {
+        return restTemplate.exchange(
+                createURLWithPort(uri),
+                HttpMethod.DELETE,
+                new HttpEntity<>(newDish, headers),
+                String.class);
+    }
 
     @Test
     public void testGetDishes() throws JSONException {

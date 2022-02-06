@@ -15,12 +15,13 @@ public interface IMenuService {
 
     List<Menu> findAll();
 
-    Menu create(Menu newMenu);
+    ResponseEntity<Object> create(Menu newMenu);
 
     ResponseEntity<Object> delete(Menu newMenu);
 
     ResponseEntity<Object> update(Menu newMenu);
 
 
-    List<Menu> findByMenuDay(Menu.MenuDay menuDay);
+    List<Menu> findByMenuDay(String menuDay);
+    ResponseEntity<Object> deleteAllMenus(String var);
 }

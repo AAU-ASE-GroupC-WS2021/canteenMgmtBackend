@@ -6,6 +6,7 @@ import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,49 +16,56 @@ import java.util.List;
 @Transactional
 @Service
 public class MenuService implements IMenuService {
-//    private final DishRepository dishRepo;
+    private final DishRepository dishRepo;
     private final MenuRepository menuRepo;
 
     @Autowired
-    public MenuService(MenuRepository menuRepo) {
-//        this.dishRepo = dishRepo;
+    public MenuService(MenuRepository menuRepo, DishRepository dishRepo) {
+        this.dishRepo = dishRepo;
         this.menuRepo = menuRepo;
     }
 
+public List<Menu> findByMenuDay(String menuDay){
+        return menuRepo.findByMenuDay(Menu.MenuDay.valueOf(menuDay));
+}
 
-//    public List<Dish> findAllMenus() {
-//
-//        return dishRepo.findAll(Sort.by(Sort.Direction.ASC,"dishDay"));
-//    }
-//
-//    public List<Dish> findMenuByDay( Dish.DishDay day) {
-//
-//        return dishRepo.findBydishDay(day);
-//    }
-
-    public List<Menu> findByMenuDay(Menu.MenuDay day){
-
-        return menuRepo.findByMenuDay(day);
-    }
 //    @Override
     public List<Menu> findAll() {
         return menuRepo.findAllByOrderByIdDesc();
     }
 
-    public Menu create(Menu newMenu) {
-//        List<String> menuDishNames =newMenu.getMenuDishNames();
-//        for (String name: menuDishNames){
-//
-//        }
-        return menuRepo.save(newMenu);
+    public ResponseEntity<Object> create(Menu newMenu) {
+        List<String> menuDishNames =newMenu.getMenuDishNames();
+        if (menuRepo.existsByName(newMenu.getName())){
+            return ResponseEntity.ok("Menu already exists");
+        }
+        if (menuDishNames == null){
+            return ResponseEntity.ok("No Dish selected");
+        }
+
+        for (String name: menuDishNames){
+            if (! dishRepo.existsByName(name)){
+                return ResponseEntity.ok(name + " Dish does not exist in the database");
+            }
+        }
+
+        menuRepo.save(newMenu);
+        return ResponseEntity.ok(newMenu);
     }
 
     public ResponseEntity<Object> update(Menu newMenu) {
         List<Menu> allMenu = findAll();
+        List<String> menuDishNames =newMenu.getMenuDishNames();
         int flag = 0;
+        for (String name: menuDishNames){
+            if (! dishRepo.existsByName(name)){
+                return ResponseEntity.ok(name + " Dish does not exist in the database");
+            }
+        }
         for (Menu aMenu : allMenu) {
             if (aMenu.getName().equals(newMenu.getName())) {
                 aMenu.setPrice(newMenu.getPrice());
+                aMenu.setMenuDay(newMenu.getMenuDay());
                 aMenu.setMenuDishNames(newMenu.getMenuDishNames());
                 menuRepo.save(aMenu);
                 flag =1;
@@ -66,7 +74,6 @@ public class MenuService implements IMenuService {
         }
         if (flag == 1)
             return ResponseEntity.ok("Menu Updated");
-
         else
             return ResponseEntity.ok("No Such Menu Found");
     }
@@ -81,9 +88,19 @@ public class MenuService implements IMenuService {
             }
         }
         if (flag == 1)
-            return ResponseEntity.ok("dish deleted");
+            return ResponseEntity.ok("Menu deleted");
 
         else
-            return ResponseEntity.ok("No Such Dish");
+            return ResponseEntity.ok("No Such Menu");
+    }
+
+    public ResponseEntity<Object> deleteAllMenus(String var) {
+        if (var.equals("all"))
+        {
+            menuRepo.deleteAll();
+            return ResponseEntity.ok().build();
+        }
+        else
+            return ResponseEntity.ok("invalid input parameter");
     }
 }

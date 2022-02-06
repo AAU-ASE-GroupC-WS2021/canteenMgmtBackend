@@ -24,17 +24,8 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-//    @GetMapping(value = "/menu")
-//    public List<Dish> getMenuDishes(@RequestParam(required = false) @Valid Dish.DishDay menuDay)
-//    {
-//        if(menuDay !=null)
-//            return menuService.findMenuByDay(menuDay);
-//        else
-//            return menuService.findAllMenus();
-//    }
-
     @GetMapping(value = "/menu")
-    public List<Menu> getMenus(@RequestParam(required = false) @Valid Menu.MenuDay menuDay)
+    public List<Menu> getMenus(@RequestParam(required = false) @Valid String menuDay)
     {
         if(menuDay !=null)
             return menuService.findByMenuDay(menuDay);
@@ -44,7 +35,7 @@ public class MenuController {
     }
 
     @PostMapping(value = "/menu")
-    public Menu createMenu(@Valid @RequestBody MenuDTO newMenu)
+    public ResponseEntity<Object>  createMenu(@Valid @RequestBody MenuDTO newMenu)
     {
         return menuService.create(newMenu.toEntity());
     }

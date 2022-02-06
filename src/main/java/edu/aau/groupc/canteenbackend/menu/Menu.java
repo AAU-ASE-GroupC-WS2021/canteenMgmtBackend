@@ -11,7 +11,9 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "menu")
+@Table(name = "menu",  uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"}),
+} )
 public class Menu implements DBEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,7 @@ public class Menu implements DBEntity {
         FRIDAY,
         SATURDAY
     }
-
+    @NonNull
     @ElementCollection
     List<String> menuDishNames;
 
