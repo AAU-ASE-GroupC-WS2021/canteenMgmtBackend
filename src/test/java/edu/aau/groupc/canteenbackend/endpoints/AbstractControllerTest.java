@@ -51,13 +51,7 @@ public class AbstractControllerTest {
                 new HttpEntity<>(null, headers),
                 String.class);
     }
-    protected ResponseEntity<String> makePostRequest(String uri, Dish newDish) {
-        return restTemplate.exchange(
-                createURLWithPort(uri),
-                HttpMethod.POST,
-                new HttpEntity<>(newDish, defaultHeaders),
-                String.class);
-    }
+
     protected ResponseEntity<String> makePutRequest(String uri, Dish newDish) {
         return restTemplate.exchange(
                 createURLWithPort(uri),

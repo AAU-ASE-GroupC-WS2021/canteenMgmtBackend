@@ -3,25 +3,37 @@ package edu.aau.groupc.canteenbackend.endpoints;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.services.DishService;
+import edu.aau.groupc.canteenbackend.util.JsonTest;
 import org.json.JSONException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ActiveProfiles("H2Database")
-public class DishControllerTest extends AbstractControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class DishControllerTest extends AbstractControllerTest implements JsonTest {
+
+    private MockMvc mvc;
     @Autowired
     private DishService dishService;
-
     private final HttpHeaders headers = new HttpHeaders();
+
+    @BeforeAll
+    void setupMVC() {
+        mvc = MockMvcBuilders.standaloneSetup(new DishController(dishService)).build();
+    }
 
 
     protected ResponseEntity<String> makeGetRequest(String uri) {
@@ -69,13 +81,18 @@ public class DishControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testCreateDishes() throws JSONException {
-        ResponseEntity<String> response = makePostRequest("/dish", new Dish("Salad1", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
+    public void testCreateDishes() throws Exception {
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                .post("/dish")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(new Dish("Salad1", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                .andExpect(status().isOk())
+                .andReturn();
+
         String expected = "{\"name\":\"Salad1\",\"price\":1.5,\"type\":\"STARTER\",\"dishDay\":\"MONDAY\"}";
-        JSONAssert.assertEquals(expected, response.getBody(), false);
+        JSONAssert.assertEquals(expected, res.getResponse().getContentAsString(), false);
     }
-//
-//
+
     @Test
     public void testUpdateDish()  {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
