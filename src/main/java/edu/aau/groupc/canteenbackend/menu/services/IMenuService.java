@@ -9,9 +9,6 @@ import java.util.List;
 public interface IMenuService {
 
 
-//    List<Dish> findAllMenus();
-//
-//    List<Dish> findMenuByDay( Dish.DishDay day);
 
     List<Menu> findAll();
 

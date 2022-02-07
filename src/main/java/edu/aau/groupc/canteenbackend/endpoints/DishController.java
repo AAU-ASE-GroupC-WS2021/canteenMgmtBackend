@@ -31,11 +31,6 @@ public class DishController {
             return dishService.findByDishDayAll(dishDay);
     }
 
-//    @GetMapping(value = "/dish")
-//    public List<Dish> getDishes()
-//    {
-//        return dishService.findAll();
-//    }
 
     @PostMapping(value = "/dish")
     public Dish createDish(@Valid @RequestBody DishDTO newDish)

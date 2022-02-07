@@ -17,8 +17,7 @@ public class MenuServiceTest {
 
     @Autowired
     private IMenuService menuService;
-//    @Autowired
-//    private IDishService dishService;
+
     @Test
     public void testAddMenu() {
         int numDishesBefore = menuService.findAll().size();
