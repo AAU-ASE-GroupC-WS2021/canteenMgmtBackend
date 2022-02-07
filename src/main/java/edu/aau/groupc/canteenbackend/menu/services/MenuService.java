@@ -26,7 +26,7 @@ public List<Menu> findByMenuDay(String menuDay){
         return menuRepo.findByMenuDay(Menu.MenuDay.valueOf(menuDay));
 }
 
-//    @Override
+    @Override
     public List<Menu> findAll() {
         return menuRepo.findAllByOrderByIdDesc();
     }

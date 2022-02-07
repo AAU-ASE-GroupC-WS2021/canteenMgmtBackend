@@ -1,32 +1,52 @@
 package edu.aau.groupc.canteenbackend.menu.endpoints;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.endpoints.DishController;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
+import edu.aau.groupc.canteenbackend.menu.controller.MenuController;
 import edu.aau.groupc.canteenbackend.menu.services.MenuService;
 import edu.aau.groupc.canteenbackend.services.DishService;
 import org.json.JSONException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import edu.aau.groupc.canteenbackend.util.JsonTest;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ActiveProfiles("H2Database")
-class MenuControllerTest extends AbstractControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class MenuControllerTest extends AbstractControllerTest implements JsonTest{
+
+
+    private MockMvc mvc;
+
     @Autowired
     private DishService dishService;
     @Autowired
     private MenuService menuService;
+
+    @BeforeAll
+    void setupMVC() {
+        mvc = MockMvcBuilders.standaloneSetup(new MenuController(menuService)).build();
+    }
+
+
 
     private final HttpHeaders headers = new HttpHeaders();
 
@@ -76,39 +96,61 @@ class MenuControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void testCreateMenu() throws JSONException {
+    void testCreateMenu1() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        String expected = "{\"id\":7,\"name\":\"veg menu\",\"price\":2.0,\"menuDay\":\"MONDAY\",\"menuDishNames\":[\"Salad\",\"Cheese Burger\",\"Tiramisu\"]}";
-        JSONAssert.assertEquals(expected, response.getBody(), false);
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String expected = "{\"id\":2,\"name\":\"veg menu\",\"price\":2.0,\"menuDay\":\"MONDAY\",\"menuDishNames\":[\"Salad\",\"Cheese Burger\",\"Tiramisu\"]}";
+        JSONAssert.assertEquals(expected, res.getResponse().getContentAsString(), false);
     }
 
+
     @Test
-    void testCreateMenuAlreadyExist() {
+    void testCreateMenuAlreadyExist() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response_old = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        String expected = "Menu already exists";
-        assertThat(response.getBody()).isEqualTo(expected);
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+        String expected ="Menu already exists";
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
     @Test
-    void testCreateMenuDishNotExist() {
+    void testCreateMenuDishNotExist() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "Salad Dish does not exist in the database";
-        assertThat(response.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
     @Test
@@ -119,85 +161,145 @@ class MenuControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void testFindMenuByDay() {
+    void testFindMenuByDay()  throws Exception{
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
         List<Menu> menuList = menuService.findByMenuDay("MONDAY");
         int numOfMenusOld=menuList.size();
-        ResponseEntity<String> response_new = makePostRequest(new Menu("veg menu2", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
         List<Menu> menuList2 = menuService.findByMenuDay("MONDAY");
         int numOfMenusNew=menuList2.size();
         assertThat(numOfMenusNew).isEqualTo(numOfMenusOld+1);
     }
 
     @Test
-    void testUpdateMenu() {
+    void testUpdateMenu() throws Exception{
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Burger", 2.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        ResponseEntity<String> response_new = makePutRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu", "Burger")));
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .put("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "Menu Updated";
-        assertThat(response_new.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
     @Test
-    void testUpdateMenuDishNotExist() {
+    void testUpdateMenuDishNotExist() throws Exception{
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        ResponseEntity<String> response_new = makePutRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu", "Burger")));
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .put("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu","Burger")))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "Burger Dish does not exist in the database";
-        assertThat(response_new.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
     @Test
-    void testUpdateMenuNotExist() {
+    void testUpdateMenuNotExist() throws Exception{
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        ResponseEntity<String> response_new = makePutRequest(new Menu("Healthy menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .put("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "No Such Menu Found";
-        assertThat(response_new.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
     @Test
-    void testDeleteMenu() {
+    void testDeleteMenu() throws Exception{
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        ResponseEntity<String> response_new = makeDeleteRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .delete("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "Menu deleted";
-        assertThat(response_new.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
     @Test
-    void testDeleteMenuNotExist() {
+    void testDeleteMenuNotExist() throws Exception{
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        ResponseEntity<String> response_new = makeDeleteRequest(new Menu("Healthy menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .delete("/menu")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "No Such Menu";
-        assertThat(response_new.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
 }

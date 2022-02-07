@@ -115,7 +115,7 @@ class DishControllerTest extends AbstractControllerTest implements JsonTest {
 
     @Test
     void testDeleteNoDish() throws Exception {
-
+        dishService.deleteAllDishes("all");
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                         .delete("/dish")
                         .contentType(MediaType.APPLICATION_JSON)
