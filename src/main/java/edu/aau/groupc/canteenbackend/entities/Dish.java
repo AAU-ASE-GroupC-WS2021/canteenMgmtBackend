@@ -1,8 +1,12 @@
 package edu.aau.groupc.canteenbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.aau.groupc.canteenbackend.orders.OrderHasDish;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "dish",  uniqueConstraints = {
@@ -24,6 +28,10 @@ public class Dish implements DBEntity {
         MAIN,
         DESSERT
     }
+
+    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<OrderHasDish> dishIsInOrders = new HashSet<>();
 
     private DishDay dishDay;
 
@@ -90,5 +98,13 @@ public class Dish implements DBEntity {
     public Dish setDishDay(@NonNull DishDay dishDay) {
         this.dishDay = dishDay;
         return this;
+    }
+
+    public Set<OrderHasDish> getDishIsInOrders() {
+        return dishIsInOrders;
+    }
+
+    public void setDishIsInOrders(Set<OrderHasDish> dishIsInOrders) {
+        this.dishIsInOrders = dishIsInOrders;
     }
 }

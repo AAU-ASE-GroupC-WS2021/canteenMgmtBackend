@@ -4,8 +4,10 @@ import edu.aau.groupc.canteenbackend.dao.DishRepository;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.plaf.TreeUI;
 import java.util.List;
@@ -19,6 +21,12 @@ public class DishService implements IDishService {
     @Autowired
     public DishService(DishRepository dishRepo) {
         this.dishRepo = dishRepo;
+    }
+
+    @Override
+    public Dish findById(Integer id) throws ResponseStatusException {
+        Optional<Dish> dishOptional = dishRepo.findById(id);
+        return dishOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "dish not found"));
     }
 
     @Override

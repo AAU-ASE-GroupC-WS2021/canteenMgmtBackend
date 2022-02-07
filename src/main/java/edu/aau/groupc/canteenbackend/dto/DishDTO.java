@@ -20,7 +20,7 @@ public class DishDTO implements DTO {
     @NotNull(message = "Price is required")
     private Float price;
     @NotNull(message = "Type is required")
-    @EnumPattern(regexp = "STARTER|MAIN|DESSERT", name="Type")
+    @EnumPattern(regexp = "STARTER|MAIN|DESSERT", name = "Type")
     private String type;
     @EnumPattern(regexp = "NOMENUDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY", name="DishDay")
     private String dishDay = "NOMENUDAY";

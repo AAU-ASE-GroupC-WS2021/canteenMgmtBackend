@@ -4,13 +4,17 @@ import edu.aau.groupc.canteenbackend.entities.DBEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "auth", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username", "token"}),
+        @UniqueConstraint(columnNames = {"token"}),
 })
 public class Auth implements DBEntity {
+
+    private static int defaultTokenValidityPeriodMilliseconds = 24 * 60 * 60 * 1000;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,23 +30,23 @@ public class Auth implements DBEntity {
     public Auth(String username) {
         super();
         this.username = username;
-        this.token = username + System.currentTimeMillis();
+        this.token = generateRandomToken();
         this.timeStart = System.currentTimeMillis();
-        this.timeEnd = this.timeStart + 60 * 60 * 1000;
+        this.timeEnd = this.timeStart + defaultTokenValidityPeriodMilliseconds;
     }
 
     public Auth(String username, String token) {
         super();
         this.username = username;
         this.token = token;
-        this.timeStart = 0;
-        this.timeEnd = 0;
+        this.timeStart = System.currentTimeMillis();
+        this.timeEnd = this.timeStart + defaultTokenValidityPeriodMilliseconds;
     }
 
     public Auth(String username, long maxDuration) {
         super();
         this.username = username;
-        this.token = username + System.currentTimeMillis();
+        this.token = generateRandomToken();
         this.timeStart = System.currentTimeMillis();
         this.timeEnd = this.timeStart + maxDuration;
     }
@@ -85,5 +89,38 @@ public class Auth implements DBEntity {
 
     public void setTimeEnd(long maxDuration) {
         this.timeEnd = this.timeStart + maxDuration;
+    }
+
+    public boolean isNotExpired() {
+        long now = System.currentTimeMillis();
+        return now >= timeStart && now <= timeEnd;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Auth auth = (Auth) o;
+        return id == auth.id && timeStart == auth.timeStart && timeEnd == auth.timeEnd && username.equals(auth.username) && token.equals(auth.token);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, token, timeStart, timeEnd);
+    }
+
+    @Override
+    public String toString() {
+        return "Auth{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", token='" + token + '\'' +
+                ", timeStart=" + timeStart +
+                ", timeEnd=" + timeEnd +
+                '}';
+    }
+
+    private String generateRandomToken() {
+        return UUID.randomUUID().toString();
     }
 }

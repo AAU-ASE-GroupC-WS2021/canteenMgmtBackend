@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -25,7 +26,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public Auth login(String username, String password) {
-        if (!this.userRepository.existsByUsernameAndPassword(username, password)) {
+        if (!Boolean.TRUE.equals(this.userRepository.existsByUsernameAndPassword(username, password))) {
             return null;
         }
 
@@ -33,8 +34,8 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean logout(String username, String token) {
-        return this.authRepository.deleteByUsernameAndToken(username, token) > 0;
+    public Boolean logout(String token) {
+        return this.authRepository.deleteByToken(token) > 0;
     }
 
     @Override
@@ -43,16 +44,30 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public Boolean isValidLogin(String username, String token) {
-        return this.authRepository.getAuthByUsernameAndToken(username, token) != null;
+    public boolean isValidLogin(String token) {
+        if (token == null) {
+            return false;
+        }
+
+        Optional<Auth> auth = authRepository.getAuthByToken(token);
+        if (auth.isEmpty()) {
+            return false;
+        }
+
+        return auth.get().isNotExpired();
     }
 
     @Override
-    public User getUserByUsernameAndToken(String username, String token) {
-        if (!isValidLogin(username, token)) {
+    public User getUserByToken(String token) {
+        if (token == null) {
             return null;
         }
 
-        return this.userRepository.getUserByUsername(username);
+        Optional<Auth> auth = authRepository.getAuthByToken(token);
+        if (auth.isEmpty()) {
+            return null;
+        }
+
+        return userRepository.getUserByUsername(auth.get().getUsername());
     }
 }

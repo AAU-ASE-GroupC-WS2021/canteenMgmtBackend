@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Data
 public class UserDto implements DTO, Serializable {
@@ -23,6 +24,8 @@ public class UserDto implements DTO, Serializable {
     @Length(min = 64, max = 64, message = "Password must be exactly 64 characters long!")
     private String password;
 
+    private Integer canteenID;
+
     private UserDto() {}
 
     public UserDto(String username, String password) {
@@ -30,9 +33,35 @@ public class UserDto implements DTO, Serializable {
         this.password = password;
     }
 
+    public UserDto(String username, String password, Integer canteenID) {
+        this.username = username;
+        this.password = password;
+        this.canteenID = canteenID;
+    }
+
     @Override
     public User toEntity() {
         return new User(getUsername(), getPassword(), User.Type.USER);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return username.equals(userDto.username) && password.equals(userDto.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto {" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
