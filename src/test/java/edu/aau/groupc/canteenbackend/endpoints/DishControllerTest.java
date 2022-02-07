@@ -1,5 +1,6 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.services.DishService;
@@ -17,6 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.io.UnsupportedEncodingException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DishControllerTest extends AbstractControllerTest implements JsonTest {
 
     private MockMvc mvc;
+
     @Autowired
     private DishService dishService;
     private final HttpHeaders headers = new HttpHeaders();
@@ -35,47 +39,15 @@ class DishControllerTest extends AbstractControllerTest implements JsonTest {
         mvc = MockMvcBuilders.standaloneSetup(new DishController(dishService)).build();
     }
 
-
-    protected ResponseEntity<String> makeGetRequestDish(String uri) {
-        return restTemplate.exchange(
-                createURLWithPort(uri),
-                HttpMethod.GET,
-                new HttpEntity<>(null, headers),
-                String.class);
-    }
-
-    protected ResponseEntity<String> makePostRequestDish(String uri, Menu newDish) {
-        return restTemplate.exchange(
-                createURLWithPort(uri),
-                HttpMethod.POST,
-                new HttpEntity<>(newDish, headers),
-                String.class);
-    }
-    protected ResponseEntity<String> makePutRequestDish(String uri, Menu newDish) {
-        return restTemplate.exchange(
-                createURLWithPort(uri),
-                HttpMethod.PUT,
-                new HttpEntity<>(newDish, headers),
-                String.class);
-    }
-
-    protected ResponseEntity<String> makeDeleteRequest(String uri, Menu newDish) {
-        return restTemplate.exchange(
-                createURLWithPort(uri),
-                HttpMethod.DELETE,
-                new HttpEntity<>(newDish, headers),
-                String.class);
-    }
-
     @Test
     void testGetDishes() throws JSONException {
         dishService.deleteAllDishes("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
 
-        ResponseEntity<String> response = makeGetRequestDish("/dish");
+        ResponseEntity<String> response = makeGetRequest("/dish");
         String expected = "[{\"name\":\"Salad\",\"price\":1.5,\"type\":\"STARTER\",\"dishDay\":\"MONDAY\"}," +
-                           "{\"name\":\"Cheese Burger\",\"price\":4.0,\"type\":\"MAIN\",\"dishDay\":\"MONDAY\"}]";
+                "{\"name\":\"Cheese Burger\",\"price\":4.0,\"type\":\"MAIN\",\"dishDay\":\"MONDAY\"}]";
 
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }
@@ -83,9 +55,9 @@ class DishControllerTest extends AbstractControllerTest implements JsonTest {
     @Test
     void testCreateDishes() throws Exception {
         MvcResult res = mvc.perform(MockMvcRequestBuilders
-                .post("/dish")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(new Dish("Salad1", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                        .post("/dish")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Dish("Salad1", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -94,41 +66,65 @@ class DishControllerTest extends AbstractControllerTest implements JsonTest {
     }
 
     @Test
-    void testUpdateDish()  {
-        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePutRequest("/dish", new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
-        String expected = "dish updated";
-        assertThat(response.getBody()).isEqualTo(expected);
-    }
-
-    @Test
-    void testUpdateDishNON()  {
-        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makePutRequest("/dish", new Dish ("Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
+    void testUpdateDishNoSuchDish() throws Exception {
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .put("/dish")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Dish("Salad1", 2f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "No Such Dish found";
-        assertThat(response.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
+
     @Test
-    void testDeleteDish() {
+    void testUpdateDishes() throws Exception {
+        MvcResult res_old = mvc.perform(MockMvcRequestBuilders
+                        .post("/dish")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Dish("Salad1", 2f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                .andExpect(status().isOk())
+                .andReturn();
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .put("/dish")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Dish("Salad1", 2f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                .andExpect(status().isOk())
+                .andReturn();
+        String expected = "dish updated";
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
+    }
 
-        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
-//        dishService.delete(new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
+    // old tests
 
-        ResponseEntity<String> response = makeDeleteRequest("/dish", new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY) );
+    @Test
+    void testDeleteDish() throws Exception {
+
+        dishService.create(new Dish("Salad1", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .delete("/dish")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Dish("Salad1", 2f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                .andExpect(status().isOk())
+                .andReturn();
         String expected = "dish deleted";
-
-        assertThat(response.getBody()).isEqualTo(expected);
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
     @Test
-    void testDeleteDishNonExisting() {
-        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
-        ResponseEntity<String> response = makeDeleteRequest("/dish", new Dish ("Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY) );
-        String expected = "No Such Dish";
-        assertThat(response.getBody()).isEqualTo(expected);
-    }
+    void testDeleteNoDish() throws Exception {
 
+        MvcResult res = mvc.perform(MockMvcRequestBuilders
+                        .delete("/dish")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new Dish("Salad1", 2f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                .andExpect(status().isOk())
+                .andReturn();
+        String expected = "No Such Dish";
+        assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
+    }
 
 
 }

@@ -45,8 +45,8 @@ class DishServiceTest {
     void testDeleteAllDish() {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.deleteAllDishes("all");
-        int numDishesAtual = dishService.findAll().size();
-        assertEquals(0, numDishesAtual);
+        int numDishesActual = dishService.findAll().size();
+        assertEquals(0, numDishesActual);
     }
 
     @Test

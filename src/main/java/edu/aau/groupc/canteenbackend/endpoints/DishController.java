@@ -33,19 +33,20 @@ public class DishController {
     }
 
 
-    @Secured(User.Type.USER)
+    @Secured(User.Type.ADMIN)
     @PostMapping(value = "/dish")
     public Dish createDish(@Valid @RequestBody DishDTO newDish)
     {
         return dishService.create(newDish.toEntity());
     }
 
+    @Secured(User.Type.ADMIN)
     @PutMapping(value = "/dish")
     public ResponseEntity<Object> update(@Valid @RequestBody DishDTO updateDish)
     {
         return dishService.update(updateDish.toEntity());
     }
-
+    @Secured(User.Type.ADMIN)
     @DeleteMapping (value = "/dish")
     public ResponseEntity<Object> delete(@Valid @RequestBody DishDTO deleteDish)
     {
