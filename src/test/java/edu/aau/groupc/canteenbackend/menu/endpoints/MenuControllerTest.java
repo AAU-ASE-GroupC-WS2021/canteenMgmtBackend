@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,6 +28,7 @@ public class MenuControllerTest extends AbstractControllerTest {
     @Autowired
     private MenuService menuService;
 
+    private final HttpHeaders headers = new HttpHeaders();
 
     protected ResponseEntity<String> makeGetRequest(String uri) {
         return restTemplate.exchange(

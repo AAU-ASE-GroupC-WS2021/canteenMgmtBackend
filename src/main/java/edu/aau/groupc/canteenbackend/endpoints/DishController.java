@@ -3,7 +3,6 @@ package edu.aau.groupc.canteenbackend.endpoints;
 import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.dto.DishDTO;
 import edu.aau.groupc.canteenbackend.entities.Dish;
-import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
 import org.springframework.beans.factory.annotation.Autowired;

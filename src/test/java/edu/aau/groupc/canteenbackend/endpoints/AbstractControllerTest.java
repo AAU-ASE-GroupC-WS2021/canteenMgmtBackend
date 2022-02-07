@@ -55,14 +55,14 @@ public class AbstractControllerTest {
         return restTemplate.exchange(
                 createURLWithPort(uri),
                 HttpMethod.POST,
-                new HttpEntity<>(newDish, headers),
+                new HttpEntity<>(newDish, defaultHeaders),
                 String.class);
     }
     protected ResponseEntity<String> makePutRequest(String uri, Dish newDish) {
         return restTemplate.exchange(
                 createURLWithPort(uri),
                 HttpMethod.PUT,
-                new HttpEntity<>(newDish, headers),
+                new HttpEntity<>(newDish, defaultHeaders),
                 String.class);
     }
 
@@ -70,7 +70,7 @@ public class AbstractControllerTest {
         return restTemplate.exchange(
                 createURLWithPort(uri),
                 HttpMethod.DELETE,
-                new HttpEntity<>(newDish, headers),
+                new HttpEntity<>(newDish, defaultHeaders),
                 String.class);
     }
 

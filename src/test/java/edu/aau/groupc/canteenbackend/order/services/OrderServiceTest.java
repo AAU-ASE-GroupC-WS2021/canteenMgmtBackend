@@ -89,7 +89,7 @@ class OrderServiceTest {
     void testFindAllByUserAsDTO_WithDish_toTestEntityToDTOConversion() {
         User user = createEmptyUser();
         Canteen canteen = createCanteen();
-        Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.MAIN));
+        Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(user.getId(), exampleDish, count, new Date(), canteen.getId());
         orderService.create(createOrderDTO);
         List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(user.getId());
@@ -108,7 +108,7 @@ class OrderServiceTest {
     void testCreate() {
         User user = createEmptyUser();
         Canteen canteen = createCanteen();
-        Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.DESSERT));
+        Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
         CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleDish(user.getId(), exampleDish, count, new Date(), canteen.getId());
         OrderDTO orderDTO = orderService.create(createOrderDTO);
         assertEquals(1, orderDTO.getDishes().size());

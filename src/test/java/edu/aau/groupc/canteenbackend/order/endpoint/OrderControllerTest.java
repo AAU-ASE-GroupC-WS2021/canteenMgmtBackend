@@ -59,7 +59,7 @@ class OrderControllerTest extends AbstractControllerTest implements JsonTest {
         mvc = MockMvcBuilders.standaloneSetup(new OrderController(orderService)).build();
         initCanteens();
         initUsers();
-        firstDish = dishService.create(new Dish("test", 2, Dish.Type.MAIN));
+        firstDish = dishService.create(new Dish("test", 2, Dish.Type.MAIN, Dish.DishDay.FRIDAY));
     }
 
     @Test

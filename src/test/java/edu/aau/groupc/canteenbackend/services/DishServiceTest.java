@@ -1,7 +1,6 @@
 package edu.aau.groupc.canteenbackend.services;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -40,7 +38,7 @@ class DishServiceTest {
     }
 
     private Dish createDish() {
-        return dishService.create(new Dish("test", 5, Dish.Type.MAIN));
+        return dishService.create(new Dish("test", 5, Dish.Type.MAIN, Dish.DishDay.MONDAY));
     }
 
     @Test
