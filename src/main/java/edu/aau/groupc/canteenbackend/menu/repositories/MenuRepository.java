@@ -10,7 +10,8 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
 
     List<Menu> findAllByOrderByIdDesc();
-    List<Menu> findByMenuDay(Menu.MenuDay day);
+
+    List<Menu> findByMenuDay(Menu.MenuDay menuDay);
     Menu       findByName (String name);
     boolean existsByName(String name);
 }

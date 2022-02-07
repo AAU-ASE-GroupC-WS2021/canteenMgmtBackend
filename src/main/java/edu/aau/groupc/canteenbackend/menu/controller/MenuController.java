@@ -27,11 +27,10 @@ public class MenuController {
     @GetMapping(value = "/menu")
     public List<Menu> getMenus(@RequestParam(required = false) @Valid String menuDay)
     {
-        if(menuDay !=null)
-            return menuService.findByMenuDay(menuDay);
-        else
+        if(menuDay == null)
             return menuService.findAll();
-
+        else
+            return menuService.findByMenuDay(menuDay);
     }
 
     @PostMapping(value = "/menu")

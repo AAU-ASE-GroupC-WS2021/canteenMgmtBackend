@@ -15,4 +15,6 @@ public interface IDishService {
     ResponseEntity<Object> update(Dish toEntity);
 
     ResponseEntity<Object> deleteAllDishes(String var) ;
+
+    List<Dish> findByDishDayAll(String dishDay);
 }

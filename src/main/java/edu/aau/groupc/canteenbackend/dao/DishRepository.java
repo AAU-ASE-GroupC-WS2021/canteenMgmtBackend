@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface DishRepository extends JpaRepository<Dish, Integer> {
 
-    List<Dish> findBydishDay(Dish.DishDay day);
+    List<Dish> findByDishDay(Dish.DishDay day);
 
     List<Dish> findAllByOrderByIdDesc();
+
     boolean existsByName(String name);
 }

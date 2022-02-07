@@ -26,6 +26,7 @@ public class DishService implements IDishService {
         return dishRepo.findAllByOrderByIdDesc();
     }
 
+
 //    @Override
 //    public Dish create(Dish newDish) {
 //        return dishRepo.save(newDish);
@@ -84,5 +85,10 @@ public class DishService implements IDishService {
         }
         else
             return ResponseEntity.ok("invalid input parameter");
+    }
+
+    @Override
+    public List<Dish> findByDishDayAll(String dishDay) {
+        return dishRepo.findByDishDay(Dish.DishDay.valueOf(dishDay));
     }
 }
