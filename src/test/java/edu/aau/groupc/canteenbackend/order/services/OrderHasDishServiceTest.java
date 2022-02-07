@@ -42,7 +42,7 @@ class OrderHasDishServiceTest {
     }
 
     private Dish createDish() {
-        Dish dish = new Dish("name", 2, Dish.Type.MAIN);
+        Dish dish = new Dish("name", 2, Dish.Type.MAIN, Dish.DishDay.MONDAY);
         return dishService.create(dish);
     }
 }
