@@ -1,9 +1,6 @@
 package edu.aau.groupc.canteenbackend.menu;
 
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
-import edu.aau.groupc.canteenbackend.entities.Dish;
-import lombok.Data;
-import org.hibernate.mapping.Array;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;

@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("H2Database")
 @SpringBootTest
-public class MenuServiceTest {
+class MenuServiceTest {
 
     @Autowired
     private IMenuService menuService;
 
     @Test
-    public void testAddMenu() {
+    void testAddMenu() {
         int numDishesBefore = menuService.findAll().size();
         menuService.create(new Menu());
         int numDishesAfter = menuService.findAll().size();

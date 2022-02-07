@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ActiveProfiles("H2Database")
-public class MenuControllerTest extends AbstractControllerTest {
+class MenuControllerTest extends AbstractControllerTest {
     @Autowired
     private DishService dishService;
     @Autowired
@@ -63,7 +63,7 @@ public class MenuControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetMenus() throws JSONException {
+    void testGetMenus() throws JSONException {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -76,19 +76,19 @@ public class MenuControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testCreateMenu() throws JSONException {
+    void testCreateMenu() throws JSONException {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
-        String expected = "{\"id\":5,\"name\":\"veg menu\",\"price\":2.0,\"menuDay\":\"MONDAY\",\"menuDishNames\":[\"Salad\",\"Cheese Burger\",\"Tiramisu\"]}";
+        String expected = "{\"id\":7,\"name\":\"veg menu\",\"price\":2.0,\"menuDay\":\"MONDAY\",\"menuDishNames\":[\"Salad\",\"Cheese Burger\",\"Tiramisu\"]}";
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }
 
     @Test
-    public void testCreateMenuAlreadyExist() {
+    void testCreateMenuAlreadyExist() {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -97,38 +97,45 @@ public class MenuControllerTest extends AbstractControllerTest {
         ResponseEntity<String> response_old = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         String expected = "Menu already exists";
-        assertThat(expected.equals(response.getBody())).isTrue();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testCreateMenuDishNotExist() {
+    void testCreateMenuDishNotExist() {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         String expected = "Salad Dish does not exist in the database";
-        assertThat(expected.equals(response.getBody())).isTrue();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testDeleteMenuInvalid() {
+    void testDeleteMenuInvalid() {
         ResponseEntity<Object> response = menuService.deleteAllMenus("all1");
         String expected = "invalid input parameter";
-        assertThat(expected.equals(response.getBody())).isTrue();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testFindMenuByDay() {
-        Menu.MenuDay day = Menu.MenuDay.valueOf("MONDAY");
-        List<Menu> menuList = menuService.findByMenuDay(day.toString());
-        String expected =menuList.toString();
-//        String expected = "\"invalid input parameter\"";
-        assertThat(expected.equals(menuList.toString())).isTrue();
+    void testFindMenuByDay() {
+        dishService.deleteAllDishes("all");
+        menuService.deleteAllMenus("all");
+        dishService.create(new Dish("Salad", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+        dishService.create(new Dish("Tiramisu", 2.0f, Dish.Type.DESSERT, Dish.DishDay.MONDAY));
+        ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        List<Menu> menuList = menuService.findByMenuDay("MONDAY");
+        int numOfMenusOld=menuList.size();
+        ResponseEntity<String> response_new = makePostRequest(new Menu("veg menu2", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
+        List<Menu> menuList2 = menuService.findByMenuDay("MONDAY");
+        int numOfMenusNew=menuList2.size();
+        assertThat(numOfMenusNew).isEqualTo(numOfMenusOld+1);
     }
 
     @Test
-    public void testUpdateMenu() {
+    void testUpdateMenu() {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -138,11 +145,11 @@ public class MenuControllerTest extends AbstractControllerTest {
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         ResponseEntity<String> response_new = makePutRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu", "Burger")));
         String expected = "Menu Updated";
-        assertThat(expected.equals(response_new.getBody())).isTrue();
+        assertThat(response_new.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testUpdateMenuDishNotExist() {
+    void testUpdateMenuDishNotExist() {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -151,11 +158,11 @@ public class MenuControllerTest extends AbstractControllerTest {
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         ResponseEntity<String> response_new = makePutRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu", "Burger")));
         String expected = "Burger Dish does not exist in the database";
-        assertThat(expected.equals(response_new.getBody())).isTrue();
+        assertThat(response_new.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testUpdateMenuNotExist() {
+    void testUpdateMenuNotExist() {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -164,11 +171,11 @@ public class MenuControllerTest extends AbstractControllerTest {
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         ResponseEntity<String> response_new = makePutRequest(new Menu("Healthy menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         String expected = "No Such Menu Found";
-        assertThat(expected.equals(response_new.getBody())).isTrue();
+        assertThat(response_new.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testDeleteMenu() {
+    void testDeleteMenu() {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -177,11 +184,11 @@ public class MenuControllerTest extends AbstractControllerTest {
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         ResponseEntity<String> response_new = makeDeleteRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         String expected = "Menu deleted";
-        assertThat(expected.equals(response_new.getBody())).isTrue();
+        assertThat(response_new.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testDeleteMenuNotExist() {
+    void testDeleteMenuNotExist() {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -190,7 +197,7 @@ public class MenuControllerTest extends AbstractControllerTest {
         ResponseEntity<String> response = makePostRequest(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         ResponseEntity<String> response_new = makeDeleteRequest(new Menu("Healthy menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")));
         String expected = "No Such Menu";
-        assertThat(expected.equals(response_new.getBody())).isTrue();
+        assertThat(response_new.getBody()).isEqualTo(expected);
     }
 
 }

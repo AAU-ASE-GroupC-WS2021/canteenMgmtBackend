@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("H2Database")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DishControllerTest extends AbstractControllerTest implements JsonTest {
+class DishControllerTest extends AbstractControllerTest implements JsonTest {
 
     private MockMvc mvc;
     @Autowired
@@ -36,7 +36,7 @@ public class DishControllerTest extends AbstractControllerTest implements JsonTe
     }
 
 
-    protected ResponseEntity<String> makeGetRequest(String uri) {
+    protected ResponseEntity<String> makeGetRequestDish(String uri) {
         return restTemplate.exchange(
                 createURLWithPort(uri),
                 HttpMethod.GET,
@@ -44,14 +44,14 @@ public class DishControllerTest extends AbstractControllerTest implements JsonTe
                 String.class);
     }
 
-    protected ResponseEntity<String> makePostRequest(String uri, Menu newDish) {
+    protected ResponseEntity<String> makePostRequestDish(String uri, Menu newDish) {
         return restTemplate.exchange(
                 createURLWithPort(uri),
                 HttpMethod.POST,
                 new HttpEntity<>(newDish, headers),
                 String.class);
     }
-    protected ResponseEntity<String> makePutRequest(String uri, Menu newDish) {
+    protected ResponseEntity<String> makePutRequestDish(String uri, Menu newDish) {
         return restTemplate.exchange(
                 createURLWithPort(uri),
                 HttpMethod.PUT,
@@ -68,12 +68,12 @@ public class DishControllerTest extends AbstractControllerTest implements JsonTe
     }
 
     @Test
-    public void testGetDishes() throws JSONException {
+    void testGetDishes() throws JSONException {
         dishService.deleteAllDishes("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
 
-        ResponseEntity<String> response = makeGetRequest("/dish");
+        ResponseEntity<String> response = makeGetRequestDish("/dish");
         String expected = "[{\"name\":\"Salad\",\"price\":1.5,\"type\":\"STARTER\",\"dishDay\":\"MONDAY\"}," +
                            "{\"name\":\"Cheese Burger\",\"price\":4.0,\"type\":\"MAIN\",\"dishDay\":\"MONDAY\"}]";
 
@@ -81,7 +81,7 @@ public class DishControllerTest extends AbstractControllerTest implements JsonTe
     }
 
     @Test
-    public void testCreateDishes() throws Exception {
+    void testCreateDishes() throws Exception {
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                 .post("/dish")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -94,23 +94,23 @@ public class DishControllerTest extends AbstractControllerTest implements JsonTe
     }
 
     @Test
-    public void testUpdateDish()  {
+    void testUpdateDish()  {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         ResponseEntity<String> response = makePutRequest("/dish", new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
         String expected = "dish updated";
-        assertThat(expected.equals(response.getBody())).isTrue();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testUpdateDishNON()  {
+    void testUpdateDishNON()  {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         ResponseEntity<String> response = makePutRequest("/dish", new Dish ("Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
         String expected = "No Such Dish found";
-        assertThat(expected.equals(response.getBody())).isTrue();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testDeleteDish() {
+    void testDeleteDish() {
 
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
 //        dishService.delete(new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY));
@@ -118,15 +118,15 @@ public class DishControllerTest extends AbstractControllerTest implements JsonTe
         ResponseEntity<String> response = makeDeleteRequest("/dish", new Dish ("Cheese Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY) );
         String expected = "dish deleted";
 
-        assertThat(expected.equals(response.getBody())).isTrue();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
-    public void testDeleteDishNonExisting() {
+    void testDeleteDishNonExisting() {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         ResponseEntity<String> response = makeDeleteRequest("/dish", new Dish ("Burger", 2.0f, Dish.Type.STARTER, Dish.DishDay.WEDNESDAY) );
         String expected = "No Such Dish";
-        assertThat(expected.equals(response.getBody())).isTrue();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
 

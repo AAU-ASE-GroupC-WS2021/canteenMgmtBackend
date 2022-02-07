@@ -1,7 +1,5 @@
 package edu.aau.groupc.canteenbackend.menu.controller;
 
-import edu.aau.groupc.canteenbackend.dto.DishDTO;
-import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.dto.MenuDTO;
 import edu.aau.groupc.canteenbackend.menu.services.IMenuService;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
 
 @Validated
 @RestController

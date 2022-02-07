@@ -1,12 +1,9 @@
 package edu.aau.groupc.canteenbackend.menu.services;
 
 import edu.aau.groupc.canteenbackend.dao.DishRepository;
-import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,8 +91,8 @@ public List<Menu> findByMenuDay(String menuDay){
             return ResponseEntity.ok("No Such Menu");
     }
 
-    public ResponseEntity<Object> deleteAllMenus(String var) {
-        if (var.equals("all"))
+    public ResponseEntity<Object> deleteAllMenus(String deleteMenuVariable) {
+        if (deleteMenuVariable.equals("all"))
         {
             menuRepo.deleteAll();
             return ResponseEntity.ok().build();

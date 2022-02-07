@@ -42,7 +42,7 @@ class DishServiceTest {
     }
 
     @Test
-    public void testDeleteAllDish() {
+    void testDeleteAllDish() {
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
         dishService.deleteAllDishes("all");
         int numDishesAtual = dishService.findAll().size();
@@ -50,10 +50,10 @@ class DishServiceTest {
     }
 
     @Test
-    public void testDeleteAllDishFalse(){
+    void testDeleteAllDishFalse(){
         int numDishesBefore = dishService.findAll().size();
         dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
-        ResponseEntity response = dishService.deleteAllDishes("all1");
+        ResponseEntity<Object> response = dishService.deleteAllDishes("all1");
         String expected = "invalid input parameter";
         assertEquals(expected, response.getBody());
     }

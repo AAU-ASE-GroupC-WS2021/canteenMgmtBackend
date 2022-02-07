@@ -1,6 +1,5 @@
 package edu.aau.groupc.canteenbackend.menu.services;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import org.springframework.http.ResponseEntity;
 
@@ -20,5 +19,5 @@ public interface IMenuService {
 
 
     List<Menu> findByMenuDay(String menuDay);
-    ResponseEntity<Object> deleteAllMenus(String var);
+    ResponseEntity<Object> deleteAllMenus(String deleteMenuVariable);
 }

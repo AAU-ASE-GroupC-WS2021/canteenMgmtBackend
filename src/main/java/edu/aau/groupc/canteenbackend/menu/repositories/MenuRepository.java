@@ -1,6 +1,5 @@
 package edu.aau.groupc.canteenbackend.menu.repositories;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 

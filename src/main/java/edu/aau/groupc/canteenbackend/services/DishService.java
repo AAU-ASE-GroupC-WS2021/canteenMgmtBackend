@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.plaf.TreeUI;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -81,8 +81,8 @@ public class DishService implements IDishService {
             return ResponseEntity.ok("No Such Dish");
         }
 
-    public ResponseEntity<Object> deleteAllDishes(String var) {
-        if (var.equals("all"))
+    public ResponseEntity<Object> deleteAllDishes(String deleteDishVariable) {
+        if (deleteDishVariable.equals("all"))
         {
             dishRepo.deleteAll();
             return ResponseEntity.ok().build();
