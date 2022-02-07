@@ -16,7 +16,7 @@ public class DishDTO implements DTO {
     @NotNull(message = "Price is required")
     private Float price;
     @NotNull(message = "Type is required")
-    @EnumPattern(regexp = "STARTER|MAIN|DESSERT", name="Type")
+    @EnumPattern(regexp = "STARTER|MAIN|DESSERT", name = "Type")
     private String type;
 
     public Dish toEntity() {
