@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class AvatarService implements IAvatarService {
         Optional<Avatar> avatar = this.avatarRepository.getAvatarByUsername(username);
 
         if (avatar.isPresent()) {
-            avatar.get().setAvatar(newAvatar);
+            avatar.get().setAvatar(Base64.getDecoder().decode(newAvatar));
             avatarRepository.save(avatar.get());
         }
         else {

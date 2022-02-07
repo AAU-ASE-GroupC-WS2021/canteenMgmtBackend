@@ -4,6 +4,7 @@ import edu.aau.groupc.canteenbackend.entities.DBEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Base64;
 import java.util.Objects;
 
 @Data
@@ -18,13 +19,29 @@ public class Avatar implements DBEntity {
     private long id;
 
     private String username;
-    private String avatar;
+    private byte[] avatar;
 
     public Avatar() {}
 
     public Avatar(String username, String avatar) {
         super();
         this.username = username;
+        this.avatar = Base64.getDecoder().decode(avatar);;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 
@@ -38,7 +55,7 @@ public class Avatar implements DBEntity {
         return "Avatar {" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
+                ", avatar='" + Base64.getEncoder().encodeToString(avatar) + '\'' +
                 '}';
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
 
 @RestController
 public class AvatarController {
@@ -67,14 +68,14 @@ public class AvatarController {
     }
 
     @GetMapping(value = "/api/avatar")
-    public ResponseEntity<AvatarDto> getAvatar(@RequestBody String username) {
+    public ResponseEntity<AvatarDto> getAvatar(@RequestParam String username) {
         Avatar avatar;
 
         if ((avatar = avatarService.getAvatar(username)) == null) {
             return new ResponseEntity<>(new AvatarDto(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(new AvatarDto(avatar.getUsername(), avatar.getAvatar()), HttpStatus.OK);
+        return new ResponseEntity<>(new AvatarDto(avatar.getUsername(), Base64.getEncoder().encodeToString(avatar.getAvatar())), HttpStatus.OK);
     }
 
 }
