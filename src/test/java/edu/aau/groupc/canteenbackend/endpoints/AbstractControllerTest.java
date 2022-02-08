@@ -1,17 +1,28 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.services.DishService;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AbstractControllerTest {
+class AbstractControllerTest {
     @LocalServerPort
     private int port;
 
@@ -26,7 +37,7 @@ public class AbstractControllerTest {
 
     private final HttpHeaders defaultHeaders;
 
-    public AbstractControllerTest() {
+    public AbstractControllerTest ()  {
         defaultHeaders = new HttpHeaders();
         defaultHeaders.setContentType(MediaType.APPLICATION_JSON);
     }
@@ -90,5 +101,17 @@ public class AbstractControllerTest {
                 }
             }
         }
+    }
+
+    @Autowired
+    private DishService dishService;
+
+
+    @Test
+    void testAddDish() {
+        int numDishesBefore = dishService.findAll().size();
+        dishService.create(new Dish());
+        int numDishesAfter = dishService.findAll().size();
+        assertEquals(numDishesBefore + 1, numDishesAfter);
     }
 }
