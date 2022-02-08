@@ -37,10 +37,6 @@ public class DishService implements IDishService {
 
     @Override
     public Dish create(Dish newDish) {
-
-    if (dishRepo.existsByName((newDish.getName()))) {
-        return null;
-    }
         return dishRepo.save(newDish);
     }
 
@@ -54,7 +50,7 @@ public class DishService implements IDishService {
                 aDish.setType(newDish.getType());
                 aDish.setDishDay(newDish.getDishDay());
                 dishRepo.save(aDish);
-                flag =1;
+                flag = 1;
                 break;
             }
         }
@@ -65,11 +61,11 @@ public class DishService implements IDishService {
             return ResponseEntity.ok("No Such Dish found");
     }
 
-    public ResponseEntity<Object> delete(Dish newDish) {
+    public ResponseEntity<Object> delete(String deleteDishName) {
         List<Dish> allDish = findAll();
         int flag = 0;
         for (Dish aDish : allDish) {
-            if (newDish.getName().equals(aDish.getName())) {
+            if (deleteDishName.equals(aDish.getName())) {
                 dishRepo.delete(aDish);
                 flag = 1;
             }
@@ -79,15 +75,13 @@ public class DishService implements IDishService {
 
         else
             return ResponseEntity.ok("No Such Dish");
-        }
+    }
 
     public ResponseEntity<Object> deleteAllDishes(String deleteDishVariable) {
-        if (deleteDishVariable.equals("all"))
-        {
+        if (deleteDishVariable.equals("all")) {
             dishRepo.deleteAll();
             return ResponseEntity.ok().build();
-        }
-        else
+        } else
             return ResponseEntity.ok("invalid input parameter");
     }
 

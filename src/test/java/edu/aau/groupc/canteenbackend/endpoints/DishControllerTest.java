@@ -106,7 +106,7 @@ class DishControllerTest extends AbstractControllerTest implements JsonTest {
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                         .delete("/dish")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(new Dish("Salad1", 2f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                        .content("Salad1"))
                 .andExpect(status().isOk())
                 .andReturn();
         String expected = "dish deleted";
@@ -119,7 +119,7 @@ class DishControllerTest extends AbstractControllerTest implements JsonTest {
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                         .delete("/dish")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(new Dish("Salad1", 2f, Dish.Type.STARTER, Dish.DishDay.MONDAY))))
+                        .content("Salad1"))
                 .andExpect(status().isOk())
                 .andReturn();
         String expected = "No Such Dish";
