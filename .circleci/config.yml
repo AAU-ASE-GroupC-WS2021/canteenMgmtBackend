@@ -95,10 +95,10 @@ jobs:
           name: Run performance tests
           command: |
             export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
-            mvn verify -DjmeterUserThreads=<< performance-user-threads >> \
-                       -DjmeterUserIterations=<< performance-user-iterations >> \
-                       -DjmeterOwnerThreads=<< performance-owner-threads >> \
-                       -DjmeterOwnerIterations=<< performance-owner-iterations >> \
+            mvn verify -DjmeterUserThreads=<< pipeline.parameters.performance-user-threads >> \
+                       -DjmeterUserIterations=<< pipeline.parameters.performance-user-iterations >> \
+                       -DjmeterOwnerThreads=<< pipeline.parameters.performance-owner-threads >> \
+                       -DjmeterOwnerIterations=<< pipeline.parameters.performance-owner-iterations >> \
               -Pperformance -f pom.xml
       - store_artifacts:
           path: target/jmeter/reports
