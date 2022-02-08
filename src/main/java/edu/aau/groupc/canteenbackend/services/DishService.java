@@ -50,7 +50,7 @@ public class DishService implements IDishService {
                 aDish.setType(newDish.getType());
                 aDish.setDishDay(newDish.getDishDay());
                 dishRepo.save(aDish);
-                flag =1;
+                flag = 1;
                 break;
             }
         }
@@ -75,15 +75,13 @@ public class DishService implements IDishService {
 
         else
             return ResponseEntity.ok("No Such Dish");
-        }
+    }
 
     public ResponseEntity<Object> deleteAllDishes(String deleteDishVariable) {
-        if (deleteDishVariable.equals("all"))
-        {
+        if (deleteDishVariable.equals("all")) {
             dishRepo.deleteAll();
             return ResponseEntity.ok().build();
-        }
-        else
+        } else
             return ResponseEntity.ok("invalid input parameter");
     }
 

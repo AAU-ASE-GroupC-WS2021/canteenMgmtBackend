@@ -49,9 +49,9 @@ public class MenuController {
 
     @Secured(User.Type.ADMIN)
     @DeleteMapping (value = "/menu")
-    public ResponseEntity<Object> deleteMenu(@Valid @RequestBody MenuDTO deleteMenu)
+    public ResponseEntity<Object> deleteMenu(@Valid @RequestBody String deleteMenuName)
     {
-        return menuService.delete(deleteMenu.toEntity());
+        return menuService.delete(deleteMenuName);
     }
 
 }
