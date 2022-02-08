@@ -167,9 +167,6 @@
                                     <argument>-Dnashorn.args=--no-deprecation-warningr</argument>
                                 </arguments>
                             </jMeterProcessJVMSettings>
-                            <propertiesJMeter>
-                                <jmeter.reportgenerator.exporter.html.series_filter>^(Create Admin|Create Canteen|Get Canteens|Get Users|Login|Logout|Update Admin|Update Canteen)(-success|-failure)?$</jmeter.reportgenerator.exporter.html.series_filter>
-                            </propertiesJMeter>
                             <generateReports>true</generateReports>
                         </configuration>
                     </plugin>
