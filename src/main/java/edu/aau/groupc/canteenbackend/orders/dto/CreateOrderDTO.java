@@ -25,9 +25,5 @@ public class CreateOrderDTO implements Serializable {
     @NotNull
     @PickupdateConstraint
     private Date pickupDate;
-    // TODO: check if the user may be fetched by the authetication
-    @NotNull(message = "UserId is required")
-    private Long userId;
-
     // TODO ADD MENU LIST
 }

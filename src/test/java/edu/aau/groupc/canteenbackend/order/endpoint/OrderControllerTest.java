@@ -35,8 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OrderControllerTest extends AbstractControllerTest implements JsonTest {
 
-    private final Long invalidID = 9999L;
-    private final String malformedID = "xyz543";
     private MockMvc mvc;
     private User firstUser;
     private Canteen firstCanteen;
@@ -82,7 +80,7 @@ class OrderControllerTest extends AbstractControllerTest implements JsonTest {
         createOderForUser(firstUser);
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/api/order-by-id?orderId=" + invalidID)
+                .get("/api/order-by-id?orderId=" + 9999L)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -94,7 +92,7 @@ class OrderControllerTest extends AbstractControllerTest implements JsonTest {
         createOderForUser(firstUser);
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/api/order-by-id?orderId=" + malformedID)
+                .get("/api/order-by-id?orderId=" + "xyz543")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andReturn();
@@ -117,76 +115,32 @@ class OrderControllerTest extends AbstractControllerTest implements JsonTest {
         createOderForUser(firstUser);
         createOderForUser(firstUser);
 
+        // setting the user manually since the authetication skips it
         MvcResult res = mvc.perform(MockMvcRequestBuilders
-                .get("/api/order?userId=" + firstUser.getId())
+                .get("/api/order")
+                .requestAttr("user", firstUser)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertJsonArrayEquals(orderService.findAllByUserAsDTO(firstUser.getId()), res.getResponse().getContentAsString());
-    }
-
-    @Test
-    void testOrdersForUser_InvalidId() throws Exception {
-        createOderForUser(firstUser);
-        createOderForUser(firstUser);
-
-        mvc.perform(MockMvcRequestBuilders
-                .get("/api/order?userId=" + invalidID)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-    }
-
-    @Test
-    void testOrdersForUser_MalformedId() throws Exception {
-        createOderForUser(firstUser);
-        createOderForUser(firstUser);
-
-        mvc.perform(MockMvcRequestBuilders
-                .get("/api/order?userId=" + malformedID)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-    }
-
-    @Test
-    void testOrdersForUser_MissingId() throws Exception {
-        createOderForUser(firstUser);
-        createOderForUser(firstUser);
-
-        mvc.perform(MockMvcRequestBuilders
-                .get("/api/order")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andReturn();
+        assertJsonArrayEquals(orderService.findAllByUserAsDTO(firstUser), res.getResponse().getContentAsString());
     }
 
     @Test
     void testCreateOrder_ThenReturn() throws Exception {
-        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstUser.getId(), firstDish, 2, getValidDate(), firstCanteen.getId());
+        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstDish, 2, getValidDate(), firstCanteen.getId());
+        // setting the user manually since the authetication skips it
         mvc.perform(MockMvcRequestBuilders
                 .post("/api/create-order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(dto)))
                 .andExpect(status().isOk())
-                .andReturn();
-    }
-
-    @Test
-    void testCreateOrder_userNotFound() throws Exception {
-        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(invalidID, firstDish, 2, getValidDate(), firstCanteen.getId());
-        mvc.perform(MockMvcRequestBuilders
-                .post("/api/create-order")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(dto)))
-                .andExpect(status().isNotFound())
                 .andReturn();
     }
 
     @Test
     void testCreateOrder_canteenNotFound() throws Exception {
-        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstUser.getId(), firstDish, 2, getValidDate(), 9999);
+        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstDish, 2, getValidDate(), 9999);
         mvc.perform(MockMvcRequestBuilders
                 .post("/api/create-order")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -197,7 +151,7 @@ class OrderControllerTest extends AbstractControllerTest implements JsonTest {
 
     @Test
     void testCreateOrder_constraints_count() throws Exception {
-        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstUser.getId(), firstDish, -1, getValidDate(), firstCanteen.getId());
+        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstDish, -1, getValidDate(), firstCanteen.getId());
         mvc.perform(MockMvcRequestBuilders
                 .post("/api/create-order")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -208,7 +162,7 @@ class OrderControllerTest extends AbstractControllerTest implements JsonTest {
 
     @Test
     void testCreateOrder_constraints_pickupDate() throws Exception {
-        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstUser.getId(), firstDish, 2, new Date(), firstCanteen.getId());
+        CreateOrderDTO dto = createCreateOrderDTOWithExampleDish(firstDish, 2, new Date(), firstCanteen.getId());
         mvc.perform(MockMvcRequestBuilders
                 .post("/api/create-order")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -247,14 +201,13 @@ class OrderControllerTest extends AbstractControllerTest implements JsonTest {
         return orderService.save(order);
     }
 
-    private CreateOrderDTO createCreateOrderDTOWithExampleDish(Long userId, Dish dish, Integer count, Date pickupDate, Integer canteenId) {
+    private CreateOrderDTO createCreateOrderDTOWithExampleDish(Dish dish, Integer count, Date pickupDate, Integer canteenId) {
         List<DishForOrderCreationDTO> dishList = new LinkedList<>();
         DishForOrderCreationDTO dto = new DishForOrderCreationDTO();
         dto.setId(dish.getId());
         dto.setCount(count);
         dishList.add(dto);
         CreateOrderDTO orderDTO = new CreateOrderDTO();
-        orderDTO.setUserId(userId);
         orderDTO.setCanteenId(canteenId);
         orderDTO.setPickupDate(pickupDate);
         orderDTO.setDishes(dishList);
