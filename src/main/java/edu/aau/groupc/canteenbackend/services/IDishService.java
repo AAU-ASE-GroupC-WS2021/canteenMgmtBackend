@@ -13,7 +13,7 @@ public interface IDishService {
 
     Dish create(Dish newDish);
 
-    ResponseEntity<Object> delete(Dish toEntity);
+    ResponseEntity<Object> delete(String deleteDishName);
 
     ResponseEntity<Object> update(Dish toEntity);
 

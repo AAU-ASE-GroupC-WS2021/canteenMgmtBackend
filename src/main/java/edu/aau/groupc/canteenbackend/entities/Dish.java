@@ -9,9 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "dish",  uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name"}),
-} )
+@Table(name = "dish")
+
 public class Dish implements DBEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

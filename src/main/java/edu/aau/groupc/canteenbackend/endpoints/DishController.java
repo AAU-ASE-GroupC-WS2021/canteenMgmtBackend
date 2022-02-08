@@ -48,8 +48,8 @@ public class DishController {
     }
     @Secured(User.Type.ADMIN)
     @DeleteMapping (value = "/dish")
-    public ResponseEntity<Object> delete(@Valid @RequestBody DishDTO deleteDish)
+    public ResponseEntity<Object> delete(@Valid @RequestBody String deleteDishName)
     {
-        return dishService.delete(deleteDish.toEntity());
+        return dishService.delete(deleteDishName);
     }
 }

@@ -37,10 +37,6 @@ public class DishService implements IDishService {
 
     @Override
     public Dish create(Dish newDish) {
-
-    if (dishRepo.existsByName((newDish.getName()))) {
-        return null;
-    }
         return dishRepo.save(newDish);
     }
 
@@ -65,11 +61,11 @@ public class DishService implements IDishService {
             return ResponseEntity.ok("No Such Dish found");
     }
 
-    public ResponseEntity<Object> delete(Dish newDish) {
+    public ResponseEntity<Object> delete(String deleteDishName) {
         List<Dish> allDish = findAll();
         int flag = 0;
         for (Dish aDish : allDish) {
-            if (newDish.getName().equals(aDish.getName())) {
+            if (deleteDishName.equals(aDish.getName())) {
                 dishRepo.delete(aDish);
                 flag = 1;
             }
