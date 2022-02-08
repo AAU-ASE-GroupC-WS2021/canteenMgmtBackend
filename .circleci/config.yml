@@ -7,6 +7,18 @@ parameters:
   run-performance-tests:
     type: boolean
     default: false
+  performance-user-threads:
+    type: integer
+    default: 10
+  performance-user-iterations:
+    type: integer
+    default: 100
+  performance-owner-threads:
+    type: integer
+    default: 1
+  performance-owner-iterations:
+    type: integer
+    default: 100
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.3
@@ -83,7 +95,11 @@ jobs:
           name: Run performance tests
           command: |
             export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))
-            mvn verify -Pperformance -f pom.xml
+            mvn verify -DjmeterUserThreads=<< performance-user-threads >> \
+                       -DjmeterUserIterations=<< performance-user-iterations >> \
+                       -DjmeterOwnerThreads=<< performance-owner-threads >> \
+                       -DjmeterOwnerIterations=<< performance-owner-iterations >> \
+              -Pperformance -f pom.xml
       - store_artifacts:
           path: target/jmeter/reports
 

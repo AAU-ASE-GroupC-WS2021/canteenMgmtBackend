@@ -17,6 +17,10 @@
         <java.version>17</java.version>
         <sonar.organization>elsantner</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <jmeterUserThreads>10</jmeterUserThreads>
+        <jmeterUserIterations>100</jmeterUserIterations>
+        <jmeterOwnerThreads>1</jmeterOwnerThreads>
+        <jmeterOwnerIterations>100</jmeterOwnerIterations>
     </properties>
     <dependencies>
         <dependency>
@@ -152,6 +156,12 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <propertiesUser>
+                                <jmeterUserThreads>${jmeterUserThreads}</jmeterUserThreads>
+                                <jmeterUserIterations>${jmeterUserIterations}</jmeterUserIterations>
+                                <jmeterOwnerThreads>${jmeterOwnerThreads}</jmeterOwnerThreads>
+                                <jmeterOwnerIterations>${jmeterOwnerIterations}</jmeterOwnerIterations>
+                            </propertiesUser>
                             <jMeterProcessJVMSettings>
                                 <arguments>
                                     <argument>-Dnashorn.args=--no-deprecation-warningr</argument>

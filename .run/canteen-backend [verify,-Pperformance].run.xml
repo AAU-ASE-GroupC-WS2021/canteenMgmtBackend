@@ -26,6 +26,7 @@
           <option name="goals">
             <list>
               <option value="verify" />
+              <option value="-DjmeterUserThreads=5" />
               <option value="-Pperformance" />
             </list>
           </option>
