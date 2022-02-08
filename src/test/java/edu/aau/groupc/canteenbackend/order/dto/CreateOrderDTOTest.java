@@ -17,40 +17,39 @@ class CreateOrderDTOTest implements ValidationTest {
 
     @Test
     void testValid_ThenOk() {
-        assertValid(createOrderDTO(1L, 1, generateDishList(2), false, futureDate));
+        assertValid(createOrderDTO(1, generateDishList(2), false, futureDate));
     }
 
     @Test
     void testNullCanteenId_ThenInvalid() {
-        assertInvalid(createOrderDTO(1L, null, generateDishList(2), true, futureDate));
+        assertInvalid(createOrderDTO(null, generateDishList(2), true, futureDate));
     }
 
     @Test
     void testNullDishList_ThenInvalid() {
-        assertInvalid(createOrderDTO(1L, 1, null, true, futureDate));
+        assertInvalid(createOrderDTO(1, null, true, futureDate));
     }
 
     @Test
     void testEmptyDishList_ThenInvalid() {
-        assertInvalid(createOrderDTO(1L, 1, new LinkedList<>(), false, futureDate));
+        assertInvalid(createOrderDTO(1, new LinkedList<>(), false, futureDate));
     }
 
     // this test is only to check if the "parent" dto catches invalid states in the dtos inside the list
     @Test
     void testInvalidDishList_ThenInvalid() {
-        assertInvalid(createOrderDTO(1L, 1, generateInvalidDishList(), false, futureDate));
+        assertInvalid(createOrderDTO(1, generateInvalidDishList(), false, futureDate));
     }
 
     @Test
     void testDateNow_ThenInvalid() {
-        assertInvalid(createOrderDTO(1L, 1, generateDishList(1), false, new Date()));
+        assertInvalid(createOrderDTO(1, generateDishList(1), false, new Date()));
     }
 
 
-    private CreateOrderDTO createOrderDTO(Long userId, Integer canteenId, List<DishForOrderCreationDTO> dishList, boolean reserveTable, Date pickupDate) {
+    private CreateOrderDTO createOrderDTO(Integer canteenId, List<DishForOrderCreationDTO> dishList, boolean reserveTable, Date pickupDate) {
         CreateOrderDTO dto = new CreateOrderDTO();
         dto.setDishes(dishList);
-        dto.setUserId(userId);
         dto.setCanteenId(canteenId);
         dto.setReserveTable(reserveTable);
         dto.setPickupDate(pickupDate);

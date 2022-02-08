@@ -1,5 +1,7 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
+import edu.aau.groupc.canteenbackend.entities.Dish;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AbstractControllerTest {
@@ -48,6 +51,22 @@ public class AbstractControllerTest {
                 createURLWithPort(uri),
                 HttpMethod.GET,
                 new HttpEntity<>(null, headers),
+                String.class);
+    }
+
+    protected ResponseEntity<String> makePutRequest(String uri, Dish newDish) {
+        return restTemplate.exchange(
+                createURLWithPort(uri),
+                HttpMethod.PUT,
+                new HttpEntity<>(newDish, defaultHeaders),
+                String.class);
+    }
+
+    protected ResponseEntity<String> makeDeleteRequest(String uri, Dish newDish) {
+        return restTemplate.exchange(
+                createURLWithPort(uri),
+                HttpMethod.DELETE,
+                new HttpEntity<>(newDish, defaultHeaders),
                 String.class);
     }
 

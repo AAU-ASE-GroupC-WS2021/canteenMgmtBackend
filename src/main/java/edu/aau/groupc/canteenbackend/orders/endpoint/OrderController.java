@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -26,8 +27,8 @@ public class OrderController {
 
     @Secured(User.Type.USER)
     @GetMapping(value = "/order")
-    public List<OrderDTO> getOrders(@RequestParam @NotNull Long userId) {
-        return orderService.findAllByUserAsDTO(userId);
+    public List<OrderDTO> getOrders(@NotNull HttpServletRequest request) {
+        return orderService.findAllByUserAsDTO((User) request.getAttribute("user"));
     }
 
     @Secured(User.Type.USER)
@@ -38,7 +39,7 @@ public class OrderController {
 
     @Secured(User.Type.USER)
     @PostMapping(value = "/create-order")
-    public OrderDTO createOrder(@Valid @RequestBody CreateOrderDTO newOrder) {
-        return orderService.create(newOrder);
+    public OrderDTO createOrder(@NotNull HttpServletRequest request, @Valid @RequestBody CreateOrderDTO newOrder) {
+        return orderService.create(newOrder, (User) request.getAttribute("user"));
     }
 }
