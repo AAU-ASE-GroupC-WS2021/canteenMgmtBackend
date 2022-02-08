@@ -9,7 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "dish")
+@Table(name = "dish",  uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"}),
+} )
 public class Dish implements DBEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,15 +33,28 @@ public class Dish implements DBEntity {
     @JsonIgnore
     private Set<OrderHasDish> dishIsInOrders = new HashSet<>();
 
+    private DishDay dishDay;
+
+    public enum DishDay {
+        NOMENUDAY,
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY
+    }
+
     public Dish() {
         // default
     }
 
-    public Dish(@NonNull String name, float price, @NonNull Type type) {
+    public Dish(@NonNull String name, float price, @NonNull Type type, @NonNull DishDay dishDay) {
         super();
         this.name = name;
         this.price = price;
         this.type = type;
+        this.dishDay = dishDay;
     }
 
     public Integer getId() {
@@ -72,6 +87,16 @@ public class Dish implements DBEntity {
 
     public Dish setType(@NonNull Type type) {
         this.type = type;
+        return this;
+    }
+
+    @NonNull
+    public DishDay getDishDay() {
+        return dishDay;
+    }
+
+    public Dish setDishDay(@NonNull DishDay dishDay) {
+        this.dishDay = dishDay;
         return this;
     }
 
