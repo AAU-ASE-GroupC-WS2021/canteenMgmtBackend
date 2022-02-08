@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
-import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AbstractControllerTest {
@@ -93,11 +92,5 @@ public class AbstractControllerTest {
                 }
             }
         }
-    }
-    @Test
-    void checkTest() {
-        ResponseEntity<String> response = makeGetRequest("/dish");
-        int expected = 200;
-        assertThat(response.getStatusCode().value()).isEqualTo(expected);
     }
 }
