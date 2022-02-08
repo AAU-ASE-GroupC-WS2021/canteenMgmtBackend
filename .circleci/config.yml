@@ -19,6 +19,12 @@ parameters:
   performance-owner-iterations:
     type: integer
     default: 100
+  performance-pause-randmax:
+    type: integer
+    default: 100
+  performance-pause-const:
+    type: integer
+    default: 50
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.3
@@ -99,6 +105,8 @@ jobs:
                        -DjmeterUserIterations=<< pipeline.parameters.performance-user-iterations >> \
                        -DjmeterOwnerThreads=<< pipeline.parameters.performance-owner-threads >> \
                        -DjmeterOwnerIterations=<< pipeline.parameters.performance-owner-iterations >> \
+                       -DjmeterPauseRandMax=<< pipeline.parameters.performance-pause-randmax >> \
+                       -DjmeterPauseConst=<< pipeline.parameters.performance-pause-const >> \
               -Pperformance -f pom.xml
       - store_artifacts:
           path: target/jmeter/reports

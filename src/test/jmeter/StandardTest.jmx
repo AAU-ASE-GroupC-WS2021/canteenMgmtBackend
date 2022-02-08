@@ -18,16 +18,6 @@
             <stringProp name="Argument.value">8080</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="think_time_const" elementType="Argument">
-            <stringProp name="Argument.name">think_time_const</stringProp>
-            <stringProp name="Argument.value">200</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="think_time_rand_max" elementType="Argument">
-            <stringProp name="Argument.name">think_time_rand_max</stringProp>
-            <stringProp name="Argument.value">100</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -447,8 +437,8 @@ if (vars.get(&quot;canteenIDs&quot;) != null &amp;&amp; vars.get(&quot;canteenID
           </TestAction>
           <hashTree>
             <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-              <stringProp name="ConstantTimer.delay">${think_time_const}</stringProp>
-              <stringProp name="RandomTimer.range">${think_time_rand_max}</stringProp>
+              <stringProp name="ConstantTimer.delay">${__P(jmeterPauseConst)}</stringProp>
+              <stringProp name="RandomTimer.range">${__P(jmeterPauseRandMax)}</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
@@ -628,8 +618,8 @@ if (vars.get(&quot;canteenIDs&quot;) != null &amp;&amp; vars.get(&quot;canteenID
           </TestAction>
           <hashTree>
             <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Pause" enabled="true">
-              <stringProp name="ConstantTimer.delay">${think_time_const}</stringProp>
-              <stringProp name="RandomTimer.range">${think_time_rand_max}</stringProp>
+              <stringProp name="ConstantTimer.delay">${__P(jmeterPauseConst)}</stringProp>
+              <stringProp name="RandomTimer.range">${__P(jmeterPauseRandMax)}</stringProp>
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>

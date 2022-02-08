@@ -21,6 +21,8 @@
         <jmeterUserIterations>100</jmeterUserIterations>
         <jmeterOwnerThreads>1</jmeterOwnerThreads>
         <jmeterOwnerIterations>100</jmeterOwnerIterations>
+        <jmeterPauseRandMax>100</jmeterPauseRandMax>
+        <jmeterPauseConst>50</jmeterPauseConst>
     </properties>
     <dependencies>
         <dependency>
@@ -161,6 +163,8 @@
                                 <jmeterUserIterations>${jmeterUserIterations}</jmeterUserIterations>
                                 <jmeterOwnerThreads>${jmeterOwnerThreads}</jmeterOwnerThreads>
                                 <jmeterOwnerIterations>${jmeterOwnerIterations}</jmeterOwnerIterations>
+                                <jmeterPauseRandMax>${jmeterPauseRandMax}</jmeterPauseRandMax>
+                                <jmeterPauseConst>${jmeterPauseConst}</jmeterPauseConst>
                             </propertiesUser>
                             <jMeterProcessJVMSettings>
                                 <arguments>
