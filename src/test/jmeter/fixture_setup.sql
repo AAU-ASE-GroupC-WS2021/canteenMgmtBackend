@@ -29,7 +29,11 @@ INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (10, 
 INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (11, '0514939cb14d52fc4c3d8eca10b30f2784b9a78b8715eab917b43649fc70469f', 2, 'user8', NULL);
 INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (12, 'c497ed33d4d146c6cc8037c548b9ab5adb73122c5a3457a71dd8e43bbd55ace3', 2, 'user9', NULL);
 INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (13, 'af4c5857a846e0d24c12dd90b35ad9bde245e5a52b7d453d3ab1a9e5d81ecd33', 2, 'user0', NULL);
-
+INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (14, 'af4c5857a846e0d24c12dd90b35ad9bde245e5a52b7d453d3ab1a9e5d81ecd33', 1, 'admin0', NULL);
+INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (15, 'af4c5857a846e0d24c12dd90b35ad9bde245e5a52b7d453d3ab1a9e5d81ecd33', 1, 'admin1', NULL);
+INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (16, 'af4c5857a846e0d24c12dd90b35ad9bde245e5a52b7d453d3ab1a9e5d81ecd33', 1, 'admin2', NULL);
+INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (17, 'af4c5857a846e0d24c12dd90b35ad9bde245e5a52b7d453d3ab1a9e5d81ecd33', 1, 'admin3', NULL);
+INSERT INTO public.users (id, password, type, username, canteen_id) VALUES (18, 'af4c5857a846e0d24c12dd90b35ad9bde245e5a52b7d453d3ab1a9e5d81ecd33', 1, 'admin4', NULL);
 
 --
 -- TOC entry 3018 (class 0 OID 16445)
@@ -98,7 +102,7 @@ SELECT pg_catalog.setval('public.orders_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 13, true);
+SELECT pg_catalog.setval('public.users_id_seq', 999, true);
 
 
 -- Completed on 2022-02-05 22:49:33

@@ -21,6 +21,8 @@
         <jmeterUserIterations>100</jmeterUserIterations>
         <jmeterOwnerThreads>1</jmeterOwnerThreads>
         <jmeterOwnerIterations>100</jmeterOwnerIterations>
+        <jmeterAdminThreads>5</jmeterAdminThreads>
+        <jmeterAdminIterations>100</jmeterAdminIterations>
         <jmeterPauseRandMax>100</jmeterPauseRandMax>
         <jmeterPauseConst>50</jmeterPauseConst>
     </properties>
@@ -163,6 +165,8 @@
                                 <jmeterUserIterations>${jmeterUserIterations}</jmeterUserIterations>
                                 <jmeterOwnerThreads>${jmeterOwnerThreads}</jmeterOwnerThreads>
                                 <jmeterOwnerIterations>${jmeterOwnerIterations}</jmeterOwnerIterations>
+                                <jmeterOwnerThreads>${jmeterAdminThreads}</jmeterOwnerThreads>
+                                <jmeterOwnerIterations>${jmeterAdminIterations}</jmeterOwnerIterations>
                                 <jmeterPauseRandMax>${jmeterPauseRandMax}</jmeterPauseRandMax>
                                 <jmeterPauseConst>${jmeterPauseConst}</jmeterPauseConst>
                             </propertiesUser>
@@ -172,6 +176,7 @@
                                 </arguments>
                             </jMeterProcessJVMSettings>
                             <generateReports>true</generateReports>
+                            <errorRateThresholdInPercent>10</errorRateThresholdInPercent>
                         </configuration>
                     </plugin>
 
