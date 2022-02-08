@@ -123,4 +123,18 @@ public class UserService implements IUserService {
     public List<User> findByCanteenIDAndType(Integer canteenID, User.Type type) {
         return userRepository.findUsersByHomeCanteen_IdAndTypeOrderById(canteenID, type);
     }
+
+    @Override
+    public boolean updatePassword(String username, String newPassword) {
+        User user = userRepository.getUserByUsername(username);
+
+        if (user == null || newPassword == null) {
+            return false;
+        }
+
+        user.setPassword(newPassword);
+        userRepository.save(user);
+
+        return user.getPassword().equals(newPassword);
+    }
 }

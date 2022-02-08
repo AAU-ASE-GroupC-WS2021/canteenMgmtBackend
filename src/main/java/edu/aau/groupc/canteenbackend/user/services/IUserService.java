@@ -32,4 +32,6 @@ public interface IUserService {
     List<User> findByType(User.Type type);
 
     List<User> findByCanteenIDAndType(Integer canteenID, User.Type type);
+
+    boolean updatePassword(String username, String newPassword);
 }
