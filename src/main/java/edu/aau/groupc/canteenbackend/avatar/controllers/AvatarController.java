@@ -75,7 +75,7 @@ public class AvatarController {
             return new ResponseEntity<>(new AvatarDto(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(new AvatarDto(avatar.getUsername(), Base64.getEncoder().encodeToString(avatar.getAvatar())), HttpStatus.OK);
+        return new ResponseEntity<>(new AvatarDto(avatar.getUsername(), avatar.getAvatar()), HttpStatus.OK);
     }
 
 }

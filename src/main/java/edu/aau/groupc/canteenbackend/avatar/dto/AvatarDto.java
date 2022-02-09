@@ -40,10 +40,7 @@ public class AvatarDto implements DTO, Serializable {
 
     @Override
     public String toString() {
-        return "AvatarDto {" +
-                "username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
-                '}';
+        return toJSONString();
     }
 
     public String toJSONString() {

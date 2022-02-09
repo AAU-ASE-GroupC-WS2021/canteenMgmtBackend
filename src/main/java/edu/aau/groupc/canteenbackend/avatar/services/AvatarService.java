@@ -31,7 +31,7 @@ public class AvatarService implements IAvatarService {
         Optional<Avatar> avatar = this.avatarRepository.getAvatarByUsername(username);
 
         if (avatar.isPresent()) {
-            avatar.get().setAvatar(Base64.getDecoder().decode(newAvatar));
+            avatar.get().setAvatar(newAvatar);
             avatarRepository.save(avatar.get());
         }
         else {
