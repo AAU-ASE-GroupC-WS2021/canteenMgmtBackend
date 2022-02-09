@@ -4,11 +4,14 @@ import edu.aau.groupc.canteenbackend.dao.DishRepository;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -22,26 +25,32 @@ public class MenuService implements IMenuService {
         this.menuRepo = menuRepo;
     }
 
-public List<Menu> findByMenuDay(String menuDay){
+    public List<Menu> findByMenuDay(String menuDay) {
         return menuRepo.findByMenuDay(Menu.MenuDay.valueOf(menuDay));
-}
+    }
 
     @Override
     public List<Menu> findAll() {
         return menuRepo.findAllByOrderByIdDesc();
     }
 
+    @Override
+    public Menu findById(int id) throws ResponseStatusException {
+        Optional<Menu> menuOptional = menuRepo.findById(id);
+        return menuOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "menu not found"));
+    }
+
     public ResponseEntity<Object> create(Menu newMenu) {
-        List<String> menuDishNames =newMenu.getMenuDishNames();
-        if (menuRepo.existsByName(newMenu.getName())){
+        List<String> menuDishNames = newMenu.getMenuDishNames();
+        if (menuRepo.existsByName(newMenu.getName())) {
             return ResponseEntity.ok("Menu already exists");
         }
-        if (menuDishNames == null){
+        if (menuDishNames == null) {
             return ResponseEntity.ok("No Dish selected");
         }
 
-        for (String name: menuDishNames){
-            if (! dishRepo.existsByName(name)){
+        for (String name : menuDishNames) {
+            if (!dishRepo.existsByName(name)) {
                 return ResponseEntity.ok(name + " Dish does not exist in the database");
             }
         }

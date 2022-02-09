@@ -1,13 +1,11 @@
 package edu.aau.groupc.canteenbackend.order.services;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.menu.services.IMenuService;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.orders.Order;
-import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.OrderDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.OrderDishDTO;
+import edu.aau.groupc.canteenbackend.orders.dto.*;
 import edu.aau.groupc.canteenbackend.orders.services.IOrderService;
 import edu.aau.groupc.canteenbackend.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
@@ -39,6 +37,9 @@ class OrderServiceTest {
     private IDishService dishService;
 
     @Autowired
+    private IMenuService menuService;
+
+    @Autowired
     private IUserService userService;
 
     @Autowired
@@ -48,8 +49,6 @@ class OrderServiceTest {
     void testFindAllByUserAsDTO_Size() {
         User user = createExampleUser();
         User emptyUser = userService.create(new User("test", "a", User.Type.GUEST));
-        System.out.println(user);
-        System.out.println(emptyUser);
         assertTrue(orderService.findAllByUserAsDTO(user).isEmpty());
         createOrder(user, createCanteen());
         assertEquals(1, orderService.findAllByUserAsDTO(user).size());
@@ -154,6 +153,19 @@ class OrderServiceTest {
         orderDTO.setCanteenId(canteenId);
         orderDTO.setPickupDate(date);
         orderDTO.setDishes(dishList);
+        return orderDTO;
+    }
+
+    private CreateOrderDTO createCreateOrderDTOWithExampleMenu(int menuId, Integer count, Date date, Integer canteenId) {
+        List<MenuForOrderCreationDTO> menuList = new LinkedList<>();
+        MenuForOrderCreationDTO dto = new MenuForOrderCreationDTO();
+        dto.setId(menuId);
+        dto.setCount(count);
+        menuList.add(dto);
+        CreateOrderDTO orderDTO = new CreateOrderDTO();
+        orderDTO.setCanteenId(canteenId);
+        orderDTO.setPickupDate(date);
+        orderDTO.setMenus(menuList);
         return orderDTO;
     }
 }
