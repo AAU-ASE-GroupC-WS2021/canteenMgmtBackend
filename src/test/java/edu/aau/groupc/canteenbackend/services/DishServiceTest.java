@@ -4,6 +4,7 @@ import edu.aau.groupc.canteenbackend.entities.Dish;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,7 +38,24 @@ class DishServiceTest {
     }
 
     private Dish createDish() {
-        return dishService.create(new Dish("test", 5, Dish.Type.MAIN));
+        return dishService.create(new Dish("test", 5, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+    }
+
+    @Test
+    void testDeleteAllDish() {
+        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+        dishService.deleteAllDishes("all");
+        int numDishesActual = dishService.findAll().size();
+        assertEquals(0, numDishesActual);
+    }
+
+    @Test
+    void testDeleteAllDishFalse(){
+        int numDishesBefore = dishService.findAll().size();
+        dishService.create(new Dish("Cheese Burger", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+        ResponseEntity<Object> response = dishService.deleteAllDishes("all1");
+        String expected = "invalid input parameter";
+        assertEquals(expected, response.getBody());
     }
 
 }
