@@ -1,7 +1,6 @@
 package edu.aau.groupc.canteenbackend.user.controllers;
 
 import edu.aau.groupc.canteenbackend.auth.Auth;
-import edu.aau.groupc.canteenbackend.auth.controllers.LoginController;
 import edu.aau.groupc.canteenbackend.auth.dto.LoginDto;
 import edu.aau.groupc.canteenbackend.auth.security.AuthenticationInterceptor;
 import edu.aau.groupc.canteenbackend.auth.services.IAuthService;
@@ -25,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("H2Database")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -47,7 +47,7 @@ class UserPasswordControllerTest {
 
     @BeforeEach
     void setupUsers() {
-        mvc = MockMvcBuilders.standaloneSetup(new UserController(userService), new LoginController(authService))
+        mvc = MockMvcBuilders.standaloneSetup(new UserPasswordController(userService))
                 .addInterceptors(authenticationInterceptor)
                 .build();
     }
@@ -65,15 +65,10 @@ class UserPasswordControllerTest {
         MvcResult res = mvc.perform( MockMvcRequestBuilders
                         .post("/api/password")
                         .headers(headers)
-                                .contextPath("/api/password")
-                        //.contentType(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userPasswordDTO.toJSONString()))
-                // .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
-
-        System.out.println("RES== " + res.getResponse().getContentAsString());
-        System.out.println("TKN== " + auth.getToken());
-        System.out.println(userPasswordDTO.toJSONString());
 
         assertEquals("b".repeat(64), userService.findById(user.getId()).get().getPassword());
     }
