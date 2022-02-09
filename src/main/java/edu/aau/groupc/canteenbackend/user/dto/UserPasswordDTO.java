@@ -1,17 +1,15 @@
 package edu.aau.groupc.canteenbackend.user.dto;
 
-import edu.aau.groupc.canteenbackend.dto.DTO;
-import edu.aau.groupc.canteenbackend.user.User;
 import lombok.Data;
-import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Data
-public class UserPasswordDTO implements DTO, Serializable {
+public class UserPasswordDTO implements Serializable {
 
     @NotBlank(message = "Username is required")
     @Length(min = 3, message = "Username must be at least 3 characters long!")
@@ -37,13 +35,25 @@ public class UserPasswordDTO implements DTO, Serializable {
         this.passwordNew = passwordNew;
     }
 
-    @Override
-    public User toEntity() {
-        throw new NotImplementedException();
-    }
-
     public String toJSONString() {
         return "{ \"username\": \"" + username + "\", \"passwordOld\": \"" + passwordOld + "\", \"passwordNew\": \"" + passwordNew + "\" }";
     }
 
+    @Override
+    public String toString() {
+        return toJSONString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserPasswordDTO that = (UserPasswordDTO) o;
+        return Objects.equals(username, that.username) && Objects.equals(passwordOld, that.passwordOld) && Objects.equals(passwordNew, that.passwordNew);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, passwordOld, passwordNew);
+    }
 }
