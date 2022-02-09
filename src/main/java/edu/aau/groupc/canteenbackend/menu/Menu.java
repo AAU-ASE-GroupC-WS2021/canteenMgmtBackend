@@ -1,10 +1,14 @@
 package edu.aau.groupc.canteenbackend.menu;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.orders.OrderHasMenu;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -32,11 +36,14 @@ public class Menu implements DBEntity {
         FRIDAY,
         SATURDAY
     }
+
     @NonNull
     @ElementCollection
     List<String> menuDishNames;
 
-//
+    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<OrderHasMenu> orderHasMenus = new HashSet<>();
 
     public Menu() {
         // default
@@ -92,5 +99,11 @@ public class Menu implements DBEntity {
         return this;
     }
 
+    public Set<OrderHasMenu> getOrderHasMenus() {
+        return orderHasMenus;
+    }
 
+    public void setOrderHasMenus(Set<OrderHasMenu> orderHasMenus) {
+        this.orderHasMenus = orderHasMenus;
+    }
 }
