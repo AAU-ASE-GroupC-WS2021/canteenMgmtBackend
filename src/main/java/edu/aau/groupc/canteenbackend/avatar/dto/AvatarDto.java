@@ -47,6 +47,6 @@ public class AvatarDto implements DTO, Serializable {
     }
 
     public String toJSONString() {
-        return "{ \"username\": \"" + username + "\", \"avatar\":\"" + avatar + "\" }";
+        return "{ \"username\": \"" + username + "\", \"avatar\": \"" + avatar + "\" }";
     }
 }

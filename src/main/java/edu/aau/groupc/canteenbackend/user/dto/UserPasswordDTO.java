@@ -42,4 +42,8 @@ public class UserPasswordDTO implements DTO, Serializable {
         throw new NotImplementedException();
     }
 
+    public String toJSONString() {
+        return "{ \"username\": \"" + username + "\", \"passwordOld\": \"" + passwordOld + "\", \"passwordNew\": \"" + passwordNew + "\" }";
+    }
+
 }

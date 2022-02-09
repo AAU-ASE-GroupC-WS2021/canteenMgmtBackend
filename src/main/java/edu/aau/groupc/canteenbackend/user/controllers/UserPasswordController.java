@@ -2,26 +2,17 @@ package edu.aau.groupc.canteenbackend.user.controllers;
 
 import edu.aau.groupc.canteenbackend.auth.security.Secured;
 import edu.aau.groupc.canteenbackend.endpoints.AbstractController;
-import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;
 import edu.aau.groupc.canteenbackend.user.User;
-import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.dto.UserPasswordDTO;
-import edu.aau.groupc.canteenbackend.user.dto.UserReturnDTO;
-import edu.aau.groupc.canteenbackend.user.dto.UserUpdateDTO;
-import edu.aau.groupc.canteenbackend.user.exceptions.UserNotFoundException;
-import edu.aau.groupc.canteenbackend.user.exceptions.UsernameConflictException;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class UserPasswordController extends AbstractController {
@@ -35,7 +26,8 @@ public class UserPasswordController extends AbstractController {
 
     @Secured
     @PostMapping(value = "/api/password")
-    public ResponseEntity<String> createUser(@Valid @RequestBody UserPasswordDTO newPassword, HttpServletRequest req) {
+    @Transactional
+    public ResponseEntity<String> changePassword(@Valid @RequestBody UserPasswordDTO newPassword, HttpServletRequest req) {
         User user = (User) req.getAttribute("user");
 
         if (newPassword == null) {
