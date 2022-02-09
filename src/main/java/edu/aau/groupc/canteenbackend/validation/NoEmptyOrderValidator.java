@@ -9,7 +9,7 @@ public class NoEmptyOrderValidator implements ConstraintValidator<NoEmptyOrderCo
 
     @Override
     public boolean isValid(CreateOrderDTO value, ConstraintValidatorContext context) {
-        return (value.getDishes() != null && value.getDishes().size() > 0) ||
-                (value.getMenus() != null && value.getMenus().size() > 0);
+        return (value.getDishes() != null && !value.getDishes().isEmpty()) ||
+                (value.getMenus() != null && !value.getMenus().isEmpty());
     }
 }
