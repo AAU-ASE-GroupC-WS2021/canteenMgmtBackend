@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("H2Database")
@@ -53,7 +53,7 @@ class UserPasswordControllerTest {
     }
 
     @Test
-    void changePassword() throws Exception {
+    void changePassword_OK() throws Exception {
         LoginDto login = new LoginDto("username", "a".repeat(64));
         User user = userService.create(new User(login.getUsername(), login.getPassword(), User.Type.USER));
         Auth auth = authService.login(login.getUsername(), login.getPassword());
@@ -71,5 +71,81 @@ class UserPasswordControllerTest {
                 .andReturn();
 
         assertEquals("b".repeat(64), userService.findById(user.getId()).get().getPassword());
+    }
+
+    @Test
+    void changePassword_incorrectOldPassword() throws Exception {
+        LoginDto login = new LoginDto("username", "a".repeat(64));
+        User user = userService.create(new User(login.getUsername(), login.getPassword(), User.Type.USER));
+        Auth auth = authService.login(login.getUsername(), login.getPassword());
+        UserPasswordDTO userPasswordDTO = new UserPasswordDTO(login.getUsername(), "c".repeat(64), "b".repeat(64));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.put(authHeaderKey, List.of(auth.getToken()));
+
+        MvcResult res = mvc.perform( MockMvcRequestBuilders
+                        .post("/api/password")
+                        .headers(headers)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userPasswordDTO.toJSONString()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertEquals("Old password is not correct!", res.getResponse().getContentAsString());
+    }
+
+    @Test
+    void changePassword_TryingUpdateSomeoneElsesPassword() throws Exception {
+        LoginDto login = new LoginDto("username", "a".repeat(64));
+        User user = userService.create(new User(login.getUsername(), login.getPassword(), User.Type.USER));
+        Auth auth = authService.login(login.getUsername(), login.getPassword());
+        UserPasswordDTO userPasswordDTO = new UserPasswordDTO("wrongusername", login.getPassword(), "b".repeat(64));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.put(authHeaderKey, List.of(auth.getToken()));
+
+        MvcResult res = mvc.perform( MockMvcRequestBuilders
+                        .post("/api/password")
+                        .headers(headers)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userPasswordDTO.toJSONString()))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertEquals("You can change password only for your account!", res.getResponse().getContentAsString());
+    }
+
+    @Test
+    void changePassword_NoAuth() throws Exception {
+        LoginDto login = new LoginDto("username", "a".repeat(64));
+        User user = userService.create(new User(login.getUsername(), login.getPassword(), User.Type.USER));
+        UserPasswordDTO userPasswordDTO = new UserPasswordDTO(login.getUsername(), login.getPassword(), "b".repeat(64));
+
+        MvcResult res = mvc.perform( MockMvcRequestBuilders
+                        .post("/api/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userPasswordDTO.toJSONString()))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+
+        assertTrue(true);
+    }
+
+    @Test
+    void changePassword_noBody() throws Exception {
+        LoginDto login = new LoginDto("username", "a".repeat(64));
+        User user = userService.create(new User(login.getUsername(), login.getPassword(), User.Type.USER));
+        Auth auth = authService.login(login.getUsername(), login.getPassword());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.put(authHeaderKey, List.of(auth.getToken()));
+
+        MvcResult res = mvc.perform( MockMvcRequestBuilders
+                        .post("/api/password")
+                        .headers(headers))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertTrue(true);
     }
 }
