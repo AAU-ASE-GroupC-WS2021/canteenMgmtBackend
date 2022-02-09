@@ -61,10 +61,10 @@ public class MenuService implements IMenuService {
 
     public ResponseEntity<Object> update(Menu newMenu) {
         List<Menu> allMenu = findAll();
-        List<String> menuDishNames =newMenu.getMenuDishNames();
+        List<String> menuDishNames = newMenu.getMenuDishNames();
         int flag = 0;
-        for (String name: menuDishNames){
-            if (! dishRepo.existsByName(name)){
+        for (String name : menuDishNames) {
+            if (!dishRepo.existsByName(name)) {
                 return ResponseEntity.ok(name + " Dish does not exist in the database");
             }
         }
@@ -74,7 +74,7 @@ public class MenuService implements IMenuService {
                 aMenu.setMenuDay(newMenu.getMenuDay());
                 aMenu.setMenuDishNames(newMenu.getMenuDishNames());
                 menuRepo.save(aMenu);
-                flag =1;
+                flag = 1;
                 break;
             }
         }
@@ -84,11 +84,11 @@ public class MenuService implements IMenuService {
             return ResponseEntity.ok("No Such Menu Found");
     }
 
-    public ResponseEntity<Object> delete(Menu newMenu) {
+    public ResponseEntity<Object> delete(String deleteMenuName) {
         List<Menu> allMenu = findAll();
         int flag = 0;
         for (Menu aMenu : allMenu) {
-            if (newMenu.getName().equals(aMenu.getName())) {
+            if (deleteMenuName.equals(aMenu.getName())) {
                 menuRepo.delete(aMenu);
                 flag = 1;
             }
@@ -101,12 +101,10 @@ public class MenuService implements IMenuService {
     }
 
     public ResponseEntity<Object> deleteAllMenus(String deleteMenuVariable) {
-        if (deleteMenuVariable.equals("all"))
-        {
+        if (deleteMenuVariable.equals("all")) {
             menuRepo.deleteAll();
             return ResponseEntity.ok().build();
-        }
-        else
+        } else
             return ResponseEntity.ok("invalid input parameter");
     }
 }

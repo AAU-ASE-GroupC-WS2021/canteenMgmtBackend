@@ -8,13 +8,14 @@ import java.util.List;
 
 public interface IMenuService {
 
+
     List<Menu> findAll();
 
     Menu findById(int id) throws ResponseStatusException;
 
     ResponseEntity<Object> create(Menu newMenu);
 
-    ResponseEntity<Object> delete(Menu newMenu);
+    ResponseEntity<Object> delete(String deleteMenuName);
 
     ResponseEntity<Object> update(Menu newMenu);
 

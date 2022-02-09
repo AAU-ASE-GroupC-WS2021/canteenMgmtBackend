@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("H2Database")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MenuControllerTest extends AbstractControllerTest implements JsonTest{
+class MenuControllerTest extends AbstractControllerTest implements JsonTest {
 
 
     private MockMvc mvc;
@@ -45,7 +45,6 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
     void setupMVC() {
         mvc = MockMvcBuilders.standaloneSetup(new MenuController(menuService)).build();
     }
-
 
 
     private final HttpHeaders headers = new HttpHeaders();
@@ -133,7 +132,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
                         .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
                 .andExpect(status().isOk())
                 .andReturn();
-        String expected ="Menu already exists";
+        String expected = "Menu already exists";
         assertThat(res.getResponse().getContentAsString()).isEqualTo(expected);
     }
 
@@ -161,7 +160,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
     }
 
     @Test
-    void testFindMenuByDay()  throws Exception{
+    void testFindMenuByDay() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 4.0f, Dish.Type.MAIN, Dish.DishDay.MONDAY));
@@ -174,7 +173,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
                 .andExpect(status().isOk())
                 .andReturn();
         List<Menu> menuList = menuService.findByMenuDay("MONDAY");
-        int numOfMenusOld=menuList.size();
+        int numOfMenusOld = menuList.size();
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                         .post("/menu")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -182,12 +181,12 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
                 .andExpect(status().isOk())
                 .andReturn();
         List<Menu> menuList2 = menuService.findByMenuDay("MONDAY");
-        int numOfMenusNew=menuList2.size();
-        assertThat(numOfMenusNew).isEqualTo(numOfMenusOld+1);
+        int numOfMenusNew = menuList2.size();
+        assertThat(numOfMenusNew).isEqualTo(numOfMenusOld + 1);
     }
 
     @Test
-    void testUpdateMenu() throws Exception{
+    void testUpdateMenu() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -211,7 +210,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
     }
 
     @Test
-    void testUpdateMenuDishNotExist() throws Exception{
+    void testUpdateMenuDishNotExist() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -226,7 +225,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                         .put("/menu")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu","Burger")))))
+                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu", "Burger")))))
                 .andExpect(status().isOk())
                 .andReturn();
         String expected = "Burger Dish does not exist in the database";
@@ -234,7 +233,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
     }
 
     @Test
-    void testUpdateMenuNotExist() throws Exception{
+    void testUpdateMenuNotExist() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -257,7 +256,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
     }
 
     @Test
-    void testDeleteMenu() throws Exception{
+    void testDeleteMenu() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -272,7 +271,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                         .delete("/menu")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(new Menu("veg menu", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                        .content("veg menu"))
                 .andExpect(status().isOk())
                 .andReturn();
         String expected = "Menu deleted";
@@ -280,7 +279,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
     }
 
     @Test
-    void testDeleteMenuNotExist() throws Exception{
+    void testDeleteMenuNotExist() throws Exception {
         dishService.deleteAllDishes("all");
         menuService.deleteAllMenus("all");
         dishService.create(new Dish("Salad", 1.5f, Dish.Type.STARTER, Dish.DishDay.MONDAY));
@@ -295,7 +294,7 @@ class MenuControllerTest extends AbstractControllerTest implements JsonTest{
         MvcResult res = mvc.perform(MockMvcRequestBuilders
                         .delete("/menu")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(new Menu("veg menu1", 2.0f, Menu.MenuDay.MONDAY, Arrays.asList("Salad", "Cheese Burger", "Tiramisu")))))
+                        .content("veg menu1"))
                 .andExpect(status().isOk())
                 .andReturn();
         String expected = "No Such Menu";

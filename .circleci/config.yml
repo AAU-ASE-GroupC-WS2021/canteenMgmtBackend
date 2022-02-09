@@ -19,6 +19,12 @@ parameters:
   performance-owner-iterations:
     type: integer
     default: 100
+  performance-admin-threads:
+    type: integer
+    default: 5
+  performance-admin-iterations:
+    type: integer
+    default: 100
   performance-pause-randmax:
     type: integer
     default: 100
@@ -105,6 +111,8 @@ jobs:
                        -DjmeterUserIterations=<< pipeline.parameters.performance-user-iterations >> \
                        -DjmeterOwnerThreads=<< pipeline.parameters.performance-owner-threads >> \
                        -DjmeterOwnerIterations=<< pipeline.parameters.performance-owner-iterations >> \
+                       -DjmeterAdminThreads=<< pipeline.parameters.performance-admin-threads >> \
+                       -DjmeterAdminIterations=<< pipeline.parameters.performance-admin-iterations >> \
                        -DjmeterPauseRandMax=<< pipeline.parameters.performance-pause-randmax >> \
                        -DjmeterPauseConst=<< pipeline.parameters.performance-pause-const >> \
               -Pperformance -f pom.xml

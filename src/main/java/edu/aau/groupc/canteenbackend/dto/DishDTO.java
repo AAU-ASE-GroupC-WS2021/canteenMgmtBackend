@@ -19,7 +19,7 @@ public class DishDTO implements DTO {
     @NotNull(message = "Type is required")
     @EnumPattern(regexp = "STARTER|MAIN|DESSERT", name = "Type")
     private String type;
-    @EnumPattern(regexp = "NOMENUDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY", name="DishDay")
+    @EnumPattern(regexp = "NOMENUDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY", name = "DishDay")
     private String dishDay = "NOMENUDAY";
 
     public Dish toEntity() {
