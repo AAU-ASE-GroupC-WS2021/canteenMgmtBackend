@@ -136,7 +136,7 @@ workflows:
               only:
                 - main
                 - development
-  nighly:
+  nightly:
     when:
       << pipeline.parameters.run-performance-tests >>
     jobs:
