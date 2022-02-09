@@ -14,7 +14,7 @@ public class LoginController {
     private IAuthService authService;
 
     @Autowired
-    LoginController(IAuthService authService) {
+    public LoginController(IAuthService authService) {
         this.authService = authService;
     }
 
