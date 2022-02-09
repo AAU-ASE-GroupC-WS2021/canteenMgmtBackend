@@ -10,10 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class AvatarDtoTest {
 
     @Test
-    void toEntity() {
-    }
-
-    @Test
     void testEquals_Same() {
         AvatarDto avatarDto = new AvatarDto("username", "avatar");
 
