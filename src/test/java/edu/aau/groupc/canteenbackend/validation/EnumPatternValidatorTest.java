@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.validation;
 
-import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.AbstractControllerTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

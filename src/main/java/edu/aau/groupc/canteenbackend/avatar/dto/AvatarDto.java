@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.avatar.dto;
 
 import edu.aau.groupc.canteenbackend.avatar.Avatar;
-import edu.aau.groupc.canteenbackend.dto.DTO;
+import edu.aau.groupc.canteenbackend.dish.dto.DTO;
 import lombok.Data;
 
 import java.io.Serializable;

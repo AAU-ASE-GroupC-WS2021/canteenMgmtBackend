@@ -1,6 +1,6 @@
-package edu.aau.groupc.canteenbackend.dto;
+package edu.aau.groupc.canteenbackend.dish.dto;
 
-import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.DBEntity;
 
 /**
  * This interface is required to be implemented by all DTOs (i.e. objects passed through REST

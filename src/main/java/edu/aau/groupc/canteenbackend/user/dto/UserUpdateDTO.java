@@ -1,17 +1,13 @@
 package edu.aau.groupc.canteenbackend.user.dto;
 
-import edu.aau.groupc.canteenbackend.dto.DTO;
-import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
+import edu.aau.groupc.canteenbackend.dish.dto.DTO;
 import edu.aau.groupc.canteenbackend.user.User;
 import lombok.Data;
 import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.validator.constraints.Length;
 
-import javax.naming.OperationNotSupportedException;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Data
 public class UserUpdateDTO implements DTO, Serializable {

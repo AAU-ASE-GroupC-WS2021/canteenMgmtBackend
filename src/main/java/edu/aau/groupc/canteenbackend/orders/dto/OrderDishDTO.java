@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.orders.dto;
 
-import edu.aau.groupc.canteenbackend.dto.DishDTO;
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.dto.DishDTO;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import edu.aau.groupc.canteenbackend.orders.OrderHasDish;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

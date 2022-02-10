@@ -1,13 +1,11 @@
 package edu.aau.groupc.canteenbackend.menu.endpoints;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
-import edu.aau.groupc.canteenbackend.endpoints.DishController;
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.controller.MenuController;
 import edu.aau.groupc.canteenbackend.menu.services.MenuService;
-import edu.aau.groupc.canteenbackend.services.DishService;
+import edu.aau.groupc.canteenbackend.dish.services.DishService;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.auth.dto;
 
 import edu.aau.groupc.canteenbackend.auth.Auth;
-import edu.aau.groupc.canteenbackend.dto.DTO;
+import edu.aau.groupc.canteenbackend.dish.dto.DTO;
 import lombok.Data;
 
 import java.io.Serializable;

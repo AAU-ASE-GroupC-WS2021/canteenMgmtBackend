@@ -1,6 +1,6 @@
-package edu.aau.groupc.canteenbackend.services;
+package edu.aau.groupc.canteenbackend.dish.services;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 

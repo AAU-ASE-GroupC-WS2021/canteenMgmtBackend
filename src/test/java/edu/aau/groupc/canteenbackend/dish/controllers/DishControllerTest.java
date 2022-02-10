@@ -1,7 +1,8 @@
-package edu.aau.groupc.canteenbackend.endpoints;
+package edu.aau.groupc.canteenbackend.dish.controllers;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
-import edu.aau.groupc.canteenbackend.services.DishService;
+import edu.aau.groupc.canteenbackend.dish.Dish;
+import edu.aau.groupc.canteenbackend.dish.services.DishService;
+import edu.aau.groupc.canteenbackend.AbstractControllerTest;
 import edu.aau.groupc.canteenbackend.util.JsonTest;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;

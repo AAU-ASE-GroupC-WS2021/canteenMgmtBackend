@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.user.controllers;
 
-import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.AbstractControllerTest;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.user.dto.UserDto;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;

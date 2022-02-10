@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.DBEntity;
 import edu.aau.groupc.canteenbackend.orders.OrderHasMenu;
 import org.springframework.lang.NonNull;
 
