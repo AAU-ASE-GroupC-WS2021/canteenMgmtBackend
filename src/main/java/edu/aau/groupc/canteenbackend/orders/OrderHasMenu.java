@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.orders;
 
-import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.DBEntity;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 
 import javax.persistence.*;

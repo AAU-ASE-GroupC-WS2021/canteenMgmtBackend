@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.order.endpoint;
 
-import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.orders.Order;
@@ -9,7 +9,7 @@ import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
 import edu.aau.groupc.canteenbackend.orders.endpoint.OrderController;
 import edu.aau.groupc.canteenbackend.orders.services.IOrderService;
-import edu.aau.groupc.canteenbackend.services.IDishService;
+import edu.aau.groupc.canteenbackend.dish.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import edu.aau.groupc.canteenbackend.util.JsonTest;

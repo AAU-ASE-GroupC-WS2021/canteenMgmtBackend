@@ -1,6 +1,7 @@
-package edu.aau.groupc.canteenbackend.services;
+package edu.aau.groupc.canteenbackend.dish.services;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.services.IDishService;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

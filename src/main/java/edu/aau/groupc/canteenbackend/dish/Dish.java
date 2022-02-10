@@ -1,6 +1,7 @@
-package edu.aau.groupc.canteenbackend.entities;
+package edu.aau.groupc.canteenbackend.dish;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.aau.groupc.canteenbackend.DBEntity;
 import edu.aau.groupc.canteenbackend.orders.OrderHasDish;
 import org.springframework.lang.NonNull;
 

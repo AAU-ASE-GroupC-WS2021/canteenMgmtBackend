@@ -1,6 +1,6 @@
-package edu.aau.groupc.canteenbackend.dto;
+package edu.aau.groupc.canteenbackend.dish.dto;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import edu.aau.groupc.canteenbackend.validation.EnumPattern;
 import lombok.Data;
 

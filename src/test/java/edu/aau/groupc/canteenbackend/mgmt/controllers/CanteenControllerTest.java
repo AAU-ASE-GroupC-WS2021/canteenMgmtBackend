@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.mgmt.controllers;
 
-import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.AbstractControllerTest;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.util.JsonTest;

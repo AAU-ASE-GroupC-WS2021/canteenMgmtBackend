@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.orders.services;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.services.IMenuService;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
@@ -12,7 +12,7 @@ import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.MenuForOrderCreationDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.OrderDTO;
-import edu.aau.groupc.canteenbackend.services.IDishService;
+import edu.aau.groupc.canteenbackend.dish.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

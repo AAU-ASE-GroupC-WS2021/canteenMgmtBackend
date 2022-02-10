@@ -1,9 +1,9 @@
-package edu.aau.groupc.canteenbackend.endpoints;
+package edu.aau.groupc.canteenbackend.dish.controllers;
 
 import edu.aau.groupc.canteenbackend.auth.security.Secured;
-import edu.aau.groupc.canteenbackend.dto.DishDTO;
-import edu.aau.groupc.canteenbackend.entities.Dish;
-import edu.aau.groupc.canteenbackend.services.IDishService;
+import edu.aau.groupc.canteenbackend.dish.dto.DishDTO;
+import edu.aau.groupc.canteenbackend.dish.Dish;
+import edu.aau.groupc.canteenbackend.dish.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

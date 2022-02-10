@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.menu.services;
 
-import edu.aau.groupc.canteenbackend.dao.DishRepository;
+import edu.aau.groupc.canteenbackend.dish.repositories.DishRepository;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;

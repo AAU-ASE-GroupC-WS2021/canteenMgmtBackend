@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.order.services;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
@@ -8,7 +8,7 @@ import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.orders.Order;
 import edu.aau.groupc.canteenbackend.orders.dto.*;
 import edu.aau.groupc.canteenbackend.orders.services.IOrderService;
-import edu.aau.groupc.canteenbackend.services.IDishService;
+import edu.aau.groupc.canteenbackend.dish.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.junit.jupiter.api.Test;

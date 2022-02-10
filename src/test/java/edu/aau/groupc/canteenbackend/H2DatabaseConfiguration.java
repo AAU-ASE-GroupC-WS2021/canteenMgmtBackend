@@ -16,7 +16,7 @@ import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.
 
 @Profile("H2Database")
 @Configuration
-public class DishDaoTestConfiguration {
+public class H2DatabaseConfiguration {
 
     @Bean
     @Primary

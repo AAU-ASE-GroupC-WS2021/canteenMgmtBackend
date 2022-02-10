@@ -1,4 +1,4 @@
-package edu.aau.groupc.canteenbackend.endpoints;
+package edu.aau.groupc.canteenbackend;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
