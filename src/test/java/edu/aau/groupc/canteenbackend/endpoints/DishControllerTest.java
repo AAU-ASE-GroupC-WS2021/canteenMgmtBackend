@@ -1,31 +1,29 @@
 package edu.aau.groupc.canteenbackend.endpoints;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.aau.groupc.canteenbackend.entities.Dish;
-import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.services.DishService;
 import edu.aau.groupc.canteenbackend.util.JsonTest;
 import org.json.JSONException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.UnsupportedEncodingException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ActiveProfiles("H2Database")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class DishControllerTest extends AbstractControllerTest implements JsonTest {
 
     private MockMvc mvc;
@@ -34,7 +32,7 @@ class DishControllerTest extends AbstractControllerTest implements JsonTest {
     private DishService dishService;
     private final HttpHeaders headers = new HttpHeaders();
 
-    @BeforeAll
+    @BeforeEach
     void setupMVC() {
         mvc = MockMvcBuilders.standaloneSetup(new DishController(dishService)).build();
     }

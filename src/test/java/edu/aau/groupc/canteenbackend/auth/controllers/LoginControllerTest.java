@@ -2,7 +2,6 @@ package edu.aau.groupc.canteenbackend.auth.controllers;
 
 import edu.aau.groupc.canteenbackend.auth.Auth;
 import edu.aau.groupc.canteenbackend.auth.dto.LoginDto;
-import edu.aau.groupc.canteenbackend.auth.dto.LogoutDto;
 import edu.aau.groupc.canteenbackend.auth.security.AuthenticationInterceptor;
 import edu.aau.groupc.canteenbackend.auth.services.IAuthService;
 import edu.aau.groupc.canteenbackend.user.User;
@@ -56,7 +55,7 @@ class LoginControllerTest {
                         .post("/api/auth/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(login.toJSONString()))
-                // .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
 
         assertEquals(user, authService.getUserByToken(res.getResponse().getContentAsString()));

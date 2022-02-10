@@ -3,13 +3,10 @@ package edu.aau.groupc.canteenbackend.dto;
 import edu.aau.groupc.canteenbackend.entities.Dish;
 import edu.aau.groupc.canteenbackend.validation.EnumPattern;
 import lombok.Data;
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 
 @SuppressWarnings("ALL")
 @Data

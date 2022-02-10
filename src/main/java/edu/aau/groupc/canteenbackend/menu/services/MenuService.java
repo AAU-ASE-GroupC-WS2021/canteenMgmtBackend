@@ -4,11 +4,14 @@ import edu.aau.groupc.canteenbackend.dao.DishRepository;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -29,6 +32,12 @@ public class MenuService implements IMenuService {
     @Override
     public List<Menu> findAll() {
         return menuRepo.findAllByOrderByIdDesc();
+    }
+
+    @Override
+    public Menu findById(int id) throws ResponseStatusException {
+        Optional<Menu> menuOptional = menuRepo.findById(id);
+        return menuOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "menu not found"));
     }
 
     public ResponseEntity<Object> create(Menu newMenu) {

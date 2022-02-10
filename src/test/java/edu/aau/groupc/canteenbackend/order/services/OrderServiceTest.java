@@ -1,13 +1,12 @@
 package edu.aau.groupc.canteenbackend.order.services;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.menu.Menu;
+import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.orders.Order;
-import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.OrderDTO;
-import edu.aau.groupc.canteenbackend.orders.dto.OrderDishDTO;
+import edu.aau.groupc.canteenbackend.orders.dto.*;
 import edu.aau.groupc.canteenbackend.orders.services.IOrderService;
 import edu.aau.groupc.canteenbackend.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +39,9 @@ class OrderServiceTest {
     private IDishService dishService;
 
     @Autowired
+    private MenuRepository menuRepository;
+
+    @Autowired
     private IUserService userService;
 
     @Autowired
@@ -48,8 +51,6 @@ class OrderServiceTest {
     void testFindAllByUserAsDTO_Size() {
         User user = createExampleUser();
         User emptyUser = userService.create(new User("test", "a", User.Type.GUEST));
-        System.out.println(user);
-        System.out.println(emptyUser);
         assertTrue(orderService.findAllByUserAsDTO(user).isEmpty());
         createOrder(user, createCanteen());
         assertEquals(1, orderService.findAllByUserAsDTO(user).size());
@@ -105,6 +106,25 @@ class OrderServiceTest {
     }
 
     @Test
+    void testFindAllByUserAsDTO_WithMenu_toTestEntityToDTOConversion() {
+        User user = createExampleUser();
+        Canteen canteen = createCanteen();
+        Dish exampleDish = dishService.create(new Dish(name, price, Dish.Type.MAIN, Dish.DishDay.MONDAY));
+        Menu exampleMenu = menuRepository.save(new Menu(name, price, Menu.MenuDay.MONDAY, Collections.singletonList(exampleDish.getName())));
+        CreateOrderDTO createOrderDTO = createCreateOrderDTOWithExampleMenu(exampleMenu, count, new Date(), canteen.getId());
+        orderService.create(createOrderDTO, user);
+        List<OrderDTO> orderDtos = orderService.findAllByUserAsDTO(user);
+        assertEquals(1, orderDtos.size());
+        OrderDTO orderDTO = orderDtos.get(0);
+        assertEquals(1, orderDTO.getMenus().size());
+        assertEquals(1, orderDTO.getCanteenId());
+        OrderMenuDTO menuDto = orderDTO.getMenus().get(0);
+        assertEquals(name, menuDto.getName());
+        assertEquals(price, menuDto.getPrice());
+        assertEquals(count, menuDto.getCount());
+    }
+
+    @Test
     void testCreate() {
         User user = createExampleUser();
         Canteen canteen = createCanteen();
@@ -154,6 +174,19 @@ class OrderServiceTest {
         orderDTO.setCanteenId(canteenId);
         orderDTO.setPickupDate(date);
         orderDTO.setDishes(dishList);
+        return orderDTO;
+    }
+
+    private CreateOrderDTO createCreateOrderDTOWithExampleMenu(Menu menu, Integer count, Date date, Integer canteenId) {
+        List<MenuForOrderCreationDTO> menuList = new LinkedList<>();
+        MenuForOrderCreationDTO dto = new MenuForOrderCreationDTO();
+        dto.setId(menu.getId());
+        dto.setCount(count);
+        menuList.add(dto);
+        CreateOrderDTO orderDTO = new CreateOrderDTO();
+        orderDTO.setCanteenId(canteenId);
+        orderDTO.setPickupDate(date);
+        orderDTO.setMenus(menuList);
         return orderDTO;
     }
 }

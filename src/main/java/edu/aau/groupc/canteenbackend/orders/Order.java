@@ -38,6 +38,10 @@ public class Order implements DBEntity {
     @JsonIgnore
     private Set<OrderHasDish> orderHasDishes = new HashSet<>();
 
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<OrderHasMenu> orderHasMenus = new HashSet<>();
+
     // TODO: many-to-many connection to the menus, menus do not exist yet
 
     public Order() {
@@ -90,5 +94,17 @@ public class Order implements DBEntity {
 
     public void addOrderHasDish(OrderHasDish orderHasDish) {
         this.orderHasDishes.add(orderHasDish);
+    }
+
+    public Set<OrderHasMenu> getOrderHasMenus() {
+        return orderHasMenus;
+    }
+
+    public void setOrderHasMenus(Set<OrderHasMenu> orderHasMenus) {
+        this.orderHasMenus = orderHasMenus;
+    }
+
+    public void addOrderHasMenu(OrderHasMenu orderHasMenu) {
+        this.orderHasMenus.add(orderHasMenu);
     }
 }

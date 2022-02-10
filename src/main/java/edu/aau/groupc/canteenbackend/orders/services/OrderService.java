@@ -1,12 +1,16 @@
 package edu.aau.groupc.canteenbackend.orders.services;
 
 import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.menu.Menu;
+import edu.aau.groupc.canteenbackend.menu.services.IMenuService;
 import edu.aau.groupc.canteenbackend.mgmt.services.ICanteenService;
 import edu.aau.groupc.canteenbackend.orders.Order;
 import edu.aau.groupc.canteenbackend.orders.OrderHasDish;
+import edu.aau.groupc.canteenbackend.orders.OrderHasMenu;
 import edu.aau.groupc.canteenbackend.orders.dao.OrderRepository;
 import edu.aau.groupc.canteenbackend.orders.dto.CreateOrderDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.DishForOrderCreationDTO;
+import edu.aau.groupc.canteenbackend.orders.dto.MenuForOrderCreationDTO;
 import edu.aau.groupc.canteenbackend.orders.dto.OrderDTO;
 import edu.aau.groupc.canteenbackend.services.IDishService;
 import edu.aau.groupc.canteenbackend.user.User;
@@ -27,14 +31,18 @@ public class OrderService implements IOrderService {
 
     IDishService dishService;
     IOrderHasDishService orderHasDishService;
+    IOrderHasMenuService orderHasMenuService;
     ICanteenService canteenService;
+    IMenuService menuService;
 
     @Autowired
-    public OrderService(OrderRepository orderRepo, IDishService dishService, IOrderHasDishService orderHasDishService, ICanteenService canteenService) {
+    public OrderService(OrderRepository orderRepo, IDishService dishService, IOrderHasDishService orderHasDishService, IOrderHasMenuService orderHasMenuService, ICanteenService canteenService, IMenuService menuService) {
         this.orderRepo = orderRepo;
         this.dishService = dishService;
         this.orderHasDishService = orderHasDishService;
+        this.orderHasMenuService = orderHasMenuService;
         this.canteenService = canteenService;
+        this.menuService = menuService;
     }
 
     /*
@@ -75,6 +83,13 @@ public class OrderService implements IOrderService {
             Dish d = dishService.findById(dishDto.getId());
             OrderHasDish orderHasDish = new OrderHasDish(order, d, dishDto.getCount());
             order.addOrderHasDish(orderHasDishService.save(orderHasDish));
+        }
+
+        // add all the required assoziations from the order to the dishes
+        for (MenuForOrderCreationDTO menuDto : orderDto.getMenus()) {
+            Menu menu = menuService.findById(menuDto.getId());
+            OrderHasMenu orderHasMenu = new OrderHasMenu(order, menu, menuDto.getCount());
+            order.addOrderHasMenu(orderHasMenuService.save(orderHasMenu));
         }
         return OrderDTO.from(save(order));
     }
