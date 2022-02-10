@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.mgmt.dto;
 
-import edu.aau.groupc.canteenbackend.dto.DTO;
+import edu.aau.groupc.canteenbackend.dish.dto.DTO;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import lombok.Data;
 

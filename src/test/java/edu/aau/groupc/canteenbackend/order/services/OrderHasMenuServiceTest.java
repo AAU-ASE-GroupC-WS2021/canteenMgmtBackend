@@ -1,13 +1,13 @@
 package edu.aau.groupc.canteenbackend.order.services;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.menu.repositories.MenuRepository;
 import edu.aau.groupc.canteenbackend.orders.Order;
 import edu.aau.groupc.canteenbackend.orders.OrderHasMenu;
 import edu.aau.groupc.canteenbackend.orders.services.IOrderHasMenuService;
 import edu.aau.groupc.canteenbackend.orders.services.IOrderService;
-import edu.aau.groupc.canteenbackend.services.IDishService;
+import edu.aau.groupc.canteenbackend.dish.services.IDishService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

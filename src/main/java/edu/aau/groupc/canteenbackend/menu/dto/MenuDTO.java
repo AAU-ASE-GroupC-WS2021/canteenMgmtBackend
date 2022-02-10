@@ -1,13 +1,10 @@
 package edu.aau.groupc.canteenbackend.menu.dto;
 
-import edu.aau.groupc.canteenbackend.dto.DTO;
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.dto.DTO;
 import edu.aau.groupc.canteenbackend.menu.Menu;
 import edu.aau.groupc.canteenbackend.validation.EnumPattern;
 import lombok.Data;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

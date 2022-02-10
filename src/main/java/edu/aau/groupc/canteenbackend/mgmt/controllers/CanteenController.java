@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.mgmt.controllers;
 
 import edu.aau.groupc.canteenbackend.auth.security.Secured;
-import edu.aau.groupc.canteenbackend.endpoints.AbstractController;
+import edu.aau.groupc.canteenbackend.AbstractController;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.mgmt.dto.CanteenDTO;
 import edu.aau.groupc.canteenbackend.mgmt.exceptions.CanteenNotFoundException;

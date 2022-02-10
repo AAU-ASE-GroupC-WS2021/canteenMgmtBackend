@@ -1,6 +1,6 @@
-package edu.aau.groupc.canteenbackend.endpoints;
+package edu.aau.groupc.canteenbackend;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

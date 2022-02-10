@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.user.dto;
 
-import edu.aau.groupc.canteenbackend.dto.DTO;
+import edu.aau.groupc.canteenbackend.dish.dto.DTO;
 import edu.aau.groupc.canteenbackend.user.User;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

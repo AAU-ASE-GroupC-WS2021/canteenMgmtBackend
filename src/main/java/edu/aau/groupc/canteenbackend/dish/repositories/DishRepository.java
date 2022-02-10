@@ -1,6 +1,6 @@
-package edu.aau.groupc.canteenbackend.dao;
+package edu.aau.groupc.canteenbackend.dish.repositories;
 
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

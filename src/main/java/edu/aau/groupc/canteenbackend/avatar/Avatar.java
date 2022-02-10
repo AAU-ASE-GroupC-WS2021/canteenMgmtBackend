@@ -1,6 +1,6 @@
 package edu.aau.groupc.canteenbackend.avatar;
 
-import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.DBEntity;
 import lombok.Data;
 
 import javax.persistence.*;

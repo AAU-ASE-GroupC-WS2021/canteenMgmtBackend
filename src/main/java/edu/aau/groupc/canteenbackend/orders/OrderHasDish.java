@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.orders;
 
-import edu.aau.groupc.canteenbackend.entities.DBEntity;
-import edu.aau.groupc.canteenbackend.entities.Dish;
+import edu.aau.groupc.canteenbackend.DBEntity;
+import edu.aau.groupc.canteenbackend.dish.Dish;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;

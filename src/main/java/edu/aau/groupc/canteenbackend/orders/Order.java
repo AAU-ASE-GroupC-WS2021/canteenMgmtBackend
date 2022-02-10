@@ -1,7 +1,7 @@
 package edu.aau.groupc.canteenbackend.orders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.aau.groupc.canteenbackend.entities.DBEntity;
+import edu.aau.groupc.canteenbackend.DBEntity;
 import edu.aau.groupc.canteenbackend.mgmt.Canteen;
 import edu.aau.groupc.canteenbackend.user.User;
 

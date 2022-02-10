@@ -2,7 +2,7 @@ package edu.aau.groupc.canteenbackend.auth.security;
 
 import edu.aau.groupc.canteenbackend.auth.Auth;
 import edu.aau.groupc.canteenbackend.auth.services.IAuthService;
-import edu.aau.groupc.canteenbackend.endpoints.AbstractControllerTest;
+import edu.aau.groupc.canteenbackend.AbstractControllerTest;
 import edu.aau.groupc.canteenbackend.user.User;
 import edu.aau.groupc.canteenbackend.user.services.IUserService;
 import org.json.JSONException;
